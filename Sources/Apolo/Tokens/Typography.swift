@@ -27,7 +27,8 @@ public enum FontWeight {
 
 public extension Font {
     static func abcGinto(size: CGFloat, weight: FontWeight) -> Font {
-        .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: size)
+        Bundle.ensureFontsRegistered()
+        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: size)
     }
 }
 
@@ -73,6 +74,17 @@ public extension Bundle {
                 continue
             }
         }
+    }
+    
+    static func ensureFontsRegistered() {
+        struct FontRegistration {
+            static var didRegister: Bool = {
+                Bundle.registerFonts()
+                return true
+            }()
+        }
+
+        _ = FontRegistration.didRegister
     }
 }
 
@@ -143,15 +155,6 @@ public extension Text {
     }
 }
 
-public extension View {
-    /// It's very sketchy to make custom fonts work in the Package Preview.
-    /// So we need to attach this to any package preview's view to have custom fonts displayed.
-    func loadCustomFonts() -> some View {
-        Bundle.registerFonts()
-        return self
-    }
-}
-
 #Preview {
     ScrollView {
         VStack(alignment: .leading) {
@@ -196,5 +199,4 @@ public extension View {
         }
         .padding()
     }
-    .loadCustomFonts()
 }

@@ -97,14 +97,14 @@ public extension Text {
         modifier(TypographyModifier(size: 28, lineHeight: 34, weight: .bold))
     }
 
-    /// Title 2 style (36/45, Bold)
+    /// Title 2 style (22/28, Bold)
     func title2() -> some View {
-        modifier(TypographyModifier(size: 36, lineHeight: 45, weight: .bold))
+        modifier(TypographyModifier(size: 22, lineHeight: 28, weight: .bold))
     }
 
-    /// Title 3 style with weight option (36/45)
+    /// Title 3 style with weight option (20/25)
     func title3(weight: FontWeight = .bold) -> some View {
-        modifier(TypographyModifier(size: 36, lineHeight: 45, weight: weight))
+        modifier(TypographyModifier(size: 20, lineHeight: 25, weight: weight))
     }
 
     /// Headline style (17/24, Medium)

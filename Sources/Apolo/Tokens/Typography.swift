@@ -27,7 +27,7 @@ public enum FontWeight {
 
 public extension Font {
     static func abcGinto(size: CGFloat, weight: FontWeight) -> Font {
-        .custom("(Fonts.abcGinto)-(weight.fontName)", size: size)
+        .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: size)
     }
 }
 
@@ -52,7 +52,7 @@ public extension Bundle {
         ]
 
         for fontName in fonts {
-            guard let url = Bundle.module.url(forResource: fontName, withExtension: "ttf") else {
+            guard let url = Bundle.module.url(forResource: fontName, withExtension: "otf") else {
                 print("Could not find font: \(fontName)")
                 continue
             }
@@ -143,7 +143,58 @@ public extension Text {
     }
 }
 
+public extension View {
+    /// It's very sketchy to make custom fonts work in the Package Preview.
+    /// So we need to attach this to any package preview's view to have custom fonts displayed.
+    func loadCustomFonts() -> some View {
+        Bundle.registerFonts()
+        return self
+    }
+}
+
 #Preview {
-    Text("Hello, Satoshi!")
-        .superLargeTitle()
+    ScrollView {
+        VStack(alignment: .leading) {
+            Text("Super Large Title")
+                .superLargeTitle()
+
+            Text("Extra Large Title")
+                .extraLargeTitle()
+
+            Text("Extra Large Title 2")
+                .extraLargeTitle2()
+
+            Text("Title 1")
+                .title1()
+
+            Text("Title 2")
+                .title2()
+
+            Text("Title 3")
+                .title3()
+
+            Text("Headline")
+                .headline()
+
+            Text("Bitcoin has reached 100.000 USD, marking a new all-time high. This price action comes amid increased institutional adoption and strong market fundamentals.")
+                .body()
+
+            Text("Callout")
+                .callout()
+
+            Text("Subheadline")
+                .subheadline()
+
+            Text("Footnote")
+                .footnote()
+
+            Text("Caption 1")
+                .caption1()
+
+            Text("Caption 2")
+                .caption2()
+        }
+        .padding()
+    }
+    .loadCustomFonts()
 }

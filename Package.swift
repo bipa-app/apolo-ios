@@ -18,7 +18,7 @@ let package = Package(
         .target(
             name: "Apolo",
             resources: [
-                .process("Resources/Fonts")
+                .process("Resources")
             ]
         )
     ]

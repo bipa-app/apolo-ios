@@ -18,8 +18,9 @@ let package = Package(
     targets: [
         .target(
             name: "Apolo",
+            path: "Sources",
             resources: [
-                .process("Resources")
+                .process("Apolo/Resources")
             ]
         )
     ]

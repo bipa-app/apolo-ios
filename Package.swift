@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Apolo",
+    defaultLocalization: "pt-BR",
     platforms: [
         .iOS(.v16)
     ],

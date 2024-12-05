@@ -21,9 +21,9 @@ public struct ConfirmationSlideView: View {
                     .font(.system(size: 32))
                     .rotationEffect(.degrees(rotationAngle))
                     .foregroundStyle(isDisabled ? color : isConfirmed ? confirmedColor : tintColor)
-                    .padding(20)
+                    .padding(Tokens.Spacing.large)
                     .background(isDisabled ? color : .white)
-                    .cornerRadius(7)
+                    .cornerRadius(Tokens.CornerRadius.small)
                     .offset(x: buttonOffset)
                     .gesture(
                         DragGesture()
@@ -45,9 +45,10 @@ public struct ConfirmationSlideView: View {
             .background(
                 isDisabled ? color.opacity(0.5) : isConfirmed ? confirmedColor : color
             )
-            .cornerRadius(12)
+            .cornerRadius(Tokens.CornerRadius.medium)
             .overlay(
                 Text("Confirmar")
+                    .title3(weight: .medium)
                     .foregroundStyle(isDisabled ? color : tintColor)
                     .opacity(opacity)
                     .backgroundGeometryProxy { proxy in

@@ -11,14 +11,15 @@ let package = Package(
     products: [
         .library(
             name: "Apolo",
-            targets: ["Apolo"]),
+            targets: ["Apolo"]
+        )
     ],
     targets: [
         .target(
-            name: "Apolo"),
-        .testTarget(
-            name: "ApoloTests",
-            dependencies: ["Apolo"]
-        ),
+            name: "Apolo",
+            resources: [
+                .process("Resources")
+            ]
+        )
     ]
 )

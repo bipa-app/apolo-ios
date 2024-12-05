@@ -1,12 +1,25 @@
 import SwiftUI
 
 public struct ConfirmationSlideView: View {
-    @Binding var isConfirmed: Bool
-    var tintColor: Color = .black
-    var color: Color = .init(uiColor: .quaternaryLabel)
-    var confirmedColor: Color = .green
-    var isDisabled: Bool = false
-    var confirmed: () -> Void
+    
+    public init(
+        isConfirmed: Binding<Bool>,
+        confirmedColor: Color = .green,
+        isDisabled: Bool = false,
+        confirmed: @escaping () -> Void
+    ) {
+        self._isConfirmed = isConfirmed
+        self.confirmedColor = confirmedColor
+        self.isDisabled = isDisabled
+        self.confirmed = confirmed
+    }
+    
+    @Binding private var isConfirmed: Bool
+    private var confirmedColor: Color = .green
+    private var isDisabled: Bool = false
+    private var confirmed: () -> Void
+    private var tintColor: Color = .black
+    private var color: Color = .init(uiColor: .quaternaryLabel)
     
     @State private var rotationAngle: CGFloat = 0
     @State private var buttonOffset: CGFloat = 0

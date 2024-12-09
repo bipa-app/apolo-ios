@@ -106,52 +106,61 @@ public extension Text {
 
     /// Title 1 style (28/34, Bold)
     func title1() -> some View {
-        modifier(TypographyModifier(size: 28, lineHeight: 34, weight: .bold))
+        font(.largeTitle)
+            .fontWeight(.bold)
     }
 
     /// Title 2 style (22/28, Bold)
     func title2() -> some View {
-        modifier(TypographyModifier(size: 22, lineHeight: 28, weight: .bold))
+        font(.title)
+            .fontWeight(.bold)
     }
 
     /// Title 3 style with weight option (20/25)
     func title3(weight: FontWeight = .bold) -> some View {
-        modifier(TypographyModifier(size: 20, lineHeight: 25, weight: weight))
+        font(.title2)
+            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
     }
 
     /// Headline style (17/24, Medium)
     func headline() -> some View {
-        modifier(TypographyModifier(size: 17, lineHeight: 24, weight: .medium))
+        font(.headline)
     }
 
     /// Body style with weight option (17/22)
     func body(weight: FontWeight = .regular) -> some View {
-        modifier(TypographyModifier(size: 17, lineHeight: 22, weight: weight))
+        font(.body)
+            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
     }
 
     /// Callout style with weight option (16/21)
     func callout(weight: FontWeight = .regular) -> some View {
-        modifier(TypographyModifier(size: 16, lineHeight: 21, weight: weight))
+        font(.callout)
+            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
     }
 
     /// Subheadline style with weight option (15/20)
     func subheadline(weight: FontWeight = .regular) -> some View {
-        modifier(TypographyModifier(size: 15, lineHeight: 20, weight: weight))
+        font(.subheadline)
+            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
     }
 
     /// Footnote style with weight option (13/18)
     func footnote(weight: FontWeight = .regular) -> some View {
-        modifier(TypographyModifier(size: 13, lineHeight: 18, weight: weight))
+        font(.footnote)
+            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
     }
 
     /// Caption 1 style with weight option (12/16)
     func caption1(weight: FontWeight = .regular) -> some View {
-        modifier(TypographyModifier(size: 12, lineHeight: 16, weight: weight))
+        font(.caption)
+            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
     }
 
     /// Caption 2 style with weight option (11/13)
     func caption2(weight: FontWeight = .regular) -> some View {
-        modifier(TypographyModifier(size: 11, lineHeight: 13, weight: weight))
+        font(.caption2)
+            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
     }
 }
 

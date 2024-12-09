@@ -26,9 +26,16 @@ public enum FontWeight {
 }
 
 public extension Font {
+    // For fixed sizes (used by TypographyModifier)
     static func abcGinto(size: CGFloat, weight: FontWeight) -> Font {
         Bundle.ensureFontsRegistered()
-        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: size)
+        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", fixedSize: size)
+    }
+
+    // For dynamic text styles (used by Text extensions)
+    static func abcGinto(style: Font.TextStyle, weight: FontWeight) -> Font {
+        Bundle.ensureFontsRegistered()
+        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: 17, relativeTo: style)
     }
 }
 
@@ -75,9 +82,9 @@ public extension Bundle {
             }
         }
     }
-    
+
     static func ensureFontsRegistered() {
-        struct FontRegistration {
+        enum FontRegistration {
             static var didRegister: Bool = {
                 Bundle.registerFonts()
                 return true
@@ -106,61 +113,52 @@ public extension Text {
 
     /// Title 1 style (28/34, Bold)
     func title1() -> some View {
-        font(.largeTitle)
-            .fontWeight(.bold)
+        font(.abcGinto(style: .largeTitle, weight: .bold))
     }
 
     /// Title 2 style (22/28, Bold)
     func title2() -> some View {
-        font(.title)
-            .fontWeight(.bold)
+        font(.abcGinto(style: .title, weight: .bold))
     }
 
     /// Title 3 style with weight option (20/25)
     func title3(weight: FontWeight = .bold) -> some View {
-        font(.title2)
-            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
+        font(.abcGinto(style: .title2, weight: weight))
     }
 
     /// Headline style (17/24, Medium)
     func headline() -> some View {
-        font(.headline)
+        font(.abcGinto(style: .headline, weight: .medium))
     }
 
     /// Body style with weight option (17/22)
     func body(weight: FontWeight = .regular) -> some View {
-        font(.body)
-            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
+        font(.abcGinto(style: .body, weight: weight))
     }
 
     /// Callout style with weight option (16/21)
     func callout(weight: FontWeight = .regular) -> some View {
-        font(.callout)
-            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
+        font(.abcGinto(style: .callout, weight: weight))
     }
 
     /// Subheadline style with weight option (15/20)
     func subheadline(weight: FontWeight = .regular) -> some View {
-        font(.subheadline)
-            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
+        font(.abcGinto(style: .subheadline, weight: weight))
     }
 
     /// Footnote style with weight option (13/18)
     func footnote(weight: FontWeight = .regular) -> some View {
-        font(.footnote)
-            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
+        font(.abcGinto(style: .footnote, weight: weight))
     }
 
     /// Caption 1 style with weight option (12/16)
     func caption1(weight: FontWeight = .regular) -> some View {
-        font(.caption)
-            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
+        font(.abcGinto(style: .caption, weight: weight))
     }
 
     /// Caption 2 style with weight option (11/13)
     func caption2(weight: FontWeight = .regular) -> some View {
-        font(.caption2)
-            .fontWeight(weight == .bold ? .bold : weight == .medium ? .medium : .regular)
+        font(.abcGinto(style: .caption2, weight: weight))
     }
 }
 

@@ -27,7 +27,8 @@ public enum FontWeight {
 
 public extension Font {
     static func abcGinto(size: CGFloat, weight: FontWeight) -> Font {
-        .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: size)
+        Bundle.ensureFontsRegistered()
+        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: size)
     }
 }
 
@@ -74,6 +75,17 @@ public extension Bundle {
             }
         }
     }
+    
+    static func ensureFontsRegistered() {
+        struct FontRegistration {
+            static var didRegister: Bool = {
+                Bundle.registerFonts()
+                return true
+            }()
+        }
+
+        _ = FontRegistration.didRegister
+    }
 }
 
 public extension Text {
@@ -97,14 +109,14 @@ public extension Text {
         modifier(TypographyModifier(size: 28, lineHeight: 34, weight: .bold))
     }
 
-    /// Title 2 style (36/45, Bold)
+    /// Title 2 style (22/28, Bold)
     func title2() -> some View {
-        modifier(TypographyModifier(size: 36, lineHeight: 45, weight: .bold))
+        modifier(TypographyModifier(size: 22, lineHeight: 28, weight: .bold))
     }
 
-    /// Title 3 style with weight option (36/45)
+    /// Title 3 style with weight option (20/25)
     func title3(weight: FontWeight = .bold) -> some View {
-        modifier(TypographyModifier(size: 36, lineHeight: 45, weight: weight))
+        modifier(TypographyModifier(size: 20, lineHeight: 25, weight: weight))
     }
 
     /// Headline style (17/24, Medium)
@@ -140,15 +152,6 @@ public extension Text {
     /// Caption 2 style with weight option (11/13)
     func caption2(weight: FontWeight = .regular) -> some View {
         modifier(TypographyModifier(size: 11, lineHeight: 13, weight: weight))
-    }
-}
-
-public extension View {
-    /// It's very sketchy to make custom fonts work in the Package Preview.
-    /// So we need to attach this to any package preview's view to have custom fonts displayed.
-    func loadCustomFonts() -> some View {
-        Bundle.registerFonts()
-        return self
     }
 }
 
@@ -196,5 +199,4 @@ public extension View {
         }
         .padding()
     }
-    .loadCustomFonts()
 }

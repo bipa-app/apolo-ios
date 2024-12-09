@@ -5,6 +5,7 @@ import PackageDescription
 
 let package = Package(
     name: "Apolo",
+    defaultLocalization: "pt-BR",
     platforms: [
         .iOS(.v16)
     ],
@@ -17,8 +18,9 @@ let package = Package(
     targets: [
         .target(
             name: "Apolo",
+            path: "Sources",
             resources: [
-                .process("Resources")
+                .process("Apolo/Resources")
             ]
         )
     ]

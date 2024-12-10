@@ -48,10 +48,11 @@ public enum CustomButtonShape {
 }
 
 public extension Button {
-    func borderedProminent(
+    func borderedProminentStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
-        size: ControlSize = .regular
+        size: ControlSize = .regular,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
         self
             .buttonStyle(.borderedProminent)
@@ -59,12 +60,14 @@ public extension Button {
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
             .font(.abcGinto(style: .body, weight: .regular))
+            .modifier(HapticFeedbackModifier(style: hapticStyle))
     }
 
-    func bordered(
+    func borderedStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
-        size: ControlSize = .regular
+        size: ControlSize = .regular,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
         self
             .buttonStyle(.bordered)
@@ -72,12 +75,14 @@ public extension Button {
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
             .font(.abcGinto(style: .body, weight: .regular))
+            .modifier(HapticFeedbackModifier(style: hapticStyle))
     }
 
-    func plain(
+    func plainStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
-        size: ControlSize = .regular
+        size: ControlSize = .regular,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
         self
             .buttonStyle(.plain)
@@ -85,15 +90,18 @@ public extension Button {
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
             .font(.abcGinto(style: .body, weight: .regular))
+            .modifier(HapticFeedbackModifier(style: hapticStyle))
     }
 
-    func stroked(
+    func strokedStyle(
         shape: CustomButtonShape = .capsule,
-        size: ControlSize = .regular
+        size: ControlSize = .regular,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
         self
             .modifier(StrokedButtonModifier(shape: shape, size: size))
             .font(.abcGinto(style: .subheadline, weight: .regular))
+            .modifier(HapticFeedbackModifier(style: hapticStyle))
     }
 }
 
@@ -173,36 +181,51 @@ public struct StrokedButtonModifier: ViewModifier {
     }
 }
 
+public struct HapticFeedbackModifier: ViewModifier {
+    let style: UIImpactFeedbackGenerator.FeedbackStyle
+
+    public init(style: UIImpactFeedbackGenerator.FeedbackStyle = .soft) {
+        self.style = style
+    }
+
+    public func body(content: Content) -> some View {
+        content.simultaneousGesture(TapGesture().onEnded { _ in
+            let impact = UIImpactFeedbackGenerator(style: self.style)
+            impact.impactOccurred()
+        })
+    }
+}
+
 #Preview {
     VStack(spacing: 12) {
         Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .borderedProminent(color: Color(.violet), size: .large)
+        .borderedProminentStyle(color: Color(.violet), size: .large)
 
         Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .bordered(color: Color(.violet), size: .large)
+        .borderedStyle(color: Color(.violet), size: .large, hapticStyle: .rigid)
 
         Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .stroked(shape: .capsule, size: .large)
+        .strokedStyle(shape: .capsule, size: .large)
 
         Button(systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .borderedProminent(shape: .circle, color: Color(.violet), size: .large)
+        .borderedProminentStyle(shape: .circle, color: Color(.violet), size: .large)
 
         Button(systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .bordered(shape: .circle, color: Color(.violet), size: .large)
+        .borderedStyle(shape: .circle, color: Color(.violet), size: .large)
 
         Button(systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .stroked(shape: .circle, size: .large)
+        .strokedStyle(shape: .circle, size: .large)
     }
 }

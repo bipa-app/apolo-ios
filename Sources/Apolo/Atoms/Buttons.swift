@@ -7,13 +7,13 @@
 
 import SwiftUI
 
-enum CustomButtonShape {
+public enum CustomButtonShape {
     case capsule
     case circle
     case roundedRectangle
 
     @available(iOS 17.0, *)
-    var toButtonBorderShape: ButtonBorderShape {
+    public var toButtonBorderShape: ButtonBorderShape {
         switch self {
         case .capsule:
             return .capsule
@@ -24,7 +24,7 @@ enum CustomButtonShape {
         }
     }
 
-    var toViewShape: AnyShape {
+    public var toViewShape: AnyShape {
         switch self {
         case .capsule:
             return AnyShape(Capsule())
@@ -35,7 +35,7 @@ enum CustomButtonShape {
         }
     }
 
-    var toStrokeShape: AnyShape {
+    public var toStrokeShape: AnyShape {
         switch self {
         case .capsule:
             return AnyShape(Capsule())
@@ -47,7 +47,7 @@ enum CustomButtonShape {
     }
 }
 
-extension Button {
+public extension Button {
     func borderedProminent(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
@@ -58,7 +58,7 @@ extension Button {
             .controlSize(size)
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
-            .font(.abcGinto(style: .subheadline, weight: .regular))
+            .font(.abcGinto(style: .body, weight: .regular))
     }
 
     func bordered(
@@ -71,7 +71,7 @@ extension Button {
             .controlSize(size)
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
-            .font(.abcGinto(style: .subheadline, weight: .regular))
+            .font(.abcGinto(style: .body, weight: .regular))
     }
 
     func plain(
@@ -84,22 +84,21 @@ extension Button {
             .controlSize(size)
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
-            .font(.abcGinto(style: .subheadline, weight: .regular))
+            .font(.abcGinto(style: .body, weight: .regular))
     }
 
     func stroked(
         shape: CustomButtonShape = .capsule,
-        color: Color = .primary,
         size: ControlSize = .regular
     ) -> some View {
         self
-            .modifier(StrokedButtonModifier(shape: shape, size: size, color: color))
+            .modifier(StrokedButtonModifier(shape: shape, size: size))
             .font(.abcGinto(style: .subheadline, weight: .regular))
     }
 }
 
 /// Extension to allow the creation of buttons with system images only
-extension Button {
+public extension Button {
     init(systemImage: String, action: @escaping () -> Void) where Label == Image {
         self.init(action: action) {
             Image(systemName: systemImage)
@@ -107,10 +106,14 @@ extension Button {
     }
 }
 
-struct ButtonShapeModifier: ViewModifier {
+public struct ButtonShapeModifier: ViewModifier {
     let shape: CustomButtonShape
 
-    func body(content: Content) -> some View {
+    public init(shape: CustomButtonShape) {
+        self.shape = shape
+    }
+
+    public func body(content: Content) -> some View {
         if #available(iOS 17.0, *) {
             content.buttonBorderShape(shape.toButtonBorderShape)
         } else {
@@ -119,12 +122,16 @@ struct ButtonShapeModifier: ViewModifier {
     }
 }
 
-struct StrokedButtonModifier: ViewModifier {
+public struct StrokedButtonModifier: ViewModifier {
     let shape: CustomButtonShape
     let size: ControlSize
-    let color: Color
 
     @Environment(\.isEnabled) private var isEnabled
+
+    public init(shape: CustomButtonShape, size: ControlSize) {
+        self.shape = shape
+        self.size = size
+    }
 
     private func sizeValues(for size: ControlSize) -> (height: CGFloat, padding: CGFloat) {
         switch size {
@@ -139,7 +146,7 @@ struct StrokedButtonModifier: ViewModifier {
         }
     }
 
-    func body(content: Content) -> some View {
+    public func body(content: Content) -> some View {
         let sizes = self.sizeValues(for: self.size)
 
         content
@@ -152,13 +159,13 @@ struct StrokedButtonModifier: ViewModifier {
                     switch self.shape {
                     case .capsule:
                         Capsule()
-                            .strokeBorder(self.color.opacity(0.3), lineWidth: 1)
+                            .strokeBorder(Color.primary.opacity(0.15), lineWidth: 1)
                     case .circle:
                         Circle()
-                            .strokeBorder(self.color.opacity(0.3), lineWidth: 1)
+                            .strokeBorder(Color.primary.opacity(0.15), lineWidth: 1)
                     case .roundedRectangle:
                         RoundedRectangle(cornerRadius: Tokens.CornerRadius.small)
-                            .strokeBorder(self.color.opacity(0.3), lineWidth: 1)
+                            .strokeBorder(Color.primary.opacity(0.15), lineWidth: 1)
                     }
                 }
             )

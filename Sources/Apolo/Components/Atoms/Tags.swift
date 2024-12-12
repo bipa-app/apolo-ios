@@ -17,6 +17,13 @@ public enum TagStyle {
         case .label: return .rose
         }
     }
+
+    var iconName: String? {
+        switch self {
+        case .status(let icon), .label(let icon):
+            return icon
+        }
+    }
 }
 
 public struct Tag: View {
@@ -34,18 +41,23 @@ public struct Tag: View {
         self.size = size
     }
 
+    @ViewBuilder
+    private func iconView() -> some View {
+        if let iconName = style.iconName {
+            Image(systemName: iconName)
+                .font(.caption)
+                .frame(width: 24, height: 24)
+        }
+    }
+
     public var body: some View {
         HStack(spacing: Tokens.Spacing.extraExtraSmall) {
-            if case let .status(icon) = style, let iconName = icon {
-                Image(systemName: iconName)
-                    .font(.caption)
-            } else if case let .label(icon) = style, let iconName = icon {
-                Image(systemName: iconName)
-                    .font(.caption)
-            }
+            iconView()
             Text(text)
                 .caption1(weight: .medium)
         }
+        .padding(.vertical, 6)
+        .padding(.horizontal, 12)
         .modifier(TagModifier(style: style, size: size))
     }
 }
@@ -61,21 +73,8 @@ public struct TagModifier: ViewModifier {
         self.size = size
     }
 
-    private func sizeValues(for size: ControlSize) -> (height: CGFloat, padding: CGFloat) {
-        switch size {
-        case .small: return (20, 8)
-        case .regular: return (24, 10)
-        case .large: return (32, 12)
-        default: return (24, 10)
-        }
-    }
-
     public func body(content: Content) -> some View {
-        let sizes = sizeValues(for: size)
-
         content
-            .padding(.horizontal, sizes.padding)
-            .frame(height: sizes.height)
             .background(style.backgroundColor)
             .foregroundColor(.white)
             .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.small))

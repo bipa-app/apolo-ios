@@ -35,7 +35,27 @@ public extension Font {
     // For dynamic text styles (used by Text extensions)
     static func abcGinto(style: Font.TextStyle, weight: FontWeight) -> Font {
         Bundle.ensureFontsRegistered()
-        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: 17, relativeTo: style)
+
+        let styledText: UIFont.TextStyle = {
+            switch style {
+            case .largeTitle: return .largeTitle
+            case .title: return .title1
+            case .title2: return .title2
+            case .title3: return .title3
+            case .headline: return .headline
+            case .subheadline: return .subheadline
+            case .body: return .body
+            case .callout: return .callout
+            case .footnote: return .footnote
+            case .caption: return .caption1
+            case .caption2: return .caption2
+            default: return .body
+            }
+        }()
+
+        let preferredFont = UIFont.preferredFont(forTextStyle: styledText)
+
+        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: preferredFont.pointSize, relativeTo: style)
     }
 }
 

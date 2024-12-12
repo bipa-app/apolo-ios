@@ -13,7 +13,7 @@ public enum TagStyle {
 
     var iconName: String? {
         switch self {
-        case .status(_, let icon), .label(let icon):
+        case let .status(_, icon), let .label(icon):
             return icon
         }
     }
@@ -36,7 +36,7 @@ public struct Tag: View {
 
     private var resolvedBackgroundColor: Color {
         switch style {
-        case .status(let backgroundColor, _):
+        case let .status(backgroundColor, _):
             return backgroundColor
         case .label:
             return .clear
@@ -48,7 +48,6 @@ public struct Tag: View {
             if let iconName = style.iconName {
                 Image(systemName: iconName)
                     .font(.caption)
-                    .frame(width: 24, height: 24)
                     .foregroundStyle(textColor ?? .primary)
             }
             Text(text)
@@ -58,21 +57,19 @@ public struct Tag: View {
         .padding(.vertical, 6)
         .padding(.horizontal, 12)
         .background(resolvedBackgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.small))
+        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
     }
 }
 
 #Preview {
-    VStack(spacing: 8) {
-        Tag(text: "Status Purple", style: .status(backgroundColor: .violet))
-        Tag(text: "Status Rose", style: .status(backgroundColor: .rose))
-        Tag(text: "Status with Icon",
-            style: .status(backgroundColor: .violet, icon: "checkmark"))
-        Tag(text: "Label Default", style: .label())
-        Tag(text: "Label with Icon", style: .label(icon: "bitcoinsign"))
+    VStack(alignment: .leading, spacing: 8) {
+        Tag(text: "LABEL", style: .label(icon: "bitcoinsign.circle.fill"))
+        Tag(text: "CONCLUÍDA", style: .status(backgroundColor: .green, icon: "checkmark.circle.fill"))
+        Tag(text: "PENDENTE", style: .status(backgroundColor: .yellow, icon: "clock.fill"))
+        Tag(text: "FALHADA", style: .status(backgroundColor: .red, icon: "exclamationmark.triangle.fill"))
         Tag(text: "Custom Text Color",
             style: .label(icon: "star.fill"),
-            textColor: .rose)
+            textColor: .pink)
     }
     .padding()
 }

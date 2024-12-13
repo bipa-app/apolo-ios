@@ -2,128 +2,99 @@
 //  Tags.swift
 //  Apolo
 //
-//  Created by Devin on 11/01/24.
+//  Created by Devin on 11/12/24.
 //
 
 import SwiftUI
 
-public enum TagStyle {
-    case label
-    case success
-    case warning
-    case error
-    case custom(backgroundColor: Color, textColor: Color)
-
-    var iconName: String? {
-        switch self {
-        case .success:
-            return "checkmark.circle.fill"
-        case .warning:
-            return "clock.fill"
-        case .error:
-            return "exclamationmark.triangle.fill"
-        case .label, .custom:
-            return nil
-        }
-    }
-
-    var backgroundColor: Color {
-        switch self {
-        case .label:
-            return .clear
-        case .success:
-            return .green
-        case .warning:
-            return .yellow
-        case .error:
-            return .red
-        case let .custom(backgroundColor, _):
-            return backgroundColor
-        }
-    }
-
-    var textColor: Color {
-        switch self {
-        case .custom(_, let textColor):
-            return textColor
-        case .label:
-            return .primary
-        default:
-            @Environment(\.colorScheme) var colorScheme
-            return colorScheme == .light ? .white : .black
-        }
-    }
-}
+// MARK: Tag
 
 public struct Tag: View {
-    @Environment(\.colorScheme) private var colorScheme
-
-    private let text: String
-    private let style: TagStyle
-    private let icon: String?
-
+    
+    // MARK: Public
+    
     public init(
-        style: TagStyle = .label,
-        text: String,
-        icon: String? = nil
+        style: Tag.Style = .label(),
+        title: String
     ) {
         self.style = style
-        self.text = text
-        self.icon = icon
+        self.title = title
     }
-
+    
     public var body: some View {
         HStack(spacing: Tokens.Spacing.extraExtraSmall) {
-            if let iconToUse = icon ?? style.iconName {
-                Image(systemName: iconToUse)
+            if let icon {
+                Image(systemName: icon)
                     .font(.caption)
-                    .frame(width: 24, height: 24)
-                    .foregroundStyle(style.textColor)
+                    .foregroundStyle(textColor)
             }
-
-            Text(text)
-                .subheadline(weight: .medium)
-                .foregroundStyle(style.textColor)
+            
+            Text(title)
+                .subheadline()
+                .foregroundStyle(textColor)
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 12)
-        .background(style.backgroundColor)
+        .background(backgroundColor)
         .clipShape(.rect(cornerRadius: Tokens.CornerRadius.large))
+    }
+    
+    // MARK: Private
+
+    private let style: Tag.Style
+    private let title: String
+    
+    private var backgroundColor: Color {
+        switch style {
+        case .label: .clear
+        case .success: .green
+        case .warning: .yellow
+        case .error: .red
+        case .custom(let backgroundColor, _, _): backgroundColor
+        }
+    }
+    
+    private var textColor: Color {
+        switch style {
+        case .custom(_, let textColor, _): textColor
+        case .label: .primary
+        default: Color(uiColor: .systemBackground)
+        }
+    }
+    
+    private var icon: String? {
+        switch style {
+        case .label(let icon): icon
+        case .success: "checkmark.circle.fill"
+        case .warning: "clock.fill"
+        case .error: "exclamationmark.triangle.fill"
+        case .custom(_, _, let icon): icon
+        }
     }
 }
 
-#Preview {
-    Group {
-        VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
-            Tag(style: .label, text: "LABEL", icon: "bitcoinsign.circle.fill")
-            Tag(style: .success, text: "CONCLUÍDA")
-            Tag(style: .warning, text: "PENDENTE")
-            Tag(style: .error, text: "FALHADA")
-            Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary),
-                text: "Crédito Virtual",
-                icon: "creditcard.fill")
-            Tag(style: .custom(backgroundColor: .indigo, textColor: .mint),
-                text: "Custom")
-        }
-        .padding()
-    }
-    .preferredColorScheme(.light)
-    .previewDisplayName("Light Mode")
+// MARK: Tag.Style
 
-    Group {
-        VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
-            Tag(style: .label, text: "LABEL", icon: "bitcoinsign.circle.fill")
-            Tag(style: .success, text: "CONCLUÍDA")
-            Tag(style: .warning, text: "PENDENTE")
-            Tag(style: .error, text: "FALHADA")
-            Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary),
-                text: "Crédito Virtual",
-                icon: "creditcard.fill")
-            Tag(style: .custom(backgroundColor: .indigo, textColor: .mint),
-                text: "Custom")
-        }
-        .padding()
+public extension Tag {
+    enum Style {
+        case label(icon: String? = nil)
+        case success
+        case warning
+        case error
+        case custom(backgroundColor: Color, textColor: Color, icon: String? = nil)
     }
-    .preferredColorScheme(.dark)
-    .previewDisplayName("Dark Mode")
+}
+
+// MARK: Preview
+
+#Preview {
+    VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
+        Tag(style: .label(icon: "bitcoinsign.circle.fill"), title: "LABEL")
+        Tag(style: .success, title: "CONCLUÍDA")
+        Tag(style: .warning, title: "PENDENTE")
+        Tag(style: .error, title: "FALHADA")
+        Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
+        Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom")
+    }
+    .padding()
 }

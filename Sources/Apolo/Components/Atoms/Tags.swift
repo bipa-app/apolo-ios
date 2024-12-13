@@ -46,11 +46,8 @@ public enum TagStyle {
         switch self {
         case .custom(_, let textColor):
             return textColor
-        case .label:
-            return .primary
         default:
-            @Environment(\.colorScheme) var colorScheme
-            return colorScheme == .light ? .white : .black
+            return .primary
         }
     }
 }

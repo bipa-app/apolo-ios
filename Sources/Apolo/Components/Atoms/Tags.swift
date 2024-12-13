@@ -46,8 +46,11 @@ public enum TagStyle {
         switch self {
         case .custom(_, let textColor):
             return textColor
-        default:
+        case .label:
             return .primary
+        default:
+            @Environment(\.colorScheme) var colorScheme
+            return colorScheme == .light ? .white : .black
         }
     }
 }
@@ -90,16 +93,37 @@ public struct Tag: View {
 }
 
 #Preview {
-    VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
-        Tag(style: .label, text: "LABEL", icon: "bitcoinsign.circle.fill")
-        Tag(style: .success, text: "CONCLUÍDA")
-        Tag(style: .warning, text: "PENDENTE")
-        Tag(style: .error, text: "FALHADA")
-        Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary),
-            text: "Crédito Virtual",
-            icon: "creditcard.fill")
-        Tag(style: .custom(backgroundColor: .indigo, textColor: .mint),
-            text: "Custom")
+    Group {
+        VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
+            Tag(style: .label, text: "LABEL", icon: "bitcoinsign.circle.fill")
+            Tag(style: .success, text: "CONCLUÍDA")
+            Tag(style: .warning, text: "PENDENTE")
+            Tag(style: .error, text: "FALHADA")
+            Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary),
+                text: "Crédito Virtual",
+                icon: "creditcard.fill")
+            Tag(style: .custom(backgroundColor: .indigo, textColor: .mint),
+                text: "Custom")
+        }
+        .padding()
     }
-    .padding()
+    .preferredColorScheme(.light)
+    .previewDisplayName("Light Mode")
+
+    Group {
+        VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
+            Tag(style: .label, text: "LABEL", icon: "bitcoinsign.circle.fill")
+            Tag(style: .success, text: "CONCLUÍDA")
+            Tag(style: .warning, text: "PENDENTE")
+            Tag(style: .error, text: "FALHADA")
+            Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary),
+                text: "Crédito Virtual",
+                icon: "creditcard.fill")
+            Tag(style: .custom(backgroundColor: .indigo, textColor: .mint),
+                text: "Custom")
+        }
+        .padding()
+    }
+    .preferredColorScheme(.dark)
+    .previewDisplayName("Dark Mode")
 }

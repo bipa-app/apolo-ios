@@ -8,68 +8,101 @@
 import SwiftUI
 
 public enum TagStyle {
-    case status(backgroundColor: Color, icon: String? = nil)
-    case label(icon: String? = nil)
+    case label
+    case success
+    case warning
+    case error
+    case custom(backgroundColor: Color, textColor: Color)
 
     var iconName: String? {
         switch self {
-        case let .status(_, icon), let .label(icon):
-            return icon
+        case .success:
+            return "checkmark.circle.fill"
+        case .warning:
+            return "clock.fill"
+        case .error:
+            return "exclamationmark.triangle.fill"
+        case .label, .custom:
+            return nil
+        }
+    }
+
+    var backgroundColor: Color {
+        switch self {
+        case .label:
+            return .clear
+        case .success:
+            return .green
+        case .warning:
+            return .yellow
+        case .error:
+            return .red
+        case let .custom(backgroundColor, _):
+            return backgroundColor
+        }
+    }
+
+    var textColor: Color {
+        switch self {
+        case .custom(_, let textColor):
+            return textColor
+        case .label:
+            return .primary
+        default:
+            @Environment(\.colorScheme) var colorScheme
+            return colorScheme == .light ? .white : .black
         }
     }
 }
 
 public struct Tag: View {
+    @Environment(\.colorScheme) private var colorScheme
+
     private let text: String
     private let style: TagStyle
-    private let textColor: Color?
+    private let icon: String?
 
     public init(
+        style: TagStyle = .label,
         text: String,
-        style: TagStyle = .label(),
-        textColor: Color? = nil
+        icon: String? = nil
     ) {
-        self.text = text
         self.style = style
-        self.textColor = textColor
-    }
-
-    private var resolvedBackgroundColor: Color {
-        switch style {
-        case let .status(backgroundColor, _):
-            return backgroundColor
-        case .label:
-            return .clear
-        }
+        self.text = text
+        self.icon = icon
     }
 
     public var body: some View {
         HStack(spacing: Tokens.Spacing.extraExtraSmall) {
-            if let iconName = style.iconName {
-                Image(systemName: iconName)
+            if let iconToUse = icon ?? style.iconName {
+                Image(systemName: iconToUse)
                     .font(.caption)
-                    .foregroundStyle(textColor ?? .primary)
+                    .frame(width: 24, height: 24)
+                    .foregroundStyle(style.textColor)
             }
+
             Text(text)
-                .caption1(weight: .medium)
-                .foregroundStyle(textColor ?? .primary)
+                .subheadline(weight: .medium)
+                .foregroundStyle(style.textColor)
         }
         .padding(.vertical, 6)
         .padding(.horizontal, 12)
-        .background(resolvedBackgroundColor)
-        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
+        .background(style.backgroundColor)
+        .clipShape(.rect(cornerRadius: Tokens.CornerRadius.large))
     }
 }
 
 #Preview {
-    VStack(alignment: .leading, spacing: 8) {
-        Tag(text: "LABEL", style: .label(icon: "bitcoinsign.circle.fill"))
-        Tag(text: "CONCLUÍDA", style: .status(backgroundColor: .green, icon: "checkmark.circle.fill"))
-        Tag(text: "PENDENTE", style: .status(backgroundColor: .yellow, icon: "clock.fill"))
-        Tag(text: "FALHADA", style: .status(backgroundColor: .red, icon: "exclamationmark.triangle.fill"))
-        Tag(text: "Custom Text Color",
-            style: .label(icon: "star.fill"),
-            textColor: .pink)
+    VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
+        Tag(style: .label, text: "LABEL", icon: "bitcoinsign.circle.fill")
+        Tag(style: .success, text: "CONCLUÍDA")
+        Tag(style: .warning, text: "PENDENTE")
+        Tag(style: .error, text: "FALHADA")
+        Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary),
+            text: "Crédito Virtual",
+            icon: "creditcard.fill")
+        Tag(style: .custom(backgroundColor: .indigo, textColor: .mint),
+            text: "Custom")
     }
     .padding()
 }

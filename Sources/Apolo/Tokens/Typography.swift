@@ -27,13 +27,13 @@ public enum FontWeight {
 
 public extension Font {
     // For fixed sizes (used by TypographyModifier)
-    static func abcGinto(size: CGFloat, weight: FontWeight) -> Font {
+    static func abcGinto(size: CGFloat, weight: FontWeight = .regular) -> Font {
         Bundle.ensureFontsRegistered()
         return .custom("\(Fonts.abcGinto)-\(weight.fontName)", fixedSize: size)
     }
 
     // For dynamic text styles (used by Text extensions)
-    static func abcGinto(style: Font.TextStyle, weight: FontWeight) -> Font {
+    static func abcGinto(style: Font.TextStyle, weight: FontWeight = .regular) -> Font {
         Bundle.ensureFontsRegistered()
 
         let styledText: UIFont.TextStyle = {

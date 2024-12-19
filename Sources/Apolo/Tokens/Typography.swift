@@ -9,6 +9,7 @@ import SwiftUI
 
 public enum Fonts {
     static let abcGinto = "ABCGinto"
+    static let notoEmoji = "NotoEmoji-Regular"
 }
 
 public enum FontWeight {
@@ -73,31 +74,32 @@ public struct TypographyModifier: ViewModifier {
 
 public extension Bundle {
     static func registerFonts() {
-        let fonts = [
-            "ABCGinto-Regular",
-            "ABCGinto-Medium",
-            "ABCGinto-Bold"
+        let fonts: [(name: String, ext: String)] = [
+            ("ABCGinto-Regular", "otf"),
+            ("ABCGinto-Medium", "otf"),
+            ("ABCGinto-Bold", "otf"),
+            ("NotoEmoji-Regular", "ttf")
         ]
 
-        for fontName in fonts {
-            guard let url = Bundle.module.url(forResource: fontName, withExtension: "otf") else {
-                print("Could not find font: \(fontName)")
+        for font in fonts {
+            guard let url = Bundle.module.url(forResource: font.name, withExtension: font.ext) else {
+                print("Could not find font: \(font.name)")
                 continue
             }
 
             guard let fontDataProvider = CGDataProvider(url: url as CFURL) else {
-                print("Could not create font data provider: \(fontName)")
+                print("Could not create font data provider: \(font.name)")
                 continue
             }
 
             guard let font = CGFont(fontDataProvider) else {
-                print("Could not create font: \(fontName)")
+                print("Could not create font: \(font.name)")
                 continue
             }
 
             var error: Unmanaged<CFError>?
             guard CTFontManagerRegisterGraphicsFont(font, &error) else {
-                print("Error registering font: \(fontName)")
+                print("Error registering font: \(String(describing: font.name))")
                 continue
             }
         }
@@ -112,6 +114,13 @@ public extension Bundle {
         }
 
         _ = FontRegistration.didRegister
+    }
+}
+
+public extension Font {
+    static func notoEmoji(size: CGFloat) -> Font {
+        Bundle.ensureFontsRegistered()
+        return .custom(Fonts.notoEmoji, fixedSize: size)
     }
 }
 

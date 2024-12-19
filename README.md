@@ -30,8 +30,8 @@ Apolo is Bipa's Design System, a set of guidelines that help our teams build our
   - [x] Caption1-2
 
 ### Iconography
-- [ ] SF Symbols
-- [ ] Noto Emoji
+- [x] SF Symbols
+- [x] Noto Emoji
 - [ ] Custom icon sets
 
 ### Layout & Spacing
@@ -53,11 +53,11 @@ Apolo is Bipa's Design System, a set of guidelines that help our teams build our
 - [x] Large (20)
 
 ### Atoms
-- [ ] Buttons
-  - [ ] Primary
-  - [ ] Secondary
-  - [ ] Ghost
-  - [ ] Icon buttons
+- [x] Buttons
+  - [x] Primary
+  - [x] Secondary
+  - [x] Ghost
+  - [x] Icon buttons
 - [ ] Toggles
   - [ ] Switch
   - [ ] Radio

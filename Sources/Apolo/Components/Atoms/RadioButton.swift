@@ -131,8 +131,9 @@ public struct RadioButton: View {
 
 // MARK: - Preview
 
-struct RadioButtonPreview: View {
-    @State private var selectedId = ""
+@available(iOS 17.0, *)
+#Preview {
+    @Previewable @State var selectedId = ""
 
     let options = [
         RadioOption(
@@ -152,17 +153,11 @@ struct RadioButtonPreview: View {
         )
     ]
 
-    var body: some View {
-        RadioButtonGroup(
-            options: options,
-            selectedId: $selectedId
-        ) { newSelectedId in
-            print("Selected option with id: \(newSelectedId)")
-        }
-        .padding()
+    RadioButtonGroup(
+        options: options,
+        selectedId: $selectedId
+    ) { newSelectedId in
+        print("Selected option with id: \(newSelectedId)")
     }
-}
-
-#Preview {
-    RadioButtonPreview()
+    .padding()
 }

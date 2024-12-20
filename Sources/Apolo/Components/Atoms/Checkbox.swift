@@ -84,29 +84,25 @@ public struct Checkbox: View {
     }
 }
 
-struct CheckboxPreview: View {
-    @State private var checked1 = false
-    @State private var checked2 = true
+// MARK: - Previews
 
-    var body: some View {
-        VStack(spacing: 16) {
-            Checkbox(label: "Default Checkbox", isChecked: $checked1) { newValue in
-                print("Checkbox tapped \(newValue)")
-            }
-
-            Checkbox(
-                label: "Checkbox with description",
-                description: "This is a description text that explains the checkbox",
-                isChecked: $checked2
-            ) { newValue in
-                print("Checkbox tapped \(newValue)")
-            }
-        }
-        .padding()
-    }
-}
-
+@available(iOS 17.0, *)
 #Preview {
-    CheckboxPreview()
-}
+    @Previewable @State var checked1 = false
+    @Previewable @State var checked2 = true
 
+    VStack(spacing: 16) {
+        Checkbox(label: "Default Checkbox", isChecked: $checked1) { newValue in
+            print("Checkbox tapped \(newValue)")
+        }
+
+        Checkbox(
+            label: "Checkbox with description",
+            description: "This is a description text that explains the checkbox",
+            isChecked: $checked2
+        ) { newValue in
+            print("Checkbox tapped \(newValue)")
+        }
+    }
+    .padding()
+}

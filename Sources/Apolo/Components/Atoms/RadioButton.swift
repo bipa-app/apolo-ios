@@ -12,10 +12,16 @@ import SwiftUI
 public struct RadioButtonGroup: View {
     private let options: [RadioOption]
     @Binding private var selectedId: String
+    private let onSelect: (String) -> Void
 
-    public init(options: [RadioOption], selectedId: Binding<String>) {
+    public init(
+        options: [RadioOption],
+        selectedId: Binding<String>,
+        onSelect: @escaping (String) -> Void
+    ) {
         self.options = options
         self._selectedId = selectedId
+        self.onSelect = onSelect
     }
 
     public var body: some View {
@@ -26,6 +32,7 @@ public struct RadioButtonGroup: View {
                     isSelected: selectedId == option.id
                 ) {
                     selectedId = option.id
+                    onSelect(option.id)
                 }
             }
         }
@@ -146,8 +153,13 @@ struct RadioButtonPreview: View {
     ]
 
     var body: some View {
-        RadioButtonGroup(options: options, selectedId: $selectedId)
-            .padding()
+        RadioButtonGroup(
+            options: options,
+            selectedId: $selectedId
+        ) { newSelectedId in
+            print("Selected option with id: \(newSelectedId)")
+        }
+        .padding()
     }
 }
 

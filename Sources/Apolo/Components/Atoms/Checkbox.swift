@@ -10,15 +10,23 @@ import SwiftUI
 public struct Checkbox: View {
     // MARK: - Properties
 
-    public var label: String?
-    public var description: String?
-    public var isActive: Bool
-    @State private var isPressed: Bool = false
+    private var label: String?
+    private var description: String?
+    @Binding private var isChecked: Bool
+    @State private var animate: Bool = false
+    private var onCheck: (Bool) -> Void
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
-    public init(label: String? = nil, description: String? = nil, isChecked: Bool) {
+    public init(
+        label: String? = nil,
+        description: String? = nil,
+        isChecked: Binding<Bool>,
+        onCheck: @escaping (Bool) -> Void
+    ) {
         self.label = label
         self.description = description
-        self.isActive = isChecked
+        self._isChecked = isChecked
+        self.onCheck = onCheck
     }
 
     // MARK: - Body
@@ -29,16 +37,21 @@ public struct Checkbox: View {
             labelStack
             Spacer()
         }
+        .onTapGesture {
+            feedbackGenerator.impactOccurred()
+            isChecked.toggle()
+            onCheck(isChecked)
+        }
     }
 
     // MARK: - UI Components
 
     private var checkboxSymbol: some View {
-        Image(systemName: isActive ? "checkmark.square.fill" : "square")
+        Image(systemName: isChecked ? "checkmark.square.fill" : "square")
             .font(.system(size: 20))
-            .foregroundStyle(isActive ? Color.primary : Color.secondary)
-            .scaleEffect(isPressed ? 0.95 : 1)
-            .animation(.bouncy(duration: 0.3), value: isPressed)
+            .foregroundStyle(isChecked ? Color.primary : Color.secondary)
+            .scaleEffect(animate ? 0.95 : 1)
+            .animation(.bouncy(duration: 0.3), value: animate)
             .simultaneousGesture(pressGesture)
     }
 
@@ -63,19 +76,37 @@ public struct Checkbox: View {
 
     private var pressGesture: some Gesture {
         DragGesture(minimumDistance: 0)
-            .onChanged { _ in isPressed = true }
-            .onEnded { _ in isPressed = false }
+            .onChanged { _ in
+                animate = true
+                feedbackGenerator.prepare()
+            }
+            .onEnded { _ in animate = false }
+    }
+}
+
+struct CheckboxPreview: View {
+    @State private var checked1 = false
+    @State private var checked2 = true
+
+    var body: some View {
+        VStack(spacing: 16) {
+            Checkbox(label: "Default Checkbox", isChecked: $checked1) { newValue in
+                print("Checkbox tapped \(newValue)")
+            }
+
+            Checkbox(
+                label: "Checkbox with description",
+                description: "This is a description text that explains the checkbox",
+                isChecked: $checked2
+            ) { newValue in
+                print("Checkbox tapped \(newValue)")
+            }
+        }
+        .padding()
     }
 }
 
 #Preview {
-    VStack(spacing: 16) {
-        Checkbox(label: "Default Checkbox", isChecked: false)
-        Checkbox(
-            label: "Checkbox with description",
-            description: "This is a description text that explains the checkbox",
-            isChecked: true
-        )
-    }
-    .padding()
+    CheckboxPreview()
 }
+

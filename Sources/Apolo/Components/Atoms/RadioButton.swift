@@ -7,20 +7,73 @@
 
 import SwiftUI
 
+// MARK: - Radio Button Group
+
+public struct RadioButtonGroup: View {
+    private let options: [RadioOption]
+    @Binding private var selectedId: String
+    private let onSelect: (String) -> Void
+
+    public init(
+        options: [RadioOption],
+        selectedId: Binding<String>,
+        onSelect: @escaping (String) -> Void
+    ) {
+        self.options = options
+        self._selectedId = selectedId
+        self.onSelect = onSelect
+    }
+
+    public var body: some View {
+        VStack(alignment: .leading, spacing: 16) {
+            ForEach(options) { option in
+                RadioButton(
+                    option: option,
+                    isSelected: selectedId == option.id
+                ) {
+                    selectedId = option.id
+                    onSelect(option.id)
+                }
+            }
+        }
+    }
+}
+
+// MARK: - Radio Option
+
+public struct RadioOption: Identifiable {
+    public let id: String
+    public let label: String
+    public let description: String?
+
+    public init(id: String, label: String, description: String? = nil) {
+        self.id = id
+        self.label = label
+        self.description = description
+    }
+}
+
+// MARK: - Radio Button
+
 public struct RadioButton: View {
     // MARK: - Properties
 
-    public var label: String?
-    public var description: String?
-    public var isActive: Bool
-    @State private var isPressed: Bool = false
-    
-    init(label: String? = nil, description: String? = nil, isActive: Bool) {
-        self.label = label
-        self.description = description
-        self.isActive = isActive
+    private let option: RadioOption
+    private let isSelected: Bool
+    private let action: () -> Void
+    @State private var animate: Bool = false
+    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+
+    init(
+        option: RadioOption,
+        isSelected: Bool,
+        action: @escaping () -> Void
+    ) {
+        self.option = option
+        self.isSelected = isSelected
+        self.action = action
     }
-    
+
     // MARK: - Body
 
     public var body: some View {
@@ -29,54 +82,82 @@ public struct RadioButton: View {
             labelStack
             Spacer()
         }
+        .onTapGesture {
+            feedbackGenerator.impactOccurred()
+            action()
+        }
     }
-    
+
     // MARK: - UI Components
 
     private var radioCircle: some View {
         ZStack {
             Circle()
-                .fill(isActive ? Color.primary : Color.clear)
+                .fill(isSelected ? Color.primary : Color.clear)
                 .frame(width: 10, height: 10)
             Circle()
                 .stroke(Color.secondary, lineWidth: 1)
                 .frame(width: 24, height: 24)
         }
-        .scaleEffect(x: isPressed ? 0.95 : 1, y: isPressed ? 0.95 : 1)
-        .animation(.bouncy(duration: 0.3), value: isPressed)
+        .scaleEffect(x: animate ? 0.95 : 1, y: animate ? 0.95 : 1)
+        .animation(.bouncy(duration: 0.3), value: animate)
         .simultaneousGesture(pressGesture)
     }
-    
+
     private var labelStack: some View {
-        Group {
-            if let label = label {
-                VStack(alignment: .leading) {
-                    Text(label)
-                        .body()
-                    
-                    if let description = description {
-                        Text(description)
-                            .footnote()
-                            .foregroundStyle(Color.secondary)
-                    }
-                }
+        VStack(alignment: .leading) {
+            Text(option.label)
+                .body()
+
+            if let description = option.description {
+                Text(description)
+                    .footnote()
+                    .foregroundStyle(Color.secondary)
             }
         }
     }
-    
+
     // MARK: - Gestures
 
     private var pressGesture: some Gesture {
         DragGesture(minimumDistance: 0)
-            .onChanged { _ in isPressed = true }
-            .onEnded { _ in isPressed = false }
+            .onChanged { _ in
+                animate = true
+                feedbackGenerator.prepare()
+            }
+            .onEnded { _ in animate = false }
     }
 }
 
+// MARK: - Preview
+
+@available(iOS 17.0, *)
 #Preview {
-    VStack {
-        RadioButton(label: "Testando", isActive: false)
-        RadioButton(label: "Testing", description: "Description", isActive: false)
+    @Previewable @State var selectedId = ""
+
+    let options = [
+        RadioOption(
+            id: "1",
+            label: "First Option",
+            description: "Bitcoin was made by Satoshi Nakamoto"
+        ),
+        RadioOption(
+            id: "2",
+            label: "Second Option",
+            description: "Bitcoin was made by Satoshi Nakamoto"
+        ),
+        RadioOption(
+            id: "3",
+            label: "Third Option",
+            description: "Bitcoin was made by Satoshi Nakamoto"
+        )
+    ]
+
+    RadioButtonGroup(
+        options: options,
+        selectedId: $selectedId
+    ) { newSelectedId in
+        print("Selected option with id: \(newSelectedId)")
     }
     .padding()
 }

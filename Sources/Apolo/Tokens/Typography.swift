@@ -142,17 +142,17 @@ public extension Text {
 
     /// Title 1 style (28/34, Bold)
     func title1() -> some View {
-        font(.abcGinto(style: .largeTitle, weight: .bold))
+        font(.abcGinto(style: .title, weight: .bold))
     }
 
     /// Title 2 style (22/28, Bold)
     func title2() -> some View {
-        font(.abcGinto(style: .title, weight: .bold))
+        font(.abcGinto(style: .title2, weight: .bold))
     }
 
     /// Title 3 style with weight option (20/25)
     func title3(weight: FontWeight = .bold) -> some View {
-        font(.abcGinto(style: .title2, weight: weight))
+        font(.abcGinto(style: .title3, weight: weight))
     }
 
     /// Headline style (17/24, Medium)

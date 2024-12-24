@@ -78,6 +78,9 @@ public extension Bundle {
             ("ABCGinto-Regular", "otf"),
             ("ABCGinto-Medium", "otf"),
             ("ABCGinto-Bold", "otf"),
+            ("ABCGinto-RegularItalic", "otf"),
+            ("ABCGinto-MediumItalic", "otf"),
+            ("ABCGinto-BoldItalic", "otf"),
             ("NotoEmoji-Regular", "ttf")
         ]
 

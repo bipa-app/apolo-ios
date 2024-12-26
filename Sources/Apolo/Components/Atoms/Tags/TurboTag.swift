@@ -7,25 +7,12 @@
 
 import SwiftUI
 
+// MARK: Turbo Tag
+
 struct TurboTag: View {
     @State private var phase: CGFloat = 0
 
     var body: some View {
-        turboContent
-            .padding(.vertical, Tokens.Spacing.extraSmall)
-            .padding(.horizontal, Tokens.Spacing.small)
-            .background(
-                TurboBackground(phase: phase)
-            )
-            .clipShape(.rect(cornerRadius: Tokens.CornerRadius.large))
-            .onAppear {
-                withAnimation(.linear(duration: 8).repeatForever(autoreverses: true)) {
-                    phase = .pi * 2
-                }
-            }
-    }
-
-    var turboContent: some View {
         HStack(spacing: Tokens.Spacing.extraExtraSmall) {
             Text("Bipa")
                 .subheadline()
@@ -35,24 +22,29 @@ struct TurboTag: View {
                 .italic()
         }
         .foregroundStyle(.white)
+        .padding(.vertical, Tokens.Spacing.extraSmall)
+        .padding(.horizontal, Tokens.Spacing.small)
+        .background(
+            Rectangle()
+                .fill(RadialGradient(gradient: Gradient(colors: [
+                    Color(red: 255/255, green: 187/255, blue: 0/255),
+                    Color(red: 255/255, green: 109/255, blue: 0/255),
+                    Color(red: 217/255, green: 93/255, blue: 213/255),
+                    Color(red: 57/255, green: 121/255, blue: 255/255)
+                ]), center: .center, startRadius: 40, endRadius: 4))
+                .modifier(FlowEffect(phase: phase))
+                .scaleEffect(4)
+        )
+        .clipShape(.rect(cornerRadius: Tokens.CornerRadius.large))
+        .onAppear {
+            withAnimation(.linear(duration: 8).repeatForever(autoreverses: true)) {
+                phase = .pi * 2
+            }
+        }
     }
 }
 
-private struct TurboBackground: View {
-    let phase: CGFloat
-
-    var body: some View {
-        Rectangle()
-            .fill(RadialGradient(gradient: Gradient(colors: [
-                Color(red: 255/255, green: 187/255, blue: 0/255),
-                Color(red: 255/255, green: 109/255, blue: 0/255),
-                Color(red: 217/255, green: 93/255, blue: 213/255),
-                Color(red: 57/255, green: 121/255, blue: 255/255)
-            ]), center: .center, startRadius: 40, endRadius: 4))
-            .modifier(FlowEffect(phase: phase))
-            .scaleEffect(4)
-    }
-}
+// MARK: Animation
 
 private struct FlowEffect: GeometryEffect {
     var phase: CGFloat

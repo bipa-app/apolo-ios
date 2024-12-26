@@ -51,12 +51,14 @@ public struct Tag: View {
     }
 
     private let style: Style
-    private let title: String
+    private let title: String?
 
-    public init(
-        style: Style = .label(),
-        title: String
-    ) {
+    public init(style: Style = .label()) {
+        self.style = style
+        self.title = nil
+    }
+
+    public init(style: Style = .label(), title: String) {
         self.style = style
         self.title = title
     }
@@ -64,27 +66,13 @@ public struct Tag: View {
     public var body: some View {
         if case .turbo = style {
             TurboTag()
-        } else {
-            HStack(spacing: Tokens.Spacing.extraExtraSmall) {
-                if let icon = style.icon {
-                    Image(systemName: icon)
-                        .font(.caption)
-                        .foregroundStyle(style.textColor)
-                }
-
-                Text(title)
-                    .subheadline()
-                    .foregroundStyle(style.textColor)
-            }
-            .padding(.vertical, Tokens.Spacing.extraSmall)
-            .padding(.horizontal, Tokens.Spacing.small)
-            .background(style.backgroundColor)
-            .clipShape(.rect(cornerRadius: Tokens.CornerRadius.large))
+        } else if let title {
+            PlainTag(style: style, title: title)
         }
     }
 }
 
-// MARK: - Preview
+// MARK: Preview
 
 #Preview {
     VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
@@ -93,7 +81,7 @@ public struct Tag: View {
         Tag(style: .warning, title: "PENDENTE")
         Tag(style: .error, title: "FALHADA")
         Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
-        Tag(style: .turbo, title: "")
+        Tag(style: .turbo)
         Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom")
     }
     .padding()

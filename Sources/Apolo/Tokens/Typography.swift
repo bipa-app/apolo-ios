@@ -137,7 +137,7 @@ private extension View {
     }
 }
 
-public extension Text {
+public extension View {
     /// Super large title style (48/60, Bold)
     func superLargeTitle() -> some View {
         modifier(TypographyModifier(size: 48, lineHeight: 60, weight: .bold))
@@ -245,6 +245,8 @@ public extension Text {
 
             Text("Caption 2")
                 .caption2()
+            Image(systemName: "bitcoinsign.circle")
+                .extraLargeTitle()
         }
         .padding()
     }

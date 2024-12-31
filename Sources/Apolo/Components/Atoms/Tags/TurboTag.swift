@@ -37,7 +37,7 @@ struct TurboTag: View {
         )
         .clipShape(.rect(cornerRadius: Tokens.CornerRadius.large))
         .onAppear {
-            withAnimation(.linear(duration: 8).repeatForever(autoreverses: true)) {
+            withAnimation(.linear(duration: 8).repeatForever(autoreverses: false)) {
                 phase = .pi * 2
             }
         }

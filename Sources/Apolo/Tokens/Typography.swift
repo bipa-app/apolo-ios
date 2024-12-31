@@ -69,6 +69,7 @@ public struct TypographyModifier: ViewModifier {
         content
             .font(.abcGinto(size: size, weight: weight))
             .lineSpacing(lineHeight - size)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 

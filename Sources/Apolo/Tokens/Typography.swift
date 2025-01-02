@@ -69,6 +69,7 @@ public struct TypographyModifier: ViewModifier {
         content
             .font(.abcGinto(size: size, weight: weight))
             .lineSpacing(lineHeight - size)
+            .fixedSize(horizontal: false, vertical: true)
     }
 }
 
@@ -127,7 +128,16 @@ public extension Font {
     }
 }
 
-public extension Text {
+///  Create a new extension for View that combines font, fixedSize and maybe more modifiers in the future.
+private extension View {
+    func apoloFont(_ font: Font) -> some View {
+        self
+            .font(font)
+            .fixedSize(horizontal: false, vertical: true)
+    }
+}
+
+public extension View {
     /// Super large title style (48/60, Bold)
     func superLargeTitle() -> some View {
         modifier(TypographyModifier(size: 48, lineHeight: 60, weight: .bold))
@@ -145,52 +155,52 @@ public extension Text {
 
     /// Title 1 style (28/34, Bold)
     func title1() -> some View {
-        font(.abcGinto(style: .title, weight: .bold))
+        apoloFont(.abcGinto(style: .title, weight: .bold))
     }
 
     /// Title 2 style (22/28, Bold)
     func title2() -> some View {
-        font(.abcGinto(style: .title2, weight: .bold))
+        apoloFont(.abcGinto(style: .title2, weight: .bold))
     }
 
     /// Title 3 style with weight option (20/25)
     func title3(weight: FontWeight = .bold) -> some View {
-        font(.abcGinto(style: .title3, weight: weight))
+        apoloFont(.abcGinto(style: .title3, weight: weight))
     }
 
     /// Headline style (17/24, Medium)
     func headline() -> some View {
-        font(.abcGinto(style: .headline, weight: .medium))
+        apoloFont(.abcGinto(style: .headline, weight: .medium))
     }
 
     /// Body style with weight option (17/22)
     func body(weight: FontWeight = .regular) -> some View {
-        font(.abcGinto(style: .body, weight: weight))
+        apoloFont(.abcGinto(style: .body, weight: weight))
     }
 
     /// Callout style with weight option (16/21)
     func callout(weight: FontWeight = .regular) -> some View {
-        font(.abcGinto(style: .callout, weight: weight))
+        apoloFont(.abcGinto(style: .callout, weight: weight))
     }
 
     /// Subheadline style with weight option (15/20)
     func subheadline(weight: FontWeight = .regular) -> some View {
-        font(.abcGinto(style: .subheadline, weight: weight))
+        apoloFont(.abcGinto(style: .subheadline, weight: weight))
     }
 
     /// Footnote style with weight option (13/18)
     func footnote(weight: FontWeight = .regular) -> some View {
-        font(.abcGinto(style: .footnote, weight: weight))
+        apoloFont(.abcGinto(style: .footnote, weight: weight))
     }
 
     /// Caption 1 style with weight option (12/16)
     func caption1(weight: FontWeight = .regular) -> some View {
-        font(.abcGinto(style: .caption, weight: weight))
+        apoloFont(.abcGinto(style: .caption, weight: weight))
     }
 
     /// Caption 2 style with weight option (11/13)
     func caption2(weight: FontWeight = .regular) -> some View {
-        font(.abcGinto(style: .caption2, weight: weight))
+        apoloFont(.abcGinto(style: .caption2, weight: weight))
     }
 }
 
@@ -235,6 +245,8 @@ public extension Text {
 
             Text("Caption 2")
                 .caption2()
+            Image(systemName: "bitcoinsign.circle")
+                .extraLargeTitle()
         }
         .padding()
     }

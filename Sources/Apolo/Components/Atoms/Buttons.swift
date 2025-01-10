@@ -51,7 +51,7 @@ public extension Button {
     func borderedProminentStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
-        size: ControlSize = .regular,
+        size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
         self
@@ -66,7 +66,7 @@ public extension Button {
     func borderedStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
-        size: ControlSize = .regular,
+        size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
         self
@@ -81,7 +81,7 @@ public extension Button {
     func plainStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
-        size: ControlSize = .regular,
+        size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
         self
@@ -95,7 +95,7 @@ public extension Button {
 
     func strokedStyle(
         shape: CustomButtonShape = .capsule,
-        size: ControlSize = .regular,
+        size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
         self

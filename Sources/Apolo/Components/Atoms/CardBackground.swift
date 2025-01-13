@@ -56,7 +56,7 @@ public extension CardBackground {
 
 public extension View {
     func cardBackground(
-        _ style: CardBackground.Style,
+        _ style: CardBackground.Style = .primary,
         cornerRadius: CGFloat = Tokens.CornerRadius.large
     ) -> some View {
         self.background(
@@ -80,7 +80,7 @@ public extension View {
     VStack {
         Text("Primary")
             .padding()
-            .cardBackground(.primary)
+            .cardBackground()
         
         Text("Secondary")
             .padding()
@@ -101,6 +101,6 @@ public extension View {
             .background(CardBackground())
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .cardBackground(color: .black.opacity(0.1))
+    .cardBackground(color: .secondary)
     .padding()
 }

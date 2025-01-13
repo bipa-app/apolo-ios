@@ -1,0 +1,106 @@
+//
+//  Background.swift
+//  Apolo
+//
+//  Created by Ramon Santos on 13/01/25.
+//
+
+import Foundation
+import SwiftUI
+import UIKit
+
+// MARK: CardBackground
+
+public struct CardBackground: View {
+
+    public var style: Style?
+    public var color: Color
+    public var cornerRadius: CGFloat
+    
+    public init(_ style: Style = .primary, cornerRadius: CGFloat = Tokens.CornerRadius.large) {
+        self.style = style
+        self.color = style.color
+        self.cornerRadius = cornerRadius
+    }
+    
+    public init(color: Color, cornerRadius: CGFloat = Tokens.CornerRadius.large) {
+        self.color = color
+        self.cornerRadius = cornerRadius
+    }
+    
+    public var body: some View {
+        RoundedRectangle(cornerRadius: cornerRadius)
+            .fill(color)
+    }
+}
+
+// MARK: - Style
+
+public extension CardBackground {
+    enum Style {
+        case primary
+        case secondary
+
+        var color: Color {
+            switch self {
+            case .primary:
+                return Color(.secondarySystemGroupedBackground)
+            case .secondary:
+                return Color(.systemGroupedBackground)
+            }
+        }
+    }
+}
+
+// MARK: - Modifiers
+
+public extension View {
+    func cardBackground(
+        _ style: CardBackground.Style,
+        cornerRadius: CGFloat = Tokens.CornerRadius.large
+    ) -> some View {
+        self.background(
+            CardBackground(color: style.color, cornerRadius: cornerRadius)
+        )
+    }
+    
+    func cardBackground(
+        color: Color,
+        cornerRadius: CGFloat = Tokens.CornerRadius.large
+    ) -> some View {
+        self.background(
+            CardBackground(color: color, cornerRadius: cornerRadius)
+        )
+    }
+}
+
+// MARK: - Preview
+
+#Preview {
+    VStack {
+        Text("Primary")
+            .padding()
+            .cardBackground(.primary)
+        
+        Text("Secondary")
+            .padding()
+            .cardBackground(.secondary)
+
+        Text("Custom Color")
+            .padding()
+            .cardBackground(color: .yellow)
+        
+        Button(action: {}, label: {
+            Text("Button with Primary")
+                .padding()
+                .cardBackground(.primary)
+        })
+        
+        Label("Label", systemImage: "gear")
+            .padding()
+            .background(CardBackground())
+    }
+    .frame(maxWidth: .infinity, maxHeight: .infinity)
+    .cardBackground(color: .black.opacity(0.1))
+    .padding()
+}

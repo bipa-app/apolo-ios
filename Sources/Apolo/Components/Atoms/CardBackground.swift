@@ -46,7 +46,7 @@ public extension CardBackground {
             case .primary:
                 return Color(.secondarySystemGroupedBackground)
             case .secondary:
-                return Color(.systemGroupedBackground)
+                return Color(.tertiarySystemGroupedBackground)
             }
         }
     }

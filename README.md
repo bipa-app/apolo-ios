@@ -58,20 +58,19 @@ Apolo is Bipa's Design System, a set of guidelines that help our teams build our
   - [x] Secondary
   - [x] Ghost
   - [x] Icon buttons
-- [ ] Toggles
-  - [ ] Switch
-  - [ ] Radio
-  - [ ] Checkbox
+- [x] Toggles
+  - [x] Switch
+  - [x] Radio
+  - [x] Checkbox
 - [ ] Avatar
   - [ ] User avatars
   - [ ] Placeholder avatars
-- [ ] Tags
-  - [ ] Status tags
-  - [ ] Label tags
+- [x] Tags
+  - [x] Status tags
+  - [x] Label tags
 - [ ] Duration Button
 - [ ] Charts
-- [ ] Background styles
-- [ ] Screen templates
+- [x] Background styles
 
 ### Brand Assets
 - [ ] Bipa Symbol

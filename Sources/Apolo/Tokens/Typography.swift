@@ -154,8 +154,8 @@ public extension View {
     }
 
     /// Title 1 style (28/34, Bold)
-    func title1() -> some View {
-        apoloFont(.abcGinto(style: .title, weight: .bold))
+    func title1(weight: FontWeight = .medium) -> some View {
+        apoloFont(.abcGinto(style: .title, weight: weight))
     }
 
     /// Title 2 style (22/28, Bold)

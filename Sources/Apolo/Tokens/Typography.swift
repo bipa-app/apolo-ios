@@ -159,7 +159,7 @@ public extension View {
     }
 
     /// Title 2 style (22/28, Bold)
-    func title2(weight: FontWeight = .bold) -> some View {
+    func title2(weight: FontWeight = .medium) -> some View {
         apoloFont(.abcGinto(style: .title2, weight: weight))
     }
 

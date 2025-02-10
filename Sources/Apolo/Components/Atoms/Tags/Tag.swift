@@ -10,7 +10,7 @@ import SwiftUI
 // MARK: Tag
 
 public struct Tag: View {
-    public enum Style {
+    public enum Style: Equatable {
         case label(icon: String? = nil)
         case success
         case warning

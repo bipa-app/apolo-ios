@@ -11,16 +11,19 @@ import SwiftUI
 
 public struct RadioButtonGroup: View {
     private let options: [RadioOption]
+    private let style: RadioButtonStyle
     @Binding private var selectedId: String
     private let onSelect: (String) -> Void
 
     public init(
         options: [RadioOption],
         selectedId: Binding<String>,
+        style: RadioButtonStyle = .standard,
         onSelect: @escaping (String) -> Void
     ) {
         self.options = options
         self._selectedId = selectedId
+        self.style = style
         self.onSelect = onSelect
     }
 
@@ -29,7 +32,8 @@ public struct RadioButtonGroup: View {
             ForEach(options) { option in
                 RadioButton(
                     option: option,
-                    isSelected: selectedId == option.id
+                    isSelected: selectedId == option.id,
+                    style: style
                 ) {
                     selectedId = option.id
                     onSelect(option.id)
@@ -53,6 +57,13 @@ public struct RadioOption: Identifiable {
     }
 }
 
+// MARK: - Radio Button Style
+
+public enum RadioButtonStyle {
+    case standard // Body label with footnote description
+    case reversed // Footnote label with body description
+}
+
 // MARK: - Radio Button
 
 public struct RadioButton: View {
@@ -60,6 +71,7 @@ public struct RadioButton: View {
 
     private let option: RadioOption
     private let isSelected: Bool
+    private let style: RadioButtonStyle
     private let action: () -> Void
     @State private var animate: Bool = false
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
@@ -67,10 +79,12 @@ public struct RadioButton: View {
     init(
         option: RadioOption,
         isSelected: Bool,
+        style: RadioButtonStyle = .standard,
         action: @escaping () -> Void
     ) {
         self.option = option
         self.isSelected = isSelected
+        self.style = style
         self.action = action
     }
 
@@ -106,13 +120,25 @@ public struct RadioButton: View {
 
     private var labelStack: some View {
         VStack(alignment: .leading) {
-            Text(option.label)
-                .body()
+            switch style {
+            case .standard:
+                Text(option.label)
+                    .callout(weight: .medium)
 
-            if let description = option.description {
-                Text(description)
-                    .footnote()
+                if let description = option.description {
+                    Text(description)
+                        .subheadline()
+                        .foregroundStyle(Color.secondary)
+                }
+            case .reversed:
+                Text(option.label)
+                    .subheadline()
                     .foregroundStyle(Color.secondary)
+
+                if let description = option.description {
+                    Text(description)
+                        .callout(weight: .medium)
+                }
             }
         }
     }
@@ -153,11 +179,23 @@ public struct RadioButton: View {
         )
     ]
 
-    RadioButtonGroup(
-        options: options,
-        selectedId: $selectedId
-    ) { newSelectedId in
-        print("Selected option with id: \(newSelectedId)")
+    VStack {
+        RadioButtonGroup(
+            options: options,
+            selectedId: $selectedId,
+            style: .standard
+        ) { newSelectedId in
+            print("Selected option with id: \(newSelectedId)")
+        }
+
+
+        RadioButtonGroup(
+            options: options,
+            selectedId: $selectedId,
+            style: .reversed
+        ) { newSelectedId in
+            print("Selected option with id: \(newSelectedId)")
+        }
     }
     .padding()
 }

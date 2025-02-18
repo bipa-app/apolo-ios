@@ -28,8 +28,8 @@ public struct RadioButtonGroup: View {
     }
 
     public var body: some View {
-        VStack(alignment: .leading, spacing: 16) {
-            ForEach(options) { option in
+        VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
+            ForEach(Array(options.enumerated()), id: \.element.id) { index, option in
                 RadioButton(
                     option: option,
                     isSelected: selectedId == option.id,
@@ -37,6 +37,10 @@ public struct RadioButtonGroup: View {
                 ) {
                     selectedId = option.id
                     onSelect(option.id)
+                }
+
+                if index < options.count - 1 {
+                    Separator()
                 }
             }
         }
@@ -188,6 +192,8 @@ public struct RadioButton: View {
             print("Selected option with id: \(newSelectedId)")
         }
 
+        Separator()
+            .padding(.vertical, Tokens.Spacing.extraExtraLarge)
 
         RadioButtonGroup(
             options: options,

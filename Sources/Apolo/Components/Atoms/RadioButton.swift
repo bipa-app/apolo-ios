@@ -11,19 +11,16 @@ import SwiftUI
 
 public struct RadioButtonGroup: View {
     private let options: [RadioOption]
-    private let style: RadioButtonStyle
     @Binding private var selectedId: String
     private let onSelect: (String) -> Void
 
     public init(
         options: [RadioOption],
         selectedId: Binding<String>,
-        style: RadioButtonStyle = .standard,
         onSelect: @escaping (String) -> Void
     ) {
         self.options = options
         self._selectedId = selectedId
-        self.style = style
         self.onSelect = onSelect
     }
 
@@ -33,7 +30,7 @@ public struct RadioButtonGroup: View {
                 RadioButton(
                     option: option,
                     isSelected: selectedId == option.id,
-                    style: style
+                    style: option.style
                 ) {
                     selectedId = option.id
                     onSelect(option.id)
@@ -53,11 +50,18 @@ public struct RadioOption: Identifiable {
     public let id: String
     public let label: String
     public let description: String?
+    public let style: RadioButtonStyle
 
-    public init(id: String, label: String, description: String? = nil) {
+    public init(
+        id: String,
+        label: String,
+        description: String? = nil,
+        style: RadioButtonStyle = .standard
+    ) {
         self.id = id
         self.label = label
         self.description = description
+        self.style = style
     }
 }
 
@@ -179,15 +183,15 @@ public struct RadioButton: View {
         RadioOption(
             id: "3",
             label: "Third Option",
-            description: "Bitcoin was made by Satoshi Nakamoto"
+            description: "Bitcoin was made by Satoshi Nakamoto",
+            style: .reversed
         )
     ]
 
     VStack {
         RadioButtonGroup(
             options: options,
-            selectedId: $selectedId,
-            style: .standard
+            selectedId: $selectedId
         ) { newSelectedId in
             print("Selected option with id: \(newSelectedId)")
         }
@@ -197,8 +201,7 @@ public struct RadioButton: View {
 
         RadioButtonGroup(
             options: options,
-            selectedId: $selectedId,
-            style: .reversed
+            selectedId: $selectedId
         ) { newSelectedId in
             print("Selected option with id: \(newSelectedId)")
         }

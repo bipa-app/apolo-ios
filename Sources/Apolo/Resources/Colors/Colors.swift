@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-extension Color {
-    public static let violet = Color(.violet)
-    public static let rose = Color(.rose)
+public extension Color {
+    static let violet = Color("Violet", bundle: .module)
+    static let rose = Color("Rose", bundle: .module)
 }

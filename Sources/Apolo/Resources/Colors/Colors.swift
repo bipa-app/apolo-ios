@@ -8,6 +8,6 @@
 import SwiftUI
 
 public extension Color {
-    static let violet = Color("Violet")
-    static let rose = Color("Rose")
+    static let violet = Color("Violet", bundle: .module)
+    static let rose = Color("Rose", bundle: .module)
 }

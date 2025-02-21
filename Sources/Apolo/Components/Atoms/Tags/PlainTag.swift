@@ -12,21 +12,24 @@ import SwiftUI
 struct PlainTag: View {
     let style: Tag.Style
     let title: String
+    let size: Tag.Size
 
     var body: some View {
         HStack(spacing: Tokens.Spacing.extraExtraSmall) {
             if let icon = style.icon {
-                Image(systemName: icon)
-                    .font(.caption)
-                    .foregroundStyle(style.textColor)
+                size.applyTypography(
+                    Image(systemName: icon)
+                        .foregroundStyle(style.textColor)
+                )
             }
 
-            Text(title)
-                .subheadline()
-                .foregroundStyle(style.textColor)
+            size.applyTypography(
+                Text(title)
+                    .foregroundStyle(style.textColor)
+            )
         }
-        .padding(.vertical, Tokens.Spacing.extraSmall)
-        .padding(.horizontal, Tokens.Spacing.small)
+        .padding(.vertical, size.verticalPadding)
+        .padding(.horizontal, size.horizontalPadding)
         .background(style.backgroundColor)
         .clipShape(.rect(cornerRadius: Tokens.CornerRadius.large))
     }

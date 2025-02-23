@@ -82,7 +82,7 @@ public extension Bundle {
             ("ABCGinto-RegularItalic", "otf"),
             ("ABCGinto-MediumItalic", "otf"),
             ("ABCGinto-BoldItalic", "otf"),
-            ("NotoEmoji-Regular", "ttf")
+            ("NotoEmoji-Regular", "ttf"),
         ]
 
         for font in fonts {
@@ -138,19 +138,24 @@ private extension View {
 }
 
 public extension View {
+    /// Extremely large title style (80/80, Bold)
+    func extremelyLargeTitle(weight: FontWeight = .bold) -> some View {
+        modifier(TypographyModifier(size: 80, lineHeight: 80, weight: weight))
+    }
+
     /// Super large title style (48/60, Bold)
-    func superLargeTitle() -> some View {
-        modifier(TypographyModifier(size: 48, lineHeight: 60, weight: .bold))
+    func superLargeTitle(weight: FontWeight = .bold) -> some View {
+        modifier(TypographyModifier(size: 60, lineHeight: 60, weight: weight))
     }
 
     /// Extra large title style (44/55, Bold)
-    func extraLargeTitle() -> some View {
-        modifier(TypographyModifier(size: 44, lineHeight: 55, weight: .bold))
+    func extraLargeTitle(weight: FontWeight = .bold) -> some View {
+        modifier(TypographyModifier(size: 44, lineHeight: 55, weight: weight))
     }
 
     /// Extra large title 2 style (36/45, Bold)
-    func extraLargeTitle2() -> some View {
-        modifier(TypographyModifier(size: 36, lineHeight: 45, weight: .bold))
+    func extraLargeTitle2(weight: FontWeight = .bold) -> some View {
+        modifier(TypographyModifier(size: 36, lineHeight: 45, weight: weight))
     }
 
     /// Title 1 style (28/34, Bold)
@@ -207,7 +212,10 @@ public extension View {
 #Preview {
     ScrollView {
         VStack(alignment: .leading) {
-            Text("Super Large Title")
+            Text("R$ 0")
+                .extremelyLargeTitle(weight: .medium)
+
+            Text("R$ 0")
                 .superLargeTitle()
 
             Text("Extra Large Title")

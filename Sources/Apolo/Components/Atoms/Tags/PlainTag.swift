@@ -27,6 +27,13 @@ struct PlainTag: View {
                 Text(title)
                     .foregroundStyle(style.textColor)
             )
+
+            if let secondaryIcon = style.secondaryIcon {
+                size.applyTypography(
+                    Image(systemName: secondaryIcon)
+                        .foregroundStyle(style.textColor)
+                )
+            }
         }
         .padding(.vertical, size.verticalPadding)
         .padding(.horizontal, size.horizontalPadding)

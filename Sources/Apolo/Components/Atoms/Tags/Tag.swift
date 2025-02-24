@@ -11,11 +11,11 @@ import SwiftUI
 
 public struct Tag: View {
     // MARK: - Size
-    
+
     public enum Size {
         case small
         case regular
-        
+
         func applyTypography<V: View>(_ view: V) -> AnyView {
             switch self {
             case .small:
@@ -24,14 +24,14 @@ public struct Tag: View {
                 return AnyView(view.subheadline())
             }
         }
-        
+
         var verticalPadding: CGFloat {
             switch self {
             case .small: return Tokens.Spacing.extraExtraSmall
             case .regular: return Tokens.Spacing.extraSmall
             }
         }
-        
+
         var horizontalPadding: CGFloat {
             switch self {
             case .small: return Tokens.Spacing.extraSmall
@@ -41,35 +41,47 @@ public struct Tag: View {
     }
 
     // MARK: - Style
-    
+
     public enum Style: Equatable {
         case label(icon: String? = nil)
         case success
         case warning
         case error
         case turbo
-        case custom(backgroundColor: Color, textColor: Color, icon: String? = nil)
-        
+        case custom(
+            backgroundColor: Color,
+            textColor: Color,
+            icon: String? = nil,
+            secondaryIcon: String? = nil
+        )
+
         var icon: String? {
             switch self {
-            case .label(let icon): icon
+            case let .label(icon): icon
             case .success: "checkmark.circle.fill"
             case .warning: "clock.fill"
             case .error: "exclamationmark.triangle.fill"
             case .turbo: nil
-            case .custom(_, _, let icon): icon
+            case let .custom(_, _, icon, _): icon
             }
         }
-        
+
+        var secondaryIcon: String? {
+            switch self {
+            case .label, .success, .warning, .error, .turbo: nil
+            case let .custom(_, _, _, icon): icon
+            }
+        }
+
         var textColor: Color {
             switch self {
-            case .custom(_, let textColor, _): textColor
+            case let .custom(_, textColor, _, _): textColor
             case .label: .primary
             case .turbo: .white
             default: Color(uiColor: .systemBackground)
             }
         }
-        
+
         var backgroundColor: Color {
             switch self {
             case .label: .clear
@@ -77,33 +89,33 @@ public struct Tag: View {
             case .warning: .yellow
             case .error: .red
             case .turbo: .clear
-            case .custom(let backgroundColor, _, _): backgroundColor
+            case let .custom(backgroundColor, _, _, _): backgroundColor
             }
         }
     }
-    
+
     // MARK: - Properties
-    
+
     private let style: Style
     private let title: String?
     private let size: Size
-    
+
     // MARK: - Initialization
-    
+
     public init(style: Style = .label(), size: Size = .regular) {
         self.style = style
-        self.title = nil
+        title = nil
         self.size = size
     }
-    
+
     public init(style: Style = .label(), title: String, size: Size = .regular) {
         self.style = style
         self.title = title
         self.size = size
     }
-    
+
     // MARK: - Body
-    
+
     public var body: some View {
         if case .turbo = style {
             TurboTag()
@@ -120,7 +132,7 @@ public struct Tag: View {
         Group {
             Text("Regular Size")
                 .headline()
-            
+
             Tag(style: .label(icon: "bitcoinsign.circle.fill"), title: "LABEL")
             Tag(style: .success, title: "CONCLUÍDA")
             Tag(style: .warning, title: "PENDENTE")
@@ -128,20 +140,42 @@ public struct Tag: View {
             Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
             Tag(style: .turbo)
             Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom")
+
+            Tag(
+                style: .custom(
+                    backgroundColor: Color(.violet).opacity(0.15),
+                    textColor: Color(.violet),
+                    icon: "bitcoinsign.circle.fill",
+                    secondaryIcon: "chevron.down"
+                ),
+                title: "Bitcoin",
+                size: .regular
+            )
         }
-        
+
         Divider()
-        
+
         Group {
             Text("Small Size")
                 .headline()
-            
+
             Tag(style: .label(icon: "bitcoinsign.circle.fill"), title: "LABEL", size: .small)
             Tag(style: .success, title: "CONCLUÍDA", size: .small)
             Tag(style: .warning, title: "PENDENTE", size: .small)
             Tag(style: .error, title: "FALHADA", size: .small)
             Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual", size: .small)
             Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom", size: .small)
+
+            Tag(
+                style: .custom(
+                    backgroundColor: Color(.violet).opacity(0.15),
+                    textColor: Color(.violet),
+                    icon: "bitcoinsign.circle.fill",
+                    secondaryIcon: "chevron.down"
+                ),
+                title: "Bitcoin",
+                size: .small
+            )
         }
     }
     .padding()

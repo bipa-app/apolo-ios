@@ -54,8 +54,7 @@ public extension Button {
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
-        self
-            .buttonStyle(.borderedProminent)
+        buttonStyle(.borderedProminent)
             .controlSize(size)
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
@@ -69,8 +68,7 @@ public extension Button {
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
-        self
-            .buttonStyle(.bordered)
+        buttonStyle(.bordered)
             .controlSize(size)
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
@@ -84,8 +82,7 @@ public extension Button {
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
-        self
-            .buttonStyle(.plain)
+        buttonStyle(.plain)
             .controlSize(size)
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
@@ -98,8 +95,7 @@ public extension Button {
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
-        self
-            .modifier(StrokedButtonModifier(shape: shape, size: size))
+        modifier(StrokedButtonModifier(shape: shape, size: size))
             .font(.abcGinto(style: .subheadline, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
     }
@@ -125,7 +121,7 @@ public struct ButtonShapeModifier: ViewModifier {
         if #available(iOS 17.0, *) {
             content.buttonBorderShape(shape.toButtonBorderShape)
         } else {
-            content.clipShape(self.shape.toViewShape)
+            content.clipShape(shape.toViewShape)
         }
     }
 }
@@ -155,7 +151,7 @@ public struct StrokedButtonModifier: ViewModifier {
     }
 
     public func body(content: Content) -> some View {
-        let sizes = self.sizeValues(for: self.size)
+        let sizes = sizeValues(for: size)
 
         content
             .tint(.primary)
@@ -177,7 +173,7 @@ public struct StrokedButtonModifier: ViewModifier {
                     }
                 }
             )
-            .opacity(self.isEnabled ? 1.0 : 0.5)
+            .opacity(isEnabled ? 1.0 : 0.5)
     }
 }
 
@@ -206,7 +202,7 @@ public struct HapticFeedbackModifier: ViewModifier {
         Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .borderedStyle(color: Color(.violet), size: .large, hapticStyle: .rigid)
+        .borderedStyle(color: Color(.violet), size: .regular, hapticStyle: .rigid)
 
         Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
             print("Hello")

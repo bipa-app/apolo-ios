@@ -49,14 +49,14 @@ public extension Tokens {
         // MARK: - System Colors
 
         case blue
-        case purple
         case green
         case yellow
         case orange
-        case pink
         case red
         case teal
         case indigo
+        case cyan
+        case mint
 
         public var color: SwiftUI.Color {
             switch self {
@@ -100,14 +100,14 @@ public extension Tokens {
                 // MARK: - System Colors
 
                 case .blue: return SwiftUI.Color(.systemBlue)
-                case .purple: return SwiftUI.Color(.systemPurple)
                 case .green: return SwiftUI.Color(.systemGreen)
                 case .yellow: return SwiftUI.Color(.systemYellow)
                 case .orange: return SwiftUI.Color(.systemOrange)
-                case .pink: return SwiftUI.Color(.systemPink)
                 case .red: return SwiftUI.Color(.systemRed)
                 case .teal: return SwiftUI.Color(.systemTeal)
                 case .indigo: return SwiftUI.Color(.systemIndigo)
+                case .cyan: return SwiftUI.Color(.systemCyan)
+                case .mint: return SwiftUI.Color(.systemMint)
             }
         }
 
@@ -116,5 +116,126 @@ public extension Tokens {
         public func resolve(in environment: EnvironmentValues) -> some ShapeStyle {
             color
         }
+    }
+}
+
+// MARK: - ColorCard
+
+private struct ColorCard: View {
+    let name: String
+    let color: Tokens.Color
+
+    var body: some View {
+        VStack {
+            RoundedRectangle(cornerRadius: Tokens.CornerRadius.medium)
+                .fill(color)
+                .frame(height: 60)
+                .shadow(color: Tokens.Color.quaternaryLabel.color, radius: 1.5)
+            Text(name)
+                .caption1()
+        }
+    }
+}
+
+// MARK: - Preview
+
+#Preview {
+    ScrollView {
+        VStack(spacing: Tokens.Spacing.medium) {
+            Group {
+                Text("Text Colors")
+                    .headline()
+
+                HStack {
+                    ColorCard(name: "Light Text", color: Tokens.Color.lightText)
+                    ColorCard(name: "Dark Text", color: Tokens.Color.darkText)
+                    ColorCard(name: "Placeholder", color: Tokens.Color.placeholderText)
+                }
+            }
+
+            Group {
+                Text("Label Colors")
+                    .headline()
+
+                HStack {
+                    ColorCard(name: "Label", color: Tokens.Color.label)
+                    ColorCard(name: "Secondary", color: Tokens.Color.secondaryLabel)
+                }
+                HStack {
+                    ColorCard(name: "Tertiary", color: Tokens.Color.tertiaryLabel)
+                    ColorCard(name: "Quaternary", color: Tokens.Color.quaternaryLabel)
+                }
+            }
+
+            Group {
+                Text("Background Colors")
+                    .headline()
+
+                HStack {
+                    ColorCard(name: "System", color: Tokens.Color.systemBackground)
+                    ColorCard(name: "Secondary", color: Tokens.Color.secondarySystemBackground)
+                    ColorCard(name: "Tertiary", color: Tokens.Color.tertiarySystemBackground)
+                }
+            }
+
+            Group {
+                Text("Fill Colors")
+                    .headline()
+
+                HStack {
+                    ColorCard(name: "System", color: Tokens.Color.systemFill)
+                    ColorCard(name: "Secondary", color: Tokens.Color.secondarySystemFill)
+                }
+                HStack {
+                    ColorCard(name: "Tertiary", color: Tokens.Color.tertiarySystemFill)
+                    ColorCard(name: "Quaternary", color: Tokens.Color.quaternarySystemFill)
+                }
+            }
+
+            Group {
+                Text("Grouped Background Colors")
+                    .headline()
+
+                HStack {
+                    ColorCard(name: "System", color: Tokens.Color.systemGroupedBackground)
+                    ColorCard(name: "Secondary", color: Tokens.Color.secondarySystemGroupedBackground)
+                }
+                ColorCard(name: "Tertiary", color: Tokens.Color.tertiarySystemGroupedBackground)
+            }
+
+            Group {
+                Text("Custom Colors")
+                    .headline()
+
+                HStack {
+                    ColorCard(name: "Violet", color: Tokens.Color.violet)
+                    ColorCard(name: "Rose", color: Tokens.Color.rose)
+                }
+            }
+
+            Group {
+                Text("System Colors")
+                    .headline()
+
+                HStack {
+                    ColorCard(name: "Blue", color: Tokens.Color.blue)
+                    ColorCard(name: "Green", color: Tokens.Color.green)
+                }
+                HStack {
+                    ColorCard(name: "Yellow", color: Tokens.Color.yellow)
+                    ColorCard(name: "Orange", color: Tokens.Color.orange)
+                }
+                HStack {
+                    ColorCard(name: "Red", color: Tokens.Color.red)
+                    ColorCard(name: "Teal", color: Tokens.Color.teal)
+                    ColorCard(name: "Indigo", color: Tokens.Color.indigo)
+                }
+                HStack {
+                    ColorCard(name: "Cyan", color: Tokens.Color.cyan)
+                    ColorCard(name: "Mint", color: Tokens.Color.mint)
+                }
+            }
+        }
+        .padding()
     }
 }

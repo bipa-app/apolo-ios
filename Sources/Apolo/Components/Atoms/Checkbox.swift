@@ -48,9 +48,9 @@ public struct Checkbox: View {
 
     private var checkboxSymbol: some View {
         Image(systemName: isChecked ? "checkmark.square.fill" : "square")
-            .font(.system(size: 20))
-            .foregroundStyle(isChecked ? Color.primary : Color.secondary)
-            .scaleEffect(animate ? 0.95 : 1)
+            .large()
+            .foregroundStyle(isChecked ? Tokens.Color.label : Tokens.Color.secondarySystemFill)
+            .scaleEffect(animate ? 0.85 : 1)
             .animation(.bouncy(duration: 0.3), value: animate)
             .simultaneousGesture(pressGesture)
     }

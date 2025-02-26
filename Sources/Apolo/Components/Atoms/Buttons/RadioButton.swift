@@ -9,18 +9,18 @@ import SwiftUI
 
 // MARK: - Radio Button Group
 
-public struct RadioButtonGroup: View {
-    private let options: [RadioOption]
-    @Binding private var selectedId: String
-    private let onSelect: (String) -> Void
+public struct RadioButtonGroup<T: Hashable>: View {
+    private let options: [RadioOption<T>]
+    @Binding private var selectedValue: T
+    private let onSelect: ((T) -> Void)?
 
     public init(
-        options: [RadioOption],
-        selectedId: Binding<String>,
-        onSelect: @escaping (String) -> Void
+        options: [RadioOption<T>],
+        selectedValue: Binding<T>,
+        onSelect: ((T) -> Void)? = nil
     ) {
         self.options = options
-        self._selectedId = selectedId
+        self._selectedValue = selectedValue
         self.onSelect = onSelect
     }
 
@@ -29,11 +29,11 @@ public struct RadioButtonGroup: View {
             ForEach(Array(options.enumerated()), id: \.element.id) { index, option in
                 RadioButton(
                     option: option,
-                    isSelected: selectedId == option.id,
+                    isSelected: selectedValue == option.value,
                     style: option.style
                 ) {
-                    selectedId = option.id
-                    onSelect(option.id)
+                    selectedValue = option.value
+                    onSelect?(option.value)
                 }
 
                 if index < options.count - 1 {
@@ -46,22 +46,31 @@ public struct RadioButtonGroup: View {
 
 // MARK: - Radio Option
 
-public struct RadioOption: Identifiable {
+public struct RadioOption<T: Hashable>: Identifiable {
     public let id: String
+    public let value: T
     public let label: String
     public let description: String?
     public let style: RadioButtonStyle
+    public let iconName: String?
+    public let iconColor: Color?
 
     public init(
         id: String,
+        value: T,
         label: String,
         description: String? = nil,
-        style: RadioButtonStyle = .standard
+        style: RadioButtonStyle = .standard,
+        iconName: String? = nil,
+        iconColor: Color? = nil
     ) {
         self.id = id
+        self.value = value
         self.label = label
         self.description = description
         self.style = style
+        self.iconName = iconName
+        self.iconColor = iconColor
     }
 }
 
@@ -74,10 +83,10 @@ public enum RadioButtonStyle {
 
 // MARK: - Radio Button
 
-public struct RadioButton: View {
+public struct RadioButton<T: Hashable>: View {
     // MARK: - Properties
 
-    private let option: RadioOption
+    private let option: RadioOption<T>
     private let isSelected: Bool
     private let style: RadioButtonStyle
     private let action: () -> Void
@@ -85,7 +94,7 @@ public struct RadioButton: View {
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
     init(
-        option: RadioOption,
+        option: RadioOption<T>,
         isSelected: Bool,
         style: RadioButtonStyle = .standard,
         action: @escaping () -> Void
@@ -101,6 +110,14 @@ public struct RadioButton: View {
     public var body: some View {
         HStack {
             radioCircle
+
+            if let iconName = option.iconName {
+                Image(systemName: iconName)
+                    .regular()
+                    .foregroundColor(option.iconColor ?? .primary)
+                    .padding(.trailing, 4)
+            }
+
             labelStack
             Spacer()
         }
@@ -165,35 +182,48 @@ public struct RadioButton: View {
 
 // MARK: - Preview
 
+private enum PreviewOption: String, CaseIterable {
+    case first, second, third
+}
+
 @available(iOS 17.0, *)
 #Preview {
-    @Previewable @State var selectedId = ""
+    @Previewable @State var selectedValue: PreviewOption = .first
 
     let options = [
         RadioOption(
-            id: "1",
+            id: PreviewOption.first.rawValue,
+            value: PreviewOption.first,
             label: "First Option",
-            description: "Bitcoin was made by Satoshi Nakamoto"
+            description: "Bitcoin was made by Satoshi Nakamoto",
+            iconName: "bitcoinsign.circle.fill",
+            iconColor: .orange
         ),
         RadioOption(
-            id: "2",
+            id: PreviewOption.second.rawValue,
+            value: PreviewOption.second,
             label: "Second Option",
-            description: "Bitcoin was made by Satoshi Nakamoto"
+            description: "Bitcoin was made by Satoshi Nakamoto",
+            iconName: "creditcard.fill",
+            iconColor: .blue
         ),
         RadioOption(
-            id: "3",
+            id: PreviewOption.third.rawValue,
+            value: PreviewOption.third,
             label: "Third Option",
             description: "Bitcoin was made by Satoshi Nakamoto",
-            style: .reversed
+            style: .reversed,
+            iconName: "banknote.fill",
+            iconColor: .green
         )
     ]
 
     VStack {
         RadioButtonGroup(
             options: options,
-            selectedId: $selectedId
-        ) { newSelectedId in
-            print("Selected option with id: \(newSelectedId)")
+            selectedValue: $selectedValue
+        ) { newSelectedValue in
+            print("Selected option: \(newSelectedValue)")
         }
 
         Separator()
@@ -201,10 +231,8 @@ public struct RadioButton: View {
 
         RadioButtonGroup(
             options: options,
-            selectedId: $selectedId
-        ) { newSelectedId in
-            print("Selected option with id: \(newSelectedId)")
-        }
+            selectedValue: $selectedValue
+        )
     }
     .padding()
 }

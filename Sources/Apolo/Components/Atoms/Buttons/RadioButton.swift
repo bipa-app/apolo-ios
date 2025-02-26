@@ -12,12 +12,12 @@ import SwiftUI
 public struct RadioButtonGroup<T: Hashable>: View {
     private let options: [RadioOption<T>]
     @Binding private var selectedValue: T
-    private let onSelect: (T) -> Void
+    private let onSelect: ((T) -> Void)?
 
     public init(
         options: [RadioOption<T>],
         selectedValue: Binding<T>,
-        onSelect: @escaping (T) -> Void
+        onSelect: ((T) -> Void)? = nil
     ) {
         self.options = options
         self._selectedValue = selectedValue
@@ -33,7 +33,7 @@ public struct RadioButtonGroup<T: Hashable>: View {
                     style: option.style
                 ) {
                     selectedValue = option.value
-                    onSelect(option.value)
+                    onSelect?(option.value)
                 }
 
                 if index < options.count - 1 {
@@ -232,9 +232,7 @@ private enum PreviewOption: String, CaseIterable {
         RadioButtonGroup(
             options: options,
             selectedValue: $selectedValue
-        ) { newSelectedValue in
-            print("Selected option: \(newSelectedValue)")
-        }
+        )
     }
     .padding()
 }

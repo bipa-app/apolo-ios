@@ -10,34 +10,36 @@ import SwiftUI
 // MARK: CopyButton
 
 public struct CopyButton: View {
-    
     public init(
         value: String,
+        successColor: Color = .green,
         onCopied: ((String) -> Void)? = nil
     ) {
         self.value = value
+        self.successColor = successColor
         self.onCopied = onCopied
     }
-    
+
     private let value: String
+    private let successColor: Color
     private let onCopied: ((String) -> Void)?
     @State private var copied = false
 
     public var body: some View {
         Button(action: {
-            UIImpactFeedbackGenerator(style: .soft).impactOccurred()
+            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
             UIPasteboard.general.string = value
             onCopied?(value)
-            
+
             withAnimation { copied = true }
-            
+
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 withAnimation { copied = false }
             }
         }, label: {
             if #available(iOS 18.0, *) {
                 Image(systemName: copied ? "checkmark" : "square.on.square")
-                    .foregroundStyle(copied ? .green : .primary)
+                    .foregroundStyle(copied ? successColor : .primary)
                     .contentTransition(
                         .symbolEffect(
                             .replace.magic(fallback: .downUp.byLayer),
@@ -46,7 +48,7 @@ public struct CopyButton: View {
                     )
             } else {
                 Image(systemName: copied ? "checkmark" : "square.on.square")
-                    .foregroundStyle(copied ? .green : .primary)
+                    .foregroundStyle(copied ? successColor : .primary)
                     .transition(.opacity)
             }
         })
@@ -56,7 +58,13 @@ public struct CopyButton: View {
 // MARK: - Preview
 
 #Preview {
-    CopyButton(value: "Nice animation!") { value in
-        print("Copied value is: \(value)")
+    VStack(spacing: Tokens.Spacing.medium) {
+        CopyButton(value: "Nice animation!") { value in
+            print("Copied value is: \(value)")
+        }
+
+        CopyButton(value: "Nice animation!", successColor: Color(.violet)) { value in
+            print("Copied value is: \(value)")
+        }
     }
 }

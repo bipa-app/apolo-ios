@@ -14,14 +14,14 @@ public struct Checkbox: View {
     private var description: String?
     @Binding private var isChecked: Bool
     @State private var animate: Bool = false
-    private var onCheck: (Bool) -> Void
+    private let onCheck: ((Bool) -> Void)?
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
 
     public init(
         label: String? = nil,
         description: String? = nil,
         isChecked: Binding<Bool>,
-        onCheck: @escaping (Bool) -> Void
+        onCheck: ((Bool) -> Void)? = nil
     ) {
         self.label = label
         self.description = description
@@ -40,7 +40,7 @@ public struct Checkbox: View {
         .onTapGesture {
             feedbackGenerator.impactOccurred()
             isChecked.toggle()
-            onCheck(isChecked)
+            onCheck?(isChecked)
         }
     }
 

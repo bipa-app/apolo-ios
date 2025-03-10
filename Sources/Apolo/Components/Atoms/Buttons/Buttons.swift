@@ -47,12 +47,12 @@ public enum CustomButtonShape {
     }
 }
 
-public extension Button {
+private extension View {
     func borderedProminentStyle(
-        shape: CustomButtonShape = .capsule,
-        color: Color = .green,
-        size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        _ shape: CustomButtonShape,
+        _ color: Color,
+        _ size: ControlSize,
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
     ) -> some View {
         buttonStyle(.borderedProminent)
             .controlSize(size)
@@ -63,10 +63,10 @@ public extension Button {
     }
 
     func borderedStyle(
-        shape: CustomButtonShape = .capsule,
-        color: Color = .green,
-        size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        _ shape: CustomButtonShape,
+        _ color: Color,
+        _ size: ControlSize,
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
     ) -> some View {
         buttonStyle(.bordered)
             .controlSize(size)
@@ -77,10 +77,10 @@ public extension Button {
     }
 
     func plainStyle(
-        shape: CustomButtonShape = .capsule,
-        color: Color = .green,
-        size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        _ shape: CustomButtonShape,
+        _ color: Color,
+        _ size: ControlSize,
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
     ) -> some View {
         buttonStyle(.plain)
             .controlSize(size)
@@ -91,13 +91,87 @@ public extension Button {
     }
 
     func strokedStyle(
-        shape: CustomButtonShape = .capsule,
-        size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        _ shape: CustomButtonShape,
+        _ size: ControlSize,
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
     ) -> some View {
         modifier(StrokedButtonModifier(shape: shape, size: size))
             .font(.abcGinto(style: .subheadline, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
+    }
+}
+
+public extension Button {
+    func borderedProminentStyle(
+        shape: CustomButtonShape = .capsule,
+        color: Color = .green,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+    ) -> some View {
+        borderedProminentStyle(shape, color, size, hapticStyle)
+    }
+
+    func borderedStyle(
+        shape: CustomButtonShape = .capsule,
+        color: Color = .green,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+    ) -> some View {
+        borderedStyle(shape, color, size, hapticStyle)
+    }
+
+    func plainStyle(
+        shape: CustomButtonShape = .capsule,
+        color: Color = .green,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+    ) -> some View {
+        plainStyle(shape, color, size, hapticStyle)
+    }
+
+    func strokedStyle(
+        shape: CustomButtonShape = .capsule,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+    ) -> some View {
+        strokedStyle(shape, size, hapticStyle)
+    }
+}
+
+public extension ShareLink {
+    func borderedProminentStyle(
+        shape: CustomButtonShape = .capsule,
+        color: Color = .green,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+    ) -> some View {
+        borderedProminentStyle(shape, color, size, hapticStyle)
+    }
+
+    func borderedStyle(
+        shape: CustomButtonShape = .capsule,
+        color: Color = .green,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+    ) -> some View {
+        borderedStyle(shape, color, size, hapticStyle)
+    }
+
+    func plainStyle(
+        shape: CustomButtonShape = .capsule,
+        color: Color = .green,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+    ) -> some View {
+        plainStyle(shape, color, size, hapticStyle)
+    }
+
+    func strokedStyle(
+        shape: CustomButtonShape = .capsule,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+    ) -> some View {
+        strokedStyle(shape, size, hapticStyle)
     }
 }
 
@@ -223,5 +297,15 @@ public struct HapticFeedbackModifier: ViewModifier {
             print("Hello")
         }
         .strokedStyle(shape: .circle, size: .large)
+
+        ShareLink(item: "Share me") {
+            Text("Compartilhar")
+        }
+        .plainStyle()
+
+        ShareLink(item: "Share me") {
+            Text("Compartilhar")
+        }
+        .borderedProminentStyle()
     }
 }

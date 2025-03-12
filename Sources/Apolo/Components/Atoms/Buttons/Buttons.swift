@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: CustomButtonShape
+
 public enum CustomButtonShape {
     case capsule
     case circle
@@ -47,6 +49,8 @@ public enum CustomButtonShape {
     }
 }
 
+// MARK: - View
+
 private extension View {
     func borderedProminentStyle(
         _ shape: CustomButtonShape,
@@ -60,6 +64,7 @@ private extension View {
             .tint(color)
             .font(.abcGinto(style: .body, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
+            .preventDoubleTap()
     }
 
     func borderedStyle(
@@ -74,6 +79,7 @@ private extension View {
             .tint(color)
             .font(.abcGinto(style: .body, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
+            .preventDoubleTap()
     }
 
     func plainStyle(
@@ -88,6 +94,7 @@ private extension View {
             .tint(color)
             .font(.abcGinto(style: .body, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
+            .preventDoubleTap()
     }
 
     func strokedStyle(
@@ -98,8 +105,11 @@ private extension View {
         modifier(StrokedButtonModifier(shape: shape, size: size))
             .font(.abcGinto(style: .subheadline, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
+            .preventDoubleTap()
     }
 }
+
+// MARK: - Button
 
 public extension Button {
     func borderedProminentStyle(
@@ -137,6 +147,8 @@ public extension Button {
         strokedStyle(shape, size, hapticStyle)
     }
 }
+
+// MARK: - ShareLink
 
 public extension ShareLink {
     func borderedProminentStyle(
@@ -184,6 +196,8 @@ public extension Button {
     }
 }
 
+// MARK: - ButtonShapeModifier
+
 public struct ButtonShapeModifier: ViewModifier {
     let shape: CustomButtonShape
 
@@ -199,6 +213,35 @@ public struct ButtonShapeModifier: ViewModifier {
         }
     }
 }
+
+// MARK: - PreventDoubleTapModifier
+
+public struct PreventDoubleTapModifier: ViewModifier {
+    @State private var isDisabled = false
+    
+    public func body(content: Content) -> some View {
+        content
+            .disabled(isDisabled)
+            .simultaneousGesture(
+                TapGesture()
+                    .onEnded {
+                        guard !isDisabled else { return }
+                        isDisabled = true
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                            isDisabled = false
+                        }
+                    }
+            )
+    }
+}
+
+public extension View {
+    func preventDoubleTap() -> some View {
+        self.modifier(PreventDoubleTapModifier())
+    }
+}
+
+// MARK: - StrokedButtonModifier
 
 public struct StrokedButtonModifier: ViewModifier {
     let shape: CustomButtonShape
@@ -251,6 +294,8 @@ public struct StrokedButtonModifier: ViewModifier {
     }
 }
 
+// MARK: - HapticFeedbackModifier
+
 public struct HapticFeedbackModifier: ViewModifier {
     let style: UIImpactFeedbackGenerator.FeedbackStyle
 
@@ -265,6 +310,8 @@ public struct HapticFeedbackModifier: ViewModifier {
         })
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     VStack(spacing: 12) {

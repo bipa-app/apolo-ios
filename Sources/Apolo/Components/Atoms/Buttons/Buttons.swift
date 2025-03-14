@@ -217,18 +217,18 @@ public struct ButtonShapeModifier: ViewModifier {
 // MARK: - PreventDoubleTapModifier
 
 public struct PreventDoubleTapModifier: ViewModifier {
-    @State private var isDisabled = false
+    @State private var allowTap = true
     
     public func body(content: Content) -> some View {
         content
-            .disabled(isDisabled)
+            .allowsHitTesting(allowTap)
             .simultaneousGesture(
                 TapGesture()
                     .onEnded {
-                        guard !isDisabled else { return }
-                        isDisabled = true
+                        guard allowTap else { return }
+                        allowTap.toggle()
                         DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                            isDisabled = false
+                            allowTap.toggle()
                         }
                     }
             )

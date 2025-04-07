@@ -37,7 +37,9 @@ struct PlainTag: View {
         }
         .padding(.vertical, size.verticalPadding)
         .padding(.horizontal, size.horizontalPadding)
-        .background(style.backgroundColor)
-        .clipShape(.rect(cornerRadius: Tokens.CornerRadius.large))
+        .background(
+            Capsule()
+            .fill(style.background)
+        )
     }
 }

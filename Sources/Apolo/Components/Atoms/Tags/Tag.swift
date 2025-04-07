@@ -42,19 +42,26 @@ public struct Tag: View {
 
     // MARK: - Style
 
-    public enum Style: Equatable {
+    public enum Style: Equatable, Identifiable {
         case label(icon: String? = nil)
         case success
         case warning
         case error
         case turbo
         case custom(
-            backgroundColor: Color,
-            textColor: Color,
+            shapeStyle: (any ShapeStyle)? = nil,
+            backgroundColor: Color = .clear,
+            textColor: Color = .primary,
             icon: String? = nil,
             secondaryIcon: String? = nil
         )
-
+        
+        public var id: UUID { .init() }
+        
+        public static func == (lhs: Tag.Style, rhs: Tag.Style) -> Bool {
+            return lhs.id == rhs.id
+        }
+        
         var icon: String? {
             switch self {
             case let .label(icon): icon
@@ -62,34 +69,41 @@ public struct Tag: View {
             case .warning: "clock.fill"
             case .error: "exclamationmark.triangle.fill"
             case .turbo: nil
-            case let .custom(_, _, icon, _): icon
+            case let .custom(_, _, _, icon, _): icon
             }
         }
 
         var secondaryIcon: String? {
             switch self {
             case .label, .success, .warning, .error, .turbo: nil
-            case let .custom(_, _, _, icon): icon
+            case let .custom(_, _, _, _, icon): icon
             }
         }
 
         var textColor: Color {
             switch self {
-            case let .custom(_, textColor, _, _): textColor
+            case let .custom(_, _, textColor, _, _): textColor
             case .label: .primary
             case .turbo: .white
             default: Color(uiColor: .systemBackground)
             }
         }
-
-        var backgroundColor: Color {
+        
+        var background: AnyShapeStyle {
             switch self {
-            case .label: .clear
-            case .success: .green
-            case .warning: .yellow
-            case .error: .red
-            case .turbo: .clear
-            case let .custom(backgroundColor, _, _, _): backgroundColor
+            case .label, .turbo:
+                return .init(Color.clear)
+            case .success:
+                return .init(Color.green)
+            case .warning:
+                return .init(Color.yellow)
+            case .error:
+                return .init(Color.red)
+            case let .custom(shapeStyle, backgroundColor, _, _, _):
+                if let shapeStyle {
+                    return .init(shapeStyle)
+                }
+                return .init(backgroundColor)
             }
         }
     }
@@ -139,8 +153,9 @@ public struct Tag: View {
             Tag(style: .error, title: "FALHADA")
             Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
             Tag(style: .turbo)
-            Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom")
-
+            Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom Color")
+            Tag(style: .custom(shapeStyle: .ultraThinMaterial), title: "Custom ShapeStyle")
+            
             Tag(
                 style: .custom(
                     backgroundColor: Color(.violet).opacity(0.15),

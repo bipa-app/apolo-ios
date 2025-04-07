@@ -35,7 +35,7 @@ struct TurboTag: View {
                 .modifier(FlowEffect(phase: phase))
                 .scaleEffect(4)
         )
-        .clipShape(.rect(cornerRadius: Tokens.CornerRadius.large))
+        .clipShape(.capsule)
         .onAppear {
             withAnimation(.linear(duration: 8).repeatForever(autoreverses: false)) {
                 phase = .pi * 2
@@ -65,4 +65,10 @@ private struct FlowEffect: GeometryEffect {
         )
         return ProjectionTransform(transform)
     }
+}
+
+// MARK: - Preview
+
+#Preview {
+    TurboTag()
 }

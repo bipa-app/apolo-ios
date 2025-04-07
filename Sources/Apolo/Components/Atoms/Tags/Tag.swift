@@ -10,6 +10,7 @@ import SwiftUI
 // MARK: Tag
 
 public struct Tag: View {
+    
     // MARK: - Size
 
     public enum Size {
@@ -42,7 +43,7 @@ public struct Tag: View {
 
     // MARK: - Style
 
-    public enum Style: Equatable, Identifiable {
+    public enum Style {
         case label(icon: String? = nil)
         case success
         case warning
@@ -55,12 +56,6 @@ public struct Tag: View {
             icon: String? = nil,
             secondaryIcon: String? = nil
         )
-        
-        public var id: UUID { .init() }
-        
-        public static func == (lhs: Tag.Style, rhs: Tag.Style) -> Bool {
-            return lhs.id == rhs.id
-        }
         
         var icon: String? {
             switch self {
@@ -135,6 +130,29 @@ public struct Tag: View {
             TurboTag()
         } else if let title {
             PlainTag(style: style, title: title, size: size)
+        }
+    }
+}
+
+// MARK: - Equatable
+
+extension Tag.Style: Equatable {
+    
+    // Manual implementation required because ShapeStyle (used in `.custom`) is not Equatable.
+    // We compare only equatable associated values and ignore shapeStyle.
+    public static func == (lhs: Tag.Style, rhs: Tag.Style) -> Bool {
+        switch (lhs, rhs) {
+        case let (.label(a), .label(b)):
+            return a == b
+        case (.success, .success),
+             (.warning, .warning),
+             (.error, .error),
+             (.turbo, .turbo):
+            return true
+        case let (.custom(_, bg1, txt1, i1, s1), .custom(_, bg2, txt2, i2, s2)):
+            return bg1 == bg2 && txt1 == txt2 && i1 == i2 && s1 == s2
+        default:
+            return false
         }
     }
 }

@@ -193,7 +193,7 @@ public extension View {
     }
 
     /// Callout style with weight option (16/21)
-    func callout(weight: FontWeight = .regular) -> some View {
+    func callout(weight: FontWeight = .medium) -> some View {
         apoloFont(.abcGinto(style: .callout, weight: weight))
             .dynamicTypeSize(...DynamicTypeSize.large)
     }

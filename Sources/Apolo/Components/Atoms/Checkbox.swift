@@ -8,6 +8,7 @@
 import SwiftUI
 
 public struct Checkbox: View {
+    
     // MARK: - Properties
 
     private var label: String?
@@ -37,11 +38,8 @@ public struct Checkbox: View {
             labelStack
             Spacer()
         }
-        .onTapGesture {
-            feedbackGenerator.impactOccurred()
-            isChecked.toggle()
-            onCheck?(isChecked)
-        }
+        .contentShape(Rectangle())
+        .gesture(tapGesture.simultaneously(with: pressGesture))
     }
 
     // MARK: - UI Components
@@ -49,20 +47,19 @@ public struct Checkbox: View {
     private var checkboxSymbol: some View {
         Image(systemName: isChecked ? "checkmark.square.fill" : "square")
             .large()
-            .foregroundStyle(isChecked ? Tokens.Color.label : Tokens.Color.secondarySystemFill)
+            .foregroundStyle(isChecked ? Tokens.Color.label.color : Tokens.Color.secondarySystemFill.color)
             .scaleEffect(animate ? 0.85 : 1)
             .animation(.bouncy(duration: 0.3), value: animate)
-            .simultaneousGesture(pressGesture)
     }
 
     private var labelStack: some View {
         Group {
-            if let label = label {
+            if let label {
                 VStack(alignment: .leading) {
                     Text(label)
                         .body()
 
-                    if let description = description {
+                    if let description {
                         Text(description)
                             .footnote()
                             .foregroundStyle(Color.secondary)
@@ -81,6 +78,15 @@ public struct Checkbox: View {
                 feedbackGenerator.prepare()
             }
             .onEnded { _ in animate = false }
+    }
+
+    private var tapGesture: some Gesture {
+        TapGesture()
+            .onEnded {
+                feedbackGenerator.impactOccurred()
+                isChecked.toggle()
+                onCheck?(isChecked)
+        }
     }
 }
 

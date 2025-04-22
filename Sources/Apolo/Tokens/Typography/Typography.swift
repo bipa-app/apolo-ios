@@ -37,26 +37,46 @@ public extension Font {
     static func abcGinto(style: Font.TextStyle, weight: FontWeight = .regular) -> Font {
         Bundle.ensureFontsRegistered()
 
-        let styledText: UIFont.TextStyle = {
-            switch style {
-            case .largeTitle: return .largeTitle
-            case .title: return .title1
-            case .title2: return .title2
-            case .title3: return .title3
-            case .headline: return .headline
-            case .subheadline: return .subheadline
-            case .body: return .body
-            case .callout: return .callout
-            case .footnote: return .footnote
-            case .caption: return .caption1
-            case .caption2: return .caption2
-            default: return .body
-            }
-        }()
+        return .custom(
+            "\(Fonts.abcGinto)-\(weight.fontName)",
+            size: style.size,
+            relativeTo: style // <- This enables .dynamicTypeSize() to work
+        )
+    }
+}
 
-        let preferredFont = UIFont.preferredFont(forTextStyle: styledText)
-
-        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", size: preferredFont.pointSize, relativeTo: style)
+public extension Font.TextStyle {
+    var size: CGFloat {
+        switch self {
+        case .largeTitle:
+            return 34
+        case .title:
+            return 28
+        case .title2:
+            return 22
+        case .title3:
+            return 20
+        case .headline:
+            return 17
+        case .subheadline:
+            return 15
+        case .body:
+            return 17
+        case .callout:
+            return 16
+        case .footnote:
+            return 13
+        case .caption:
+            return 12
+        case .caption2:
+            return 11
+        case .extraLargeTitle:
+            return 44
+        case .extraLargeTitle2:
+            return 36
+        @unknown default:
+            return 17
+        }
     }
 }
 

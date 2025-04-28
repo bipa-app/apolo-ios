@@ -45,8 +45,9 @@ public extension View {
     ///   - isLoading: A binding to a Boolean value that determines whether to present the alert.
     ///
     func loading(isLoading: Binding<Bool>) -> some View {
-        disabled(isLoading.wrappedValue)
-            .modifier(LoadingModifier(isPresented: isLoading))
+//        disabled(isLoading.wrappedValue)
+//            .
+        modifier(LoadingModifier(isPresented: isLoading))
     }
 }
 

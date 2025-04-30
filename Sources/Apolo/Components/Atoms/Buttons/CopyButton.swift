@@ -38,20 +38,29 @@ public struct CopyButton: View {
             }
         }, label: {
             if #available(iOS 18.0, *) {
-                Image(systemName: copied ? "checkmark" : "square.on.square")
-                    .foregroundStyle(copied ? successColor : .primary)
-                    .contentTransition(
-                        .symbolEffect(
-                            .replace.magic(fallback: .downUp.byLayer),
-                            options: .nonRepeating
+                ZStack(alignment: .center) {
+                    Image(systemName: "square.on.square")
+                        .hidden()
+                        .accessibilityHidden(true)
+
+                    Image(systemName: copied ? "checkmark" : "square.on.square")
+                        .foregroundStyle(copied ? successColor : .primary)
+                        .contentTransition(
+                            .symbolEffect(
+                                .replace.magic(fallback: .downUp.byLayer),
+                                options: .nonRepeating
+                            )
                         )
-                    )
+            }
             } else {
                 Image(systemName: copied ? "checkmark" : "square.on.square")
                     .foregroundStyle(copied ? successColor : .primary)
                     .transition(.opacity)
             }
         })
+        .accessibilityLabel("Botão de copiar")
+        .accessibilityHint("Toque para copiar o texto")
+        .accessibilityValue(value)
     }
 }
 

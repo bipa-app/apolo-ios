@@ -26,32 +26,56 @@ public struct CopyButton: View {
     @State private var copied = false
 
     public var body: some View {
-        Button(action: {
-            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
-            UIPasteboard.general.string = value
-            onCopied?(value)
+        Button(
+            action: {
+                UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+                UIPasteboard.general.string = value
+                onCopied?(value)
 
-            withAnimation { copied = true }
+                withAnimation { copied = true }
 
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                withAnimation { copied = false }
-            }
-        }, label: {
-            if #available(iOS 18.0, *) {
-                Image(systemName: copied ? "checkmark" : "square.on.square")
-                    .foregroundStyle(copied ? successColor : .primary)
-                    .contentTransition(
-                        .symbolEffect(
-                            .replace.magic(fallback: .downUp.byLayer),
-                            options: .nonRepeating
+                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                    withAnimation { copied = false }
+                }
+            },
+            label: {
+                if #available(iOS 18.0, *) {
+                    ZStack(alignment: .center) {
+                        Image(systemName: "square.on.square")
+                            .hidden()
+                            .accessibilityHidden(true)
+
+                        Image(
+                            systemName: copied
+                                ? "checkmark" : "square.on.square"
                         )
-                    )
-            } else {
-                Image(systemName: copied ? "checkmark" : "square.on.square")
-                    .foregroundStyle(copied ? successColor : .primary)
-                    .transition(.opacity)
+                        .foregroundStyle(copied ? successColor : .primary)
+                        .contentTransition(
+                            .symbolEffect(
+                                .replace.magic(fallback: .downUp.byLayer),
+                                options: .nonRepeating
+                            )
+                        )
+                    }
+                } else {
+                    ZStack(alignment: .center) {
+                        Image(systemName: "square.on.square")
+                            .hidden()
+                            .accessibilityHidden(true)
+
+                        Image(
+                            systemName: copied
+                                ? "checkmark" : "square.on.square"
+                        )
+                        .foregroundStyle(copied ? successColor : .primary)
+                        .transition(.opacity)
+                    }
+                }
             }
-        })
+        )
+        .accessibilityLabel("Botão de copiar")
+        .accessibilityHint("Toque para copiar o texto")
+        .accessibilityValue(value)
     }
 }
 
@@ -63,7 +87,8 @@ public struct CopyButton: View {
             print("Copied value is: \(value)")
         }
 
-        CopyButton(value: "Nice animation!", successColor: Color(.violet)) { value in
+        CopyButton(value: "Nice animation!", successColor: Color(.violet)) {
+            value in
             print("Copied value is: \(value)")
         }
     }

@@ -15,10 +15,16 @@ struct LoadingModifier: ViewModifier {
         content
             .overlay {
                 if isPresented {
-                    ProgressView()
-                        .progressViewStyle(LoadingProgressViewStyle())
-                        .zIndex(2)
-                        .transition(.opacity)
+                    ZStack {
+                        Color.black.opacity(0.01)
+                            .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .disabled(true)
+
+                        ProgressView()
+                            .progressViewStyle(LoadingProgressViewStyle())
+                            .zIndex(2)
+                            .transition(.opacity)
+                    }
                 } else {
                     EmptyView()
                 }
@@ -45,8 +51,7 @@ public extension View {
     ///   - isLoading: A binding to a Boolean value that determines whether to present the alert.
     ///
     func loading(isLoading: Binding<Bool>) -> some View {
-        disabled(isLoading.wrappedValue)
-            .modifier(LoadingModifier(isPresented: isLoading))
+        modifier(LoadingModifier(isPresented: isLoading))
     }
 }
 

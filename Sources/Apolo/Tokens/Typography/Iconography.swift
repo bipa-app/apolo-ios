@@ -11,25 +11,25 @@ public extension View {
     /// Extra small SF Symbol (10)
     func extraSmall() -> some View {
         self
-            .font(.system(size: 10))
+            .font(.caption2)
     }
     
     /// Small SF Symbol (15)
     func small() -> some View {
         self
-            .font(.system(size: 15))
+            .font(.subheadline)
     }
     
     /// Regular SF Symbol (17)
     func regular() -> some View {
         self
-            .font(.system(size: 17))
+            .font(.headline)
     }
     
     /// Large SF Symbol (22)
     func large() -> some View {
         self
-            .font(.system(size: 22))
+            .font(.title2)
     }
 }
 

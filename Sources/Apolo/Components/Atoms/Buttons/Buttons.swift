@@ -271,10 +271,12 @@ public struct StrokedButtonModifier: ViewModifier {
         let sizes = sizeValues(for: size)
 
         content
+            .controlSize(size)
             .tint(.primary)
             .foregroundStyle(.primary)
+            .padding(.vertical, Tokens.Spacing.small)
             .padding(.horizontal, sizes.padding)
-            .frame(height: sizes.height)
+            .frame(minHeight: sizes.height)
             .overlay(
                 Group {
                     switch self.shape {

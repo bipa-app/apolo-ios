@@ -27,31 +27,40 @@ public enum FontWeight {
     }
 }
 
+private func createModifiedFont(
+    baseName: String,
+    weight: FontWeight,
+    size: CGFloat
+) -> CTFont {
+    let fontName = "\(baseName)-\(weight.fontName)" as CFString
+    let font = CTFontCreateWithName(fontName, size, nil)
+    
+    // Disable Contextual Alternates (this controls the automatic substitution of x between numbers)
+    let featureSettings: [[CFString: Any]] = [
+        [
+            kCTFontFeatureTypeIdentifierKey: 36,    // Contextual Alternates
+            kCTFontFeatureSelectorIdentifierKey: 1, // Off
+        ]
+    ]
+    
+    let attributes = [
+        kCTFontFeatureSettingsAttribute: featureSettings,
+        kCTFontSizeAttribute: size,
+    ] as CFDictionary
+    
+    let descriptor = CTFontDescriptorCreateWithAttributes(attributes)
+    return CTFontCreateCopyWithAttributes(font, size, nil, descriptor)
+}
+
 public extension Font {
     // For fixed sizes (used by TypographyModifier)
     static func abcGinto(size: CGFloat, weight: FontWeight = .regular) -> Font {
         Bundle.ensureFontsRegistered()
-        
-        let fontName = "\(Fonts.abcGinto)-\(weight.fontName)" as CFString
-        let font = CTFontCreateWithName(fontName, size, nil)
-        
-        // Disable Contextual Alternates (this controls the automatic substitution of x between numbers)
-        let featureSettings: [[CFString: Any]] = [
-            [
-                kCTFontFeatureTypeIdentifierKey: 36,    // Contextual Alternates
-                kCTFontFeatureSelectorIdentifierKey: 1, // Off
-            ]
-        ]
-        
-        let attributes = [
-            kCTFontFeatureSettingsAttribute: featureSettings,
-            kCTFontSizeAttribute: size,
-        ] as CFDictionary
-        
-        let descriptor = CTFontDescriptorCreateWithAttributes(attributes)
-        let modifiedFont = CTFontCreateCopyWithAttributes(
-            font, size, nil, descriptor)
-
+        let modifiedFont = createModifiedFont(
+            baseName: Fonts.abcGinto,
+            weight: weight,
+            size: size
+        )
         return Font(modifiedFont)
     }
 
@@ -63,26 +72,11 @@ public extension Font {
         Bundle.ensureFontsRegistered()
 
         let size = style.size
-        let fontName = "\(Fonts.abcGinto)-\(weight.fontName)" as CFString
-        let font = CTFontCreateWithName(fontName, size, nil)
-
-        // Disable Contextual Alternates (this controls the automatic substitution of x between numbers)
-        let featureSettings: [[CFString: Any]] = [
-            [
-                kCTFontFeatureTypeIdentifierKey: 36,     // Contextual Alternates
-                kCTFontFeatureSelectorIdentifierKey: 1,   // Off
-            ]
-        ]
-        
-        let attributes = [
-            kCTFontFeatureSettingsAttribute: featureSettings,
-            kCTFontSizeAttribute: size,
-        ] as CFDictionary
-        
-        let descriptor = CTFontDescriptorCreateWithAttributes(attributes)
-        let modifiedFont = CTFontCreateCopyWithAttributes(
-            font, size, nil, descriptor)
-
+        let modifiedFont = createModifiedFont(
+            baseName: Fonts.abcGinto,
+            weight: weight,
+            size: size
+        )
         return Font(modifiedFont)
     }
 }

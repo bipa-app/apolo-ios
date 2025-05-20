@@ -27,14 +27,7 @@ public enum FontWeight {
     }
 }
 
-private func createModifiedFont(
-    baseName: String,
-    weight: FontWeight,
-    size: CGFloat
-) -> CTFont {
-    let fontName = "\(baseName)-\(weight.fontName)" as CFString
-    let font = CTFontCreateWithName(fontName, size, nil)
-    
+private func createFontDescriptor(weight: FontWeight) -> CTFontDescriptor {
     // Disable Contextual Alternates (this controls the automatic substitution of x between numbers)
     let featureSettings: [[CFString: Any]] = [
         [
@@ -44,24 +37,26 @@ private func createModifiedFont(
     ]
     
     let attributes = [
-        kCTFontFeatureSettingsAttribute: featureSettings,
-        kCTFontSizeAttribute: size,
+        kCTFontFeatureSettingsAttribute: featureSettings
     ] as CFDictionary
     
-    let descriptor = CTFontDescriptorCreateWithAttributes(attributes)
-    return CTFontCreateCopyWithAttributes(font, size, nil, descriptor)
+    return CTFontDescriptorCreateWithAttributes(attributes)
 }
 
 public extension Font {
     // For fixed sizes (used by TypographyModifier)
     static func abcGinto(size: CGFloat, weight: FontWeight = .regular) -> Font {
         Bundle.ensureFontsRegistered()
-        let modifiedFont = createModifiedFont(
-            baseName: Fonts.abcGinto,
-            weight: weight,
-            size: size
-        )
-        return Font(modifiedFont)
+        
+        let fontName = "\(Fonts.abcGinto)-\(weight.fontName)"
+        let descriptor = createFontDescriptor(weight: weight)
+        
+        // Register the font with features
+        if let cgFont = CGFont(fontName as CFString) {
+            CTFontManagerRegisterGraphicsFont(cgFont, nil)
+        }
+        
+        return .custom(fontName, fixedSize: size)
     }
 
     // For dynamic text styles (used by Text extensions)
@@ -70,14 +65,20 @@ public extension Font {
         weight: FontWeight = .regular
     ) -> Font {
         Bundle.ensureFontsRegistered()
-
-        let size = style.size
-        let modifiedFont = createModifiedFont(
-            baseName: Fonts.abcGinto,
-            weight: weight,
-            size: size
+        
+        let fontName = "\(Fonts.abcGinto)-\(weight.fontName)"
+        let descriptor = createFontDescriptor(weight: weight)
+        
+        // Register the font with features
+        if let cgFont = CGFont(fontName as CFString) {
+            CTFontManagerRegisterGraphicsFont(cgFont, nil)
+        }
+        
+        return .custom(
+            fontName,
+            size: style.size,
+            relativeTo: style
         )
-        return Font(modifiedFont)
     }
 }
 

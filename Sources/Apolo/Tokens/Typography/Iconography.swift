@@ -23,7 +23,7 @@ public extension View {
     /// Regular SF Symbol (17)
     func regular() -> some View {
         self
-            .font(.headline)
+            .font(.body)
     }
     
     /// Large SF Symbol (22)

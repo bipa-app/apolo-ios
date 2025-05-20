@@ -5,7 +5,6 @@
 //  Created by Eric on 04/12/24.
 //
 
-import CoreText
 import SwiftUI
 
 public enum Fonts {
@@ -27,57 +26,22 @@ public enum FontWeight {
     }
 }
 
-private func createModifiedFont(
-    baseName: String,
-    weight: FontWeight,
-    size: CGFloat
-) -> CTFont {
-    let fontName = "\(baseName)-\(weight.fontName)" as CFString
-    let font = CTFontCreateWithName(fontName, size, nil)
-    
-    // Disable Contextual Alternates (this controls the automatic substitution of x between numbers)
-    let featureSettings: [[CFString: Any]] = [
-        [
-            kCTFontFeatureTypeIdentifierKey: 36,    // Contextual Alternates
-            kCTFontFeatureSelectorIdentifierKey: 1, // Off
-        ]
-    ]
-    
-    let attributes = [
-        kCTFontFeatureSettingsAttribute: featureSettings,
-        kCTFontSizeAttribute: size,
-    ] as CFDictionary
-    
-    let descriptor = CTFontDescriptorCreateWithAttributes(attributes)
-    return CTFontCreateCopyWithAttributes(font, size, nil, descriptor)
-}
-
 public extension Font {
     // For fixed sizes (used by TypographyModifier)
     static func abcGinto(size: CGFloat, weight: FontWeight = .regular) -> Font {
         Bundle.ensureFontsRegistered()
-        let modifiedFont = createModifiedFont(
-            baseName: Fonts.abcGinto,
-            weight: weight,
-            size: size
-        )
-        return Font(modifiedFont)
+        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", fixedSize: size)
     }
 
     // For dynamic text styles (used by Text extensions)
-    static func abcGinto(
-        style: Font.TextStyle,
-        weight: FontWeight = .regular
-    ) -> Font {
+    static func abcGinto(style: Font.TextStyle, weight: FontWeight = .regular) -> Font {
         Bundle.ensureFontsRegistered()
 
-        let size = style.size
-        let modifiedFont = createModifiedFont(
-            baseName: Fonts.abcGinto,
-            weight: weight,
-            size: size
+        return .custom(
+            "\(Fonts.abcGinto)-\(weight.fontName)",
+            size: style.size,
+            relativeTo: style // <- This enables .dynamicTypeSize() to work
         )
-        return Font(modifiedFont)
     }
 }
 
@@ -307,9 +271,6 @@ public extension View {
                 .headline()
 
             Text("Bitcoin has reached 100.000 USD, marking a new all-time high. This price action comes amid increased institutional adoption and strong market fundamentals.")
-                .body()
-
-            Text("Contextual alternate: 0x0x")
                 .body()
 
             Text("Callout")

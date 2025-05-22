@@ -1,7 +1,7 @@
 <h1>Apolo <img src="https://github.com/user-attachments/assets/04006e9f-8199-4d71-997f-5a3324add979" align="right" width="74"/></h1>
 <p>
   <img src="https://img.shields.io/badge/Swift-orange.svg" />
-  <img src="https://img.shields.io/badge/version-0.0.1-blue.svg" />
+  <img src="https://img.shields.io/badge/version-1.0.0-blue.svg" />
 </p>
 
 Apolo is Bipa's Design System, a set of guidelines that help our teams build our products consistently and efficiently. This design system provides a robust foundation of components and patterns that ensure a cohesive user experience across all Bipa's current and future applications.

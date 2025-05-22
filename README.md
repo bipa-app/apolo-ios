@@ -62,9 +62,9 @@ Apolo is Bipa's Design System, a set of guidelines that help our teams build our
   - [x] Switch
   - [x] Radio
   - [x] Checkbox
-- [ ] Avatar
-  - [ ] User avatars
-  - [ ] Placeholder avatars
+- [x] Avatar
+  - [x] User avatars
+  - [x] Placeholder avatars
 - [x] Tags
   - [x] Status tags
   - [x] Label tags

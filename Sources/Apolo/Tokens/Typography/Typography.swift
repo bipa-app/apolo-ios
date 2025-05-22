@@ -161,85 +161,71 @@ public extension View {
     /// Extremely large title style (80/80, Bold)
     func extremelyLargeTitle(weight: FontWeight = .bold) -> some View {
         modifier(TypographyModifier(size: 80, lineHeight: 80, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Super large title style (48/60, Bold)
     func superLargeTitle(weight: FontWeight = .bold) -> some View {
         modifier(TypographyModifier(size: 60, lineHeight: 60, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Extra large title style (44/55, Bold)
     func extraLargeTitle(weight: FontWeight = .bold) -> some View {
         modifier(TypographyModifier(size: 44, lineHeight: 55, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Extra large title 2 style (36/45, Bold)
     func extraLargeTitle2(weight: FontWeight = .bold) -> some View {
         modifier(TypographyModifier(size: 36, lineHeight: 45, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Title 1 style (28/34, Bold)
     func title1(weight: FontWeight = .medium) -> some View {
         apoloFont(.abcGinto(style: .title, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Title 2 style (22/28, Bold)
     func title2(weight: FontWeight = .medium) -> some View {
         apoloFont(.abcGinto(style: .title2, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Title 3 style with weight option (20/25)
     func title3(weight: FontWeight = .bold) -> some View {
         apoloFont(.abcGinto(style: .title3, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Headline style (17/24, Medium)
     func headline() -> some View {
         apoloFont(.abcGinto(style: .headline, weight: .medium))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Body style with weight option (17/22)
     func body(weight: FontWeight = .regular) -> some View {
         apoloFont(.abcGinto(style: .body, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Callout style with weight option (16/21)
     func callout(weight: FontWeight = .medium) -> some View {
         apoloFont(.abcGinto(style: .callout, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Subheadline style with weight option (15/20)
     func subheadline(weight: FontWeight = .regular) -> some View {
         apoloFont(.abcGinto(style: .subheadline, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Footnote style with weight option (13/18)
     func footnote(weight: FontWeight = .regular) -> some View {
         apoloFont(.abcGinto(style: .footnote, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Caption 1 style with weight option (12/16)
     func caption1(weight: FontWeight = .regular) -> some View {
         apoloFont(.abcGinto(style: .caption, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 
     /// Caption 2 style with weight option (11/13)
     func caption2(weight: FontWeight = .regular) -> some View {
         apoloFont(.abcGinto(style: .caption2, weight: weight))
-            .dynamicTypeSize(...DynamicTypeSize.accessibility5)
     }
 }
 

@@ -36,7 +36,7 @@ struct TurboTag: View {
                 .scaleEffect(4)
         )
         .clipShape(.capsule)
-        .onAppear {
+        .task {
             withAnimation(.linear(duration: 8).repeatForever(autoreverses: false)) {
                 phase = .pi * 2
             }

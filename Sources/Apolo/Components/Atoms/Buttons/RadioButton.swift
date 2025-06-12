@@ -31,7 +31,7 @@ public struct RadioButtonGroup<T: Hashable>: View {
     }
     
     public var body: some View {
-        VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
+        VStack(alignment: .leading, spacing: .zero) {
             switch style {
             case .default:
                 ForEach(Array(options.enumerated()), id: \.element.id) { index, option in
@@ -88,7 +88,8 @@ public struct RadioOption<T: Hashable>: Identifiable {
     public let iconName: String?
     public let iconColor: Color?
     public let iconLeading: CGFloat?
-    
+    public let tag: Tag?
+
     public init(
         id: String,
         value: T,
@@ -97,7 +98,8 @@ public struct RadioOption<T: Hashable>: Identifiable {
         style: RadioButtonStyle = .standard,
         iconName: String? = nil,
         iconColor: Color? = nil,
-        iconLeading: CGFloat = Tokens.Spacing.extraExtraSmall
+        iconLeading: CGFloat = Tokens.Spacing.extraExtraSmall,
+        withTag tag: Tag? = nil
     ) {
         self.id = id
         self.value = value
@@ -107,6 +109,7 @@ public struct RadioOption<T: Hashable>: Identifiable {
         self.iconName = iconName
         self.iconColor = iconColor
         self.iconLeading = iconLeading
+        self.tag = tag
     }
 }
 
@@ -119,6 +122,9 @@ public enum RadioButtonStyle {
     
     /// Footnote label with body description/
     case reversed
+    
+    /// Add a cardBackground in selected item
+    case cardSelection(CardBackground.Style)
 }
 
 // MARK: - Radio Button
@@ -148,23 +154,47 @@ public struct RadioButton<T: Hashable>: View {
     // MARK: - Body
     
     public var body: some View {
-        HStack {
+        if isSelected, case .cardSelection(let cardBackgroundStyle) = style {
+            content
+                .cardBackground(cardBackgroundStyle)
+        } else {
+            content
+        }
+    }
+    
+    private var content: some View {
+        HStack(spacing: Tokens.Spacing.medium) {
             radioCircle
 
             if let iconName = option.iconName {
                 Image(systemName: iconName)
                     .regular()
                     .foregroundColor(option.iconColor ?? .primary)
-                    .padding(.trailing, 4)
                     .padding(.leading, option.iconLeading)
             }
             
             labelStack
+                .frame(maxWidth: .infinity, alignment: .leading)
+            
+            if let tag = option.tag {
+                tag
+                    .minimumScaleFactor(0.8)
+                    .lineLimit(1)
+            }
         }
+        .padding(Tokens.Spacing.medium)
+        .frame(minHeight: 77)
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.containerRelative)
-        .gesture(tapGesture.simultaneously(with: pressGesture))
-
+        .onTapGesture {
+            animate = true
+            feedbackGenerator.impactOccurred()
+            action()
+            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
+                animate = false
+            }
+        }
     }
     
     // MARK: - UI Components
@@ -175,55 +205,51 @@ public struct RadioButton<T: Hashable>: View {
                 .fill(isSelected ? Color.primary : Color.clear)
                 .frame(width: 10, height: 10)
             Circle()
-                .stroke(Color.secondary, lineWidth: 1)
+                .stroke(.secondary.opacity(0.16), lineWidth: 1)
                 .frame(width: 24, height: 24)
         }
         .scaleEffect(x: animate ? 0.95 : 1, y: animate ? 0.95 : 1)
         .animation(.bouncy(duration: 0.3), value: animate)
     }
     
+    @ViewBuilder
     private var labelStack: some View {
-        VStack(alignment: .leading) {
-            switch style {
-            case .standard:
-                Text(option.label)
-                    .callout(weight: .medium)
-                
-                if let description = option.description {
-                    Text(description)
-                        .subheadline()
-                        .foregroundStyle(Color.secondary)
-                }
-            case .reversed:
-                Text(option.label)
+        switch style {
+        case .standard:
+            standardLabel
+            
+        case .reversed:
+            reversedLabel
+            
+        case .cardSelection(let cardBackgroundStyle):
+            standardLabel
+        }
+    }
+    
+    private var standardLabel: some View {
+        VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
+            Text(option.label)
+                .callout(weight: .medium)
+            
+            if let description = option.description {
+                Text(description)
                     .subheadline()
                     .foregroundStyle(Color.secondary)
-                
-                if let description = option.description {
-                    Text(description)
-                        .callout(weight: .medium)
-                }
             }
         }
     }
     
-    // MARK: - Gestures
-    
-    private var pressGesture: some Gesture {
-        DragGesture(minimumDistance: 0)
-            .onChanged { _ in
-                animate = true
-                feedbackGenerator.prepare()
+    private var reversedLabel: some View {
+        VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
+            Text(option.label)
+                .subheadline()
+                .foregroundStyle(Color.secondary)
+            
+            if let description = option.description {
+                Text(description)
+                    .callout(weight: .medium)
             }
-            .onEnded { _ in animate = false }
-    }
-    
-    private var tapGesture: some Gesture {
-        TapGesture()
-            .onEnded {
-                feedbackGenerator.impactOccurred()
-                action()
-            }
+        }
     }
 }
 

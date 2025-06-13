@@ -160,56 +160,67 @@ extension Tag.Style: Equatable {
 // MARK: - Preview
 
 #Preview {
-    VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
-        Group {
-            Text("Regular Size")
-                .headline()
-
-            Tag(style: .label(icon: "bitcoinsign.circle.fill"), title: "LABEL")
-            Tag(style: .success, title: "CONCLUÍDA")
-            Tag(style: .warning, title: "PENDENTE")
-            Tag(style: .error, title: "FALHADA")
-            Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
-            Tag(style: .turbo)
-            Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom Color")
-            Tag(style: .custom(shapeStyle: .ultraThinMaterial), title: "Custom ShapeStyle")
+    ScrollView(.vertical) {
+        VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
+            Group {
+                Text("Regular Size")
+                    .headline()
+                
+                Tag(style: .label(icon: "bitcoinsign.circle.fill"), title: "LABEL")
+                Tag(style: .success, title: "CONCLUÍDA")
+                Tag(style: .warning, title: "PENDENTE")
+                Tag(style: .error, title: "FALHADA")
+                Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
+                Tag(style: .turbo)
+                Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom Color")
+                Tag(style: .custom(shapeStyle: .ultraThinMaterial), title: "Custom ShapeStyle")
+                
+                Tag(
+                    style: .custom(
+                        backgroundColor: Color(.violet).opacity(0.15),
+                        textColor: Color(.violet),
+                        icon: "bitcoinsign.circle.fill",
+                        secondaryIcon: "chevron.down"
+                    ),
+                    title: "Bitcoin",
+                    size: .regular
+                )
+            }
             
-            Tag(
-                style: .custom(
-                    backgroundColor: Color(.violet).opacity(0.15),
-                    textColor: Color(.violet),
-                    icon: "bitcoinsign.circle.fill",
-                    secondaryIcon: "chevron.down"
-                ),
-                title: "Bitcoin",
-                size: .regular
-            )
+            Divider()
+            
+            Group {
+                Text("Small Size")
+                    .headline()
+                
+                Tag(style: .label(icon: "bitcoinsign.circle.fill"), title: "LABEL", size: .small)
+                Tag(style: .success, title: "CONCLUÍDA", size: .small)
+                Tag(style: .warning, title: "PENDENTE", size: .small)
+                Tag(style: .error, title: "FALHADA", size: .small)
+                Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual", size: .small)
+                Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom", size: .small)
+                
+                Tag(
+                    style: .custom(
+                        backgroundColor: Color(.violet).opacity(0.15),
+                        textColor: Color(.violet),
+                        icon: "bitcoinsign.circle.fill",
+                        secondaryIcon: "chevron.down"
+                    ),
+                    title: "Bitcoin",
+                    size: .small
+                )
+                
+                Tag(
+                    style: .custom(
+                        backgroundColor: Tokens.Color.green.color.opacity(0.15),
+                        textColor: Tokens.Color.green.color
+                    ),
+                    title: "Recomendado",
+                    size: .small
+                )
+            }
         }
-
-        Divider()
-
-        Group {
-            Text("Small Size")
-                .headline()
-
-            Tag(style: .label(icon: "bitcoinsign.circle.fill"), title: "LABEL", size: .small)
-            Tag(style: .success, title: "CONCLUÍDA", size: .small)
-            Tag(style: .warning, title: "PENDENTE", size: .small)
-            Tag(style: .error, title: "FALHADA", size: .small)
-            Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual", size: .small)
-            Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom", size: .small)
-
-            Tag(
-                style: .custom(
-                    backgroundColor: Color(.violet).opacity(0.15),
-                    textColor: Color(.violet),
-                    icon: "bitcoinsign.circle.fill",
-                    secondaryIcon: "chevron.down"
-                ),
-                title: "Bitcoin",
-                size: .small
-            )
-        }
+        .padding()
     }
-    .padding()
 }

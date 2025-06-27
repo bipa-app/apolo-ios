@@ -218,7 +218,7 @@ public struct ButtonShapeModifier: ViewModifier {
 
 public struct PreventDoubleTapModifier: ViewModifier {
     @State private var allowTap = true
-    
+
     public func body(content: Content) -> some View {
         content
             .allowsHitTesting(allowTap)
@@ -237,7 +237,7 @@ public struct PreventDoubleTapModifier: ViewModifier {
 
 public extension View {
     func preventDoubleTap() -> some View {
-        self.modifier(PreventDoubleTapModifier())
+        modifier(PreventDoubleTapModifier())
     }
 }
 
@@ -316,7 +316,7 @@ public struct HapticFeedbackModifier: ViewModifier {
 // MARK: - Preview
 
 #Preview {
-    VStack(spacing: 12) {
+    VStack(spacing: 20) {
         Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }

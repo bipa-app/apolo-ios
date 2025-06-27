@@ -178,6 +178,11 @@ public extension View {
         modifier(TypographyModifier(size: 36, lineHeight: 45, weight: weight))
     }
 
+    /// Large title  (34/41, Medium)
+    func largeTitle(weight: FontWeight = .medium) -> some View {
+        modifier(TypographyModifier(size: 34, lineHeight: 41, weight: weight))
+    }
+
     /// Title 1 style (28/34, Bold)
     func title1(weight: FontWeight = .medium) -> some View {
         apoloFont(.abcGinto(style: .title, weight: weight))
@@ -243,6 +248,9 @@ public extension View {
 
             Text("Extra Large Title 2")
                 .extraLargeTitle2()
+
+            Text("Large title")
+                .largeTitle()
 
             Text("Title 1")
                 .title1()

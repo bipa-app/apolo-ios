@@ -158,6 +158,12 @@ private extension View {
 }
 
 public extension View {
+    
+    /// Mega large title style (80/100, Medium)
+    func megaLargeTitle(weight: FontWeight = .medium) -> some View {
+        modifier(TypographyModifier(size: 80, lineHeight: 100, weight: weight))
+    }
+
     /// Extremely large title style (80/80, Bold)
     func extremelyLargeTitle(weight: FontWeight = .bold) -> some View {
         modifier(TypographyModifier(size: 80, lineHeight: 80, weight: weight))

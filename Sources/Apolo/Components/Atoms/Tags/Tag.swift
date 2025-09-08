@@ -49,6 +49,7 @@ public struct Tag: View {
         case warning
         case error
         case turbo
+        case premium
         case custom(
             shapeStyle: (any ShapeStyle)? = nil,
             backgroundColor: Color = .clear,
@@ -63,14 +64,14 @@ public struct Tag: View {
             case .success: "checkmark.circle.fill"
             case .warning: "clock.fill"
             case .error: "exclamationmark.triangle.fill"
-            case .turbo: nil
+            case .turbo, .premium: nil
             case let .custom(_, _, _, icon, _): icon
             }
         }
 
         var secondaryIcon: String? {
             switch self {
-            case .label, .success, .warning, .error, .turbo: nil
+            case .label, .success, .warning, .error, .turbo, .premium: nil
             case let .custom(_, _, _, _, icon): icon
             }
         }
@@ -86,7 +87,7 @@ public struct Tag: View {
         
         var background: AnyShapeStyle {
             switch self {
-            case .label, .turbo:
+            case .label, .turbo, .premium:
                 return .init(Color.clear)
             case .success:
                 return .init(Color.green)
@@ -126,6 +127,9 @@ public struct Tag: View {
     // MARK: - Body
 
     public var body: some View {
+        if case .premium = style {
+            PremiumTag()
+        }
         if case .turbo = style {
             TurboTag()
         } else if let title {
@@ -172,6 +176,7 @@ extension Tag.Style: Equatable {
                 Tag(style: .error, title: "FALHADA")
                 Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
                 Tag(style: .turbo)
+                Tag(style: .premium)
                 Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom Color")
                 Tag(style: .custom(shapeStyle: .ultraThinMaterial), title: "Custom ShapeStyle")
                 

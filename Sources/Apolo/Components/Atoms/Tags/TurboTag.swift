@@ -44,28 +44,7 @@ struct TurboTag: View {
     }
 }
 
-// MARK: Animation
 
-private struct FlowEffect: GeometryEffect {
-    var phase: CGFloat
-
-    var animatableData: CGFloat {
-        get { phase }
-        set { phase = newValue }
-    }
-
-    func effectValue(size: CGSize) -> ProjectionTransform {
-        let transform = CGAffineTransform(
-            a: 1 + sin(phase) * 0.3,
-            b: cos(phase * 2) * 0.1,
-            c: sin(phase * 2) * 0.1,
-            d: 1 + cos(phase) * 0.2,
-            tx: sin(phase) * 5,
-            ty: cos(phase) * 5
-        )
-        return ProjectionTransform(transform)
-    }
-}
 
 // MARK: - Preview
 

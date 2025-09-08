@@ -10,6 +10,7 @@ import SwiftUI
 public enum Fonts {
     static let abcGinto = "ABCGinto"
     static let notoEmoji = "NotoEmoji-Regular"
+    static let bradford = "Bradford"
 }
 
 public enum FontWeight {
@@ -25,6 +26,29 @@ public enum FontWeight {
         }
     }
 }
+
+public extension Font.TextStyle {
+    var size: CGFloat {
+        return switch self {
+        case .caption2:         11
+        case .caption:          12
+        case .footnote:         13
+        case .subheadline:      15
+        case .callout:          16
+        case .body:             17
+        case .headline:         17
+        case .title3:           20
+        case .title2:           22
+        case .title:            28
+        case .largeTitle:       34
+        case .extraLargeTitle2: 36
+        case .extraLargeTitle:  44
+        @unknown default:       17
+        }
+    }
+}
+
+// MARK: ABCGinto
 
 public extension Font {
     // For fixed sizes (used by TypographyModifier)
@@ -45,38 +69,39 @@ public extension Font {
     }
 }
 
-public extension Font.TextStyle {
-    var size: CGFloat {
-        switch self {
-        case .largeTitle:
-            return 34
-        case .title:
-            return 28
-        case .title2:
-            return 22
-        case .title3:
-            return 20
-        case .headline:
-            return 17
-        case .subheadline:
-            return 15
-        case .body:
-            return 17
-        case .callout:
-            return 16
-        case .footnote:
-            return 13
-        case .caption:
-            return 12
-        case .caption2:
-            return 11
-        case .extraLargeTitle:
-            return 44
-        case .extraLargeTitle2:
-            return 36
-        @unknown default:
-            return 17
+// MARK: - notoEmoji
+
+public extension Font {
+    static func notoEmoji(size: CGFloat) -> Font {
+        Bundle.ensureFontsRegistered()
+        return .custom(Fonts.notoEmoji, fixedSize: size)
+    }
+}
+
+// MARK: - Bradford
+
+public extension Font {
+    /// Fixed-size Bradford. Use `italic: true` to force the Bradford-Italic face.
+    static func bradford(size: CGFloat, weight: FontWeight = .regular, italic: Bool = false) -> Font {
+        Bundle.ensureFontsRegistered()
+        return .custom(bradfordFaceName(weight: weight, italic: italic), fixedSize: size)
+    }
+
+    /// Dynamic Bradford relative to a `Font.TextStyle`. Use `italic: true` to force the Bradford-Italic face.
+    static func bradford(style: Font.TextStyle, weight: FontWeight = .regular, italic: Bool = false) -> Font {
+        Bundle.ensureFontsRegistered()
+        return .custom(
+            bradfordFaceName(weight: weight, italic: italic),
+            size: style.size,
+            relativeTo: style
+        )
+    }
+    
+    private static func bradfordFaceName(weight: FontWeight, italic: Bool) -> String {
+        if italic {
+            return "\(Fonts.bradford)-Italic"
         }
+        return "\(Fonts.bradford)-\(weight.fontName)"
     }
 }
 
@@ -103,6 +128,8 @@ public extension Bundle {
             ("ABCGinto-MediumItalic", "otf"),
             ("ABCGinto-BoldItalic", "otf"),
             ("NotoEmoji-Regular", "ttf"),
+            ("Bradford-Regular", "otf"),
+            ("Bradford-Italic", "otf")
         ]
 
         for font in fonts {
@@ -138,13 +165,6 @@ public extension Bundle {
         }
 
         _ = FontRegistration.didRegister
-    }
-}
-
-public extension Font {
-    static func notoEmoji(size: CGFloat) -> Font {
-        Bundle.ensureFontsRegistered()
-        return .custom(Fonts.notoEmoji, fixedSize: size)
     }
 }
 
@@ -238,6 +258,15 @@ public extension View {
     func caption2(weight: FontWeight = .regular) -> some View {
         apoloFont(.abcGinto(style: .caption2, weight: weight))
     }
+    
+    func bradford(weight: FontWeight = .regular) -> some View {
+        apoloFont(.bradford(style: .footnote, weight: weight, italic: false))
+    }
+    
+    /// Bradford italic convenience (uses Bradford-Italic face)
+    func bradford(weight: FontWeight = .regular, italic: Bool = false) -> some View {
+        apoloFont(.bradford(style: .body, weight: weight, italic: italic))
+    }
 }
 
 #Preview {
@@ -287,8 +316,12 @@ public extension View {
 
             Text("Caption 2")
                 .caption2()
+            
             Image(systemName: "bitcoinsign.circle")
                 .extraLargeTitle()
+            
+            Text("Bradford")
+                .bradford(italic: true)
         }
         .padding()
     }

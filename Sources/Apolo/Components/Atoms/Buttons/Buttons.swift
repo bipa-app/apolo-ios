@@ -66,6 +66,25 @@ private extension View {
             .modifier(HapticFeedbackModifier(style: hapticStyle))
             .preventDoubleTap()
     }
+    
+    func borderedProminentStyle<S: ShapeStyle>(
+        _ shape: CustomButtonShape,
+        _ shapeStyle: S,
+        _ size: ControlSize,
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
+    ) -> some View {
+        buttonStyle(.borderedProminent)
+            .controlSize(size)
+            .modifier(ButtonShapeModifier(shape: shape))
+            .tint(.clear)
+            .font(.abcGinto(style: .body, weight: .regular))
+            .background(
+                shape.toViewShape
+                    .fill(shapeStyle)
+            )
+            .modifier(HapticFeedbackModifier(style: hapticStyle))
+            .preventDoubleTap()
+    }
 
     func borderedStyle(
         _ shape: CustomButtonShape,
@@ -99,10 +118,11 @@ private extension View {
 
     func strokedStyle(
         _ shape: CustomButtonShape,
+        _ borderColor: Color,
         _ size: ControlSize,
         _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
     ) -> some View {
-        modifier(StrokedButtonModifier(shape: shape, size: size))
+        modifier(StrokedButtonModifier(shape: shape, borderColor: borderColor, size: size))
             .font(.abcGinto(style: .subheadline, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
             .preventDoubleTap()
@@ -119,6 +139,15 @@ public extension Button {
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
         borderedProminentStyle(shape, color, size, hapticStyle)
+    }
+    
+    func borderedProminentStyle<S: ShapeStyle>(
+        shape: CustomButtonShape = .capsule,
+        shapeStyle: S,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+    ) -> some View {
+        borderedProminentStyle(shape, shapeStyle, size, hapticStyle)
     }
 
     func borderedStyle(
@@ -141,10 +170,11 @@ public extension Button {
 
     func strokedStyle(
         shape: CustomButtonShape = .capsule,
+        borderColor: Color = .primary,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
-        strokedStyle(shape, size, hapticStyle)
+        strokedStyle(shape, borderColor, size, hapticStyle)
     }
 }
 
@@ -180,10 +210,11 @@ public extension ShareLink {
 
     func strokedStyle(
         shape: CustomButtonShape = .capsule,
+        borderColor: Color = .primary,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
-        strokedStyle(shape, size, hapticStyle)
+        strokedStyle(shape, borderColor, size, hapticStyle)
     }
 }
 
@@ -244,15 +275,11 @@ public extension View {
 // MARK: - StrokedButtonModifier
 
 public struct StrokedButtonModifier: ViewModifier {
-    let shape: CustomButtonShape
-    let size: ControlSize
+    public let shape: CustomButtonShape
+    public let borderColor: Color
+    public let size: ControlSize
 
     @Environment(\.isEnabled) private var isEnabled
-
-    public init(shape: CustomButtonShape, size: ControlSize) {
-        self.shape = shape
-        self.size = size
-    }
 
     private func sizeValues(for size: ControlSize) -> (height: CGFloat, padding: CGFloat) {
         switch size {
@@ -272,8 +299,6 @@ public struct StrokedButtonModifier: ViewModifier {
 
         content
             .controlSize(size)
-            .tint(.primary)
-            .foregroundStyle(.primary)
             .padding(.vertical, Tokens.Spacing.small)
             .padding(.horizontal, sizes.padding)
             .frame(minHeight: sizes.height)
@@ -282,13 +307,13 @@ public struct StrokedButtonModifier: ViewModifier {
                     switch self.shape {
                     case .capsule:
                         Capsule()
-                            .strokeBorder(Color.primary.opacity(0.15), lineWidth: 1)
+                            .strokeBorder(borderColor.opacity(0.15), lineWidth: 1)
                     case .circle:
                         Circle()
-                            .strokeBorder(Color.primary.opacity(0.15), lineWidth: 1)
+                            .strokeBorder(borderColor.opacity(0.15), lineWidth: 1)
                     case .roundedRectangle:
                         RoundedRectangle(cornerRadius: Tokens.CornerRadius.small)
-                            .strokeBorder(Color.primary.opacity(0.15), lineWidth: 1)
+                            .strokeBorder(borderColor.opacity(0.15), lineWidth: 1)
                     }
                 }
             )
@@ -316,45 +341,69 @@ public struct HapticFeedbackModifier: ViewModifier {
 // MARK: - Preview
 
 #Preview {
-    VStack(spacing: 20) {
-        Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
-            print("Hello")
+    ScrollView {
+        VStack(spacing: 20) {
+            Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
+                print("Hello")
+            }
+            .borderedProminentStyle(color: Color(.violet), size: .large)
+            
+            
+            Button(".borderedProminentStyle") {
+                print("borderedProminentStyle")
+            }
+            .borderedProminentStyle(
+                shapeStyle: LinearGradient(
+                    colors: [.yellow, .red],
+                    startPoint: .leading,
+                    endPoint: .trailing
+                ),
+                size: .large
+            )
+            .foregroundStyle(.white)
+            
+            Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
+                print("Hello")
+            }
+            .borderedStyle(color: Color(.violet), size: .regular, hapticStyle: .rigid)
+            
+            Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
+                print("Hello")
+            }
+            .strokedStyle(shape: .capsule, size: .large)
+            
+            Button(systemImage: "bitcoinsign.circle.fill") {
+                print("Hello")
+            }
+            .borderedProminentStyle(shape: .circle, color: Color(.violet), size: .large)
+            
+            Button(systemImage: "bitcoinsign.circle.fill") {
+                print("Hello")
+            }
+            .borderedStyle(shape: .circle, color: Color(.violet), size: .large)
+            
+            Button(systemImage: "bitcoinsign.circle.fill") {
+                print("Hello")
+            }
+            .strokedStyle(shape: .circle, size: .large)
+            
+            Button(action: {
+                print("strokedStyle")
+            }, label: {
+                Text(".strokedStyle")
+                    .foregroundStyle(.orange)
+            })
+            .strokedStyle(shape: .capsule, borderColor: .orange, size: .large)
+            
+            ShareLink(item: "Share me") {
+                Text("Compartilhar")
+            }
+            .plainStyle()
+            
+            ShareLink(item: "Share me") {
+                Text("Compartilhar")
+            }
+            .borderedProminentStyle()
         }
-        .borderedProminentStyle(color: Color(.violet), size: .large)
-
-        Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
-            print("Hello")
-        }
-        .borderedStyle(color: Color(.violet), size: .regular, hapticStyle: .rigid)
-
-        Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
-            print("Hello")
-        }
-        .strokedStyle(shape: .capsule, size: .large)
-
-        Button(systemImage: "bitcoinsign.circle.fill") {
-            print("Hello")
-        }
-        .borderedProminentStyle(shape: .circle, color: Color(.violet), size: .large)
-
-        Button(systemImage: "bitcoinsign.circle.fill") {
-            print("Hello")
-        }
-        .borderedStyle(shape: .circle, color: Color(.violet), size: .large)
-
-        Button(systemImage: "bitcoinsign.circle.fill") {
-            print("Hello")
-        }
-        .strokedStyle(shape: .circle, size: .large)
-
-        ShareLink(item: "Share me") {
-            Text("Compartilhar")
-        }
-        .plainStyle()
-
-        ShareLink(item: "Share me") {
-            Text("Compartilhar")
-        }
-        .borderedProminentStyle()
     }
 }

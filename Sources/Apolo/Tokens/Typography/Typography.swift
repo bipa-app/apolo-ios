@@ -259,13 +259,9 @@ public extension View {
         apoloFont(.abcGinto(style: .caption2, weight: weight))
     }
     
-    func bradford(weight: FontWeight = .regular) -> some View {
-        apoloFont(.bradford(style: .footnote, weight: weight, italic: false))
-    }
-    
     /// Bradford italic convenience (uses Bradford-Italic face)
-    func bradford(weight: FontWeight = .regular, italic: Bool = false) -> some View {
-        apoloFont(.bradford(style: .body, weight: weight, italic: italic))
+    func bradford(weight: FontWeight = .regular, style: Font.TextStyle = .body, italic: Bool = false) -> some View {
+        apoloFont(.bradford(style: style, weight: weight, italic: italic))
     }
 }
 

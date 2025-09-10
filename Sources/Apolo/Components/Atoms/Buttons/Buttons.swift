@@ -118,14 +118,22 @@ private extension View {
 
     func strokedStyle(
         _ shape: CustomButtonShape,
+        _ tintColor: Color,
         _ borderColor: Color,
         _ size: ControlSize,
         _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
     ) -> some View {
-        modifier(StrokedButtonModifier(shape: shape, borderColor: borderColor, size: size))
-            .font(.abcGinto(style: .subheadline, weight: .regular))
-            .modifier(HapticFeedbackModifier(style: hapticStyle))
-            .preventDoubleTap()
+        modifier(
+            StrokedButtonModifier(
+                shape: shape,
+                tintColor: tintColor,
+                borderColor: borderColor,
+                size: size
+            )
+        )
+        .font(.abcGinto(style: .subheadline, weight: .regular))
+        .modifier(HapticFeedbackModifier(style: hapticStyle))
+        .preventDoubleTap()
     }
 }
 
@@ -170,11 +178,12 @@ public extension Button {
 
     func strokedStyle(
         shape: CustomButtonShape = .capsule,
+        tintColor: Color = .primary,
         borderColor: Color = .primary,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
-        strokedStyle(shape, borderColor, size, hapticStyle)
+        strokedStyle(shape, tintColor, borderColor, size, hapticStyle)
     }
 }
 
@@ -210,11 +219,12 @@ public extension ShareLink {
 
     func strokedStyle(
         shape: CustomButtonShape = .capsule,
+        tintColor: Color = .primary,
         borderColor: Color = .primary,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
     ) -> some View {
-        strokedStyle(shape, borderColor, size, hapticStyle)
+        strokedStyle(shape, tintColor, borderColor, size, hapticStyle)
     }
 }
 
@@ -276,6 +286,7 @@ public extension View {
 
 public struct StrokedButtonModifier: ViewModifier {
     public let shape: CustomButtonShape
+    public let tintColor: Color
     public let borderColor: Color
     public let size: ControlSize
 
@@ -299,6 +310,7 @@ public struct StrokedButtonModifier: ViewModifier {
 
         content
             .controlSize(size)
+            .tint(tintColor)
             .padding(.vertical, Tokens.Spacing.small)
             .padding(.horizontal, sizes.padding)
             .frame(minHeight: sizes.height)

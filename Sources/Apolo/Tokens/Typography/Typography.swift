@@ -52,20 +52,35 @@ public extension Font.TextStyle {
 
 public extension Font {
     // For fixed sizes (used by TypographyModifier)
-    static func abcGinto(size: CGFloat, weight: FontWeight = .regular) -> Font {
+    static func abcGinto(size: CGFloat, weight: FontWeight = .regular, monospacedDigit: Bool = false) -> Font {
         Bundle.ensureFontsRegistered()
-        return .custom("\(Fonts.abcGinto)-\(weight.fontName)", fixedSize: size)
+        
+        if monospacedDigit {
+            return .custom("\(Fonts.abcGinto)-\(weight.fontName)", fixedSize: size)
+                .monospacedDigit()
+        } else {
+            return .custom("\(Fonts.abcGinto)-\(weight.fontName)", fixedSize: size)
+        }
     }
-
+    
     // For dynamic text styles (used by Text extensions)
-    static func abcGinto(style: Font.TextStyle, weight: FontWeight = .regular) -> Font {
+    static func abcGinto(style: Font.TextStyle, weight: FontWeight = .regular, monospacedDigit: Bool = false) -> Font {
         Bundle.ensureFontsRegistered()
-
-        return .custom(
-            "\(Fonts.abcGinto)-\(weight.fontName)",
-            size: style.size,
-            relativeTo: style // <- This enables .dynamicTypeSize() to work
-        )
+        
+        if monospacedDigit {
+            return .custom(
+                "\(Fonts.abcGinto)-\(weight.fontName)",
+                size: style.size,
+                relativeTo: style // <- This enables .dynamicTypeSize() to work
+            )
+            .monospacedDigit()
+        } else {
+            return .custom(
+                "\(Fonts.abcGinto)-\(weight.fontName)",
+                size: style.size,
+                relativeTo: style // <- This enables .dynamicTypeSize() to work
+            )
+        }
     }
 }
 
@@ -109,12 +124,21 @@ public struct TypographyModifier: ViewModifier {
     let size: CGFloat
     let lineHeight: CGFloat
     let weight: FontWeight
-
+    var monospacedDigit: Bool = false
+    
     public func body(content: Content) -> some View {
-        content
-            .font(.abcGinto(size: size, weight: weight))
-            .lineSpacing(lineHeight - size)
-            .fixedSize(horizontal: false, vertical: true)
+        
+        if monospacedDigit {
+            content
+                .font(.abcGinto(size: size, weight: weight).monospacedDigit())
+                .lineSpacing(lineHeight - size)
+                .fixedSize(horizontal: false, vertical: true)
+        } else {
+            content
+                .font(.abcGinto(size: size, weight: weight))
+                .lineSpacing(lineHeight - size)
+                .fixedSize(horizontal: false, vertical: true)
+        }
     }
 }
 
@@ -180,48 +204,48 @@ private extension View {
 public extension View {
     
     /// Mega large title style (80/100, Medium)
-    func megaLargeTitle(weight: FontWeight = .medium) -> some View {
-        modifier(TypographyModifier(size: 80, lineHeight: 100, weight: weight))
+    func megaLargeTitle(weight: FontWeight = .medium, monospacedDigit: Bool = false) -> some View {
+        modifier(TypographyModifier(size: 80, lineHeight: 100, weight: weight, monospacedDigit: monospacedDigit))
     }
 
     /// Extremely large title style (80/80, Bold)
-    func extremelyLargeTitle(weight: FontWeight = .bold) -> some View {
-        modifier(TypographyModifier(size: 80, lineHeight: 80, weight: weight))
+    func extremelyLargeTitle(weight: FontWeight = .bold, monospacedDigit: Bool = false) -> some View {
+        modifier(TypographyModifier(size: 80, lineHeight: 80, weight: weight, monospacedDigit: monospacedDigit))
     }
 
     /// Super large title style (48/60, Bold)
-    func superLargeTitle(weight: FontWeight = .bold) -> some View {
-        modifier(TypographyModifier(size: 60, lineHeight: 60, weight: weight))
+    func superLargeTitle(weight: FontWeight = .bold, monospacedDigit: Bool = false) -> some View {
+        modifier(TypographyModifier(size: 60, lineHeight: 60, weight: weight, monospacedDigit: monospacedDigit))
     }
 
     /// Extra large title style (44/55, Bold)
-    func extraLargeTitle(weight: FontWeight = .bold) -> some View {
-        modifier(TypographyModifier(size: 44, lineHeight: 55, weight: weight))
+    func extraLargeTitle(weight: FontWeight = .bold, monospacedDigit: Bool = false) -> some View {
+        modifier(TypographyModifier(size: 44, lineHeight: 55, weight: weight, monospacedDigit: monospacedDigit))
     }
 
     /// Extra large title 2 style (36/45, Bold)
-    func extraLargeTitle2(weight: FontWeight = .bold) -> some View {
-        modifier(TypographyModifier(size: 36, lineHeight: 45, weight: weight))
+    func extraLargeTitle2(weight: FontWeight = .bold, monospacedDigit: Bool = false) -> some View {
+        modifier(TypographyModifier(size: 36, lineHeight: 45, weight: weight, monospacedDigit: monospacedDigit))
     }
 
     /// Large title  (34/41, Medium)
-    func largeTitle(weight: FontWeight = .medium) -> some View {
-        modifier(TypographyModifier(size: 34, lineHeight: 41, weight: weight))
+    func largeTitle(weight: FontWeight = .medium, monospacedDigit: Bool = false) -> some View {
+        modifier(TypographyModifier(size: 34, lineHeight: 41, weight: weight, monospacedDigit: monospacedDigit))
     }
 
     /// Title 1 style (28/34, Bold)
-    func title1(weight: FontWeight = .medium) -> some View {
-        apoloFont(.abcGinto(style: .title, weight: weight))
+    func title1(weight: FontWeight = .medium, monospacedDigit: Bool = false) -> some View {
+        apoloFont(.abcGinto(style: .title, weight: weight, monospacedDigit: monospacedDigit))
     }
 
     /// Title 2 style (22/28, Bold)
-    func title2(weight: FontWeight = .medium) -> some View {
-        apoloFont(.abcGinto(style: .title2, weight: weight))
+    func title2(weight: FontWeight = .medium, monospacedDigit: Bool = false) -> some View {
+        apoloFont(.abcGinto(style: .title2, weight: weight, monospacedDigit: monospacedDigit))
     }
 
     /// Title 3 style with weight option (20/25)
-    func title3(weight: FontWeight = .bold) -> some View {
-        apoloFont(.abcGinto(style: .title3, weight: weight))
+    func title3(weight: FontWeight = .bold, monospacedDigit: Bool = false) -> some View {
+        apoloFont(.abcGinto(style: .title3, weight: weight, monospacedDigit: monospacedDigit))
     }
 
     /// Headline style (17/24, Medium)

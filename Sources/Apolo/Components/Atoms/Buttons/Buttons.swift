@@ -56,7 +56,8 @@ private extension View {
         _ shape: CustomButtonShape,
         _ color: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ preventDoubleTap: Bool
     ) -> some View {
         buttonStyle(.borderedProminent)
             .controlSize(size)
@@ -64,14 +65,15 @@ private extension View {
             .tint(color)
             .font(.abcGinto(style: .body, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
-            .preventDoubleTap()
+            .preventDoubleTap(enabled: preventDoubleTap)
     }
     
     func borderedProminentStyle<S: ShapeStyle>(
         _ shape: CustomButtonShape,
         _ shapeStyle: S,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ preventDoubleTap: Bool
     ) -> some View {
         buttonStyle(.borderedProminent)
             .controlSize(size)
@@ -83,14 +85,15 @@ private extension View {
                     .fill(shapeStyle)
             )
             .modifier(HapticFeedbackModifier(style: hapticStyle))
-            .preventDoubleTap()
+            .preventDoubleTap(enabled: preventDoubleTap)
     }
 
     func borderedStyle(
         _ shape: CustomButtonShape,
         _ color: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ preventDoubleTap: Bool
     ) -> some View {
         buttonStyle(.bordered)
             .controlSize(size)
@@ -98,14 +101,15 @@ private extension View {
             .tint(color)
             .font(.abcGinto(style: .body, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
-            .preventDoubleTap()
+            .preventDoubleTap(enabled: preventDoubleTap)
     }
 
     func plainStyle(
         _ shape: CustomButtonShape,
         _ color: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ preventDoubleTap: Bool
     ) -> some View {
         buttonStyle(.plain)
             .controlSize(size)
@@ -113,7 +117,7 @@ private extension View {
             .tint(color)
             .font(.abcGinto(style: .body, weight: .regular))
             .modifier(HapticFeedbackModifier(style: hapticStyle))
-            .preventDoubleTap()
+            .preventDoubleTap(enabled: preventDoubleTap)
     }
 
     func strokedStyle(
@@ -121,7 +125,8 @@ private extension View {
         _ tintColor: Color,
         _ borderColor: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ preventDoubleTap: Bool
     ) -> some View {
         modifier(
             StrokedButtonModifier(
@@ -133,7 +138,7 @@ private extension View {
         )
         .font(.abcGinto(style: .subheadline, weight: .regular))
         .modifier(HapticFeedbackModifier(style: hapticStyle))
-        .preventDoubleTap()
+        .preventDoubleTap(enabled: preventDoubleTap)
     }
 }
 
@@ -144,36 +149,40 @@ public extension Button {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
     ) -> some View {
-        borderedProminentStyle(shape, color, size, hapticStyle)
+        borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap)
     }
     
     func borderedProminentStyle<S: ShapeStyle>(
         shape: CustomButtonShape = .capsule,
         shapeStyle: S,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
     ) -> some View {
-        borderedProminentStyle(shape, shapeStyle, size, hapticStyle)
+        borderedProminentStyle(shape, shapeStyle, size, hapticStyle, preventDoubleTap)
     }
 
     func borderedStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
     ) -> some View {
-        borderedStyle(shape, color, size, hapticStyle)
+        borderedStyle(shape, color, size, hapticStyle, preventDoubleTap)
     }
 
     func plainStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
     ) -> some View {
-        plainStyle(shape, color, size, hapticStyle)
+        plainStyle(shape, color, size, hapticStyle, preventDoubleTap)
     }
 
     func strokedStyle(
@@ -181,9 +190,10 @@ public extension Button {
         tintColor: Color = .primary,
         borderColor: Color = .primary,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
     ) -> some View {
-        strokedStyle(shape, tintColor, borderColor, size, hapticStyle)
+        strokedStyle(shape, tintColor, borderColor, size, hapticStyle, preventDoubleTap)
     }
 }
 
@@ -194,27 +204,30 @@ public extension ShareLink {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
     ) -> some View {
-        borderedProminentStyle(shape, color, size, hapticStyle)
+        borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap)
     }
 
     func borderedStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
     ) -> some View {
-        borderedStyle(shape, color, size, hapticStyle)
+        borderedStyle(shape, color, size, hapticStyle, preventDoubleTap)
     }
 
     func plainStyle(
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
     ) -> some View {
-        plainStyle(shape, color, size, hapticStyle)
+        plainStyle(shape, color, size, hapticStyle, preventDoubleTap)
     }
 
     func strokedStyle(
@@ -222,9 +235,10 @@ public extension ShareLink {
         tintColor: Color = .primary,
         borderColor: Color = .primary,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
     ) -> some View {
-        strokedStyle(shape, tintColor, borderColor, size, hapticStyle)
+        strokedStyle(shape, tintColor, borderColor, size, hapticStyle, preventDoubleTap)
     }
 }
 
@@ -258,27 +272,33 @@ public struct ButtonShapeModifier: ViewModifier {
 // MARK: - PreventDoubleTapModifier
 
 public struct PreventDoubleTapModifier: ViewModifier {
+    
+    let enabled: Bool
     @State private var allowTap = true
 
     public func body(content: Content) -> some View {
-        content
-            .allowsHitTesting(allowTap)
-            .simultaneousGesture(
-                TapGesture()
-                    .onEnded {
-                        guard allowTap else { return }
-                        allowTap.toggle()
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+        if enabled {
+            content
+                .allowsHitTesting(allowTap)
+                .simultaneousGesture(
+                    TapGesture()
+                        .onEnded {
+                            guard allowTap else { return }
                             allowTap.toggle()
+                            DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                                allowTap.toggle()
+                            }
                         }
-                    }
-            )
+                )
+        } else {
+            content
+        }
     }
 }
 
 public extension View {
-    func preventDoubleTap() -> some View {
-        modifier(PreventDoubleTapModifier())
+    func preventDoubleTap(enabled: Bool = true) -> some View {
+        modifier(PreventDoubleTapModifier(enabled: enabled))
     }
 }
 

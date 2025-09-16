@@ -15,18 +15,39 @@ public struct Checkbox: View {
     private var description: String?
     @Binding private var isChecked: Bool
     @State private var animate: Bool = false
+    private let shapeStyle: AnyShapeStyle?
     private let onCheck: ((Bool) -> Void)?
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
-
+    private let titleFont: Font?
+    
     public init(
         label: String? = nil,
         description: String? = nil,
         isChecked: Binding<Bool>,
+        titleFont: Font? = nil,
         onCheck: ((Bool) -> Void)? = nil
     ) {
         self.label = label
         self.description = description
         self._isChecked = isChecked
+        self.shapeStyle = nil
+        self.titleFont = titleFont
+        self.onCheck = onCheck
+    }
+
+    public init<S: ShapeStyle>(
+        label: String? = nil,
+        description: String? = nil,
+        isChecked: Binding<Bool>,
+        shapeStyle: S? = nil,
+        titleFont: Font? = nil,
+        onCheck: ((Bool) -> Void)? = nil
+    ) {
+        self.label = label
+        self.description = description
+        self._isChecked = isChecked
+        self.shapeStyle = shapeStyle.map(AnyShapeStyle.init)
+        self.titleFont = titleFont
         self.onCheck = onCheck
     }
 
@@ -36,18 +57,25 @@ public struct Checkbox: View {
         HStack {
             checkboxSymbol
             labelStack
-            Spacer()
         }
-        .contentShape(Rectangle())
+        .contentShape(.rect)
         .gesture(tapGesture.simultaneously(with: pressGesture))
     }
 
     // MARK: - UI Components
 
     private var checkboxSymbol: some View {
-        Image(systemName: isChecked ? "checkmark.square.fill" : "square")
+        let fill: AnyShapeStyle = {
+            if let style = shapeStyle {
+                return isChecked ? style : AnyShapeStyle(Tokens.Color.secondarySystemFill.color)
+            } else {
+                return AnyShapeStyle(isChecked ? Tokens.Color.label.color : Tokens.Color.secondarySystemFill.color)
+            }
+        }()
+
+        return Image(systemName: isChecked ? "checkmark.square.fill" : "square")
             .large()
-            .foregroundStyle(isChecked ? Tokens.Color.label.color : Tokens.Color.secondarySystemFill.color)
+            .foregroundStyle(fill)
             .scaleEffect(animate ? 0.85 : 1)
             .animation(.bouncy(duration: 0.3), value: animate)
     }
@@ -57,7 +85,7 @@ public struct Checkbox: View {
             if let label {
                 VStack(alignment: .leading) {
                     Text(label)
-                        .body()
+                        .font(titleFont ?? .abcGinto(style: .body))
 
                     if let description {
                         Text(description)
@@ -96,8 +124,9 @@ public struct Checkbox: View {
 #Preview {
     @Previewable @State var checked1 = false
     @Previewable @State var checked2 = true
+    @Previewable @State var checked3 = true
 
-    VStack(spacing: 16) {
+    VStack(alignment: .leading, spacing: 16) {
         Checkbox(label: "Default Checkbox", isChecked: $checked1) { newValue in
             print("Checkbox tapped \(newValue)")
         }
@@ -109,6 +138,17 @@ public struct Checkbox: View {
         ) { newValue in
             print("Checkbox tapped \(newValue)")
         }
+        
+        Checkbox(
+            label: "ShapeStyle and titleFont",
+            description: "This is a description text that explains the checkbox",
+            isChecked: $checked3,
+            shapeStyle: LinearGradient.init(colors: [.yellow, .orange], startPoint: .leading, endPoint: .trailing),
+            titleFont: .abcGinto(style: .callout)
+        ) { newValue in
+            print("Checkbox tapped \(newValue)")
+        }
     }
+    .frame(maxWidth: .infinity, alignment: .leading)
     .padding()
 }

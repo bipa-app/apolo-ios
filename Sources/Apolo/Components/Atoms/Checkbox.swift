@@ -186,13 +186,13 @@ public struct ToggleCheckboxStyle: ToggleStyle {
 }
 
 public extension ToggleStyle where Self == ToggleCheckboxStyle {
-    public static var checkbox: ToggleCheckboxStyle { .init() }
+    public static var apoloCheckbox: ToggleCheckboxStyle { .init() }
     
-    public static func checkbox<S: ShapeStyle>(_ shapeStyle: S) -> ToggleCheckboxStyle {
+    public static func apoloCheckbox<S: ShapeStyle>(_ shapeStyle: S) -> ToggleCheckboxStyle {
         .init(shapeStyle: AnyShapeStyle(shapeStyle))
     }
     
-    public static func checkbox(_ color: Color) -> ToggleCheckboxStyle {
+    public static func apoloCheckbox(_ color: Color) -> ToggleCheckboxStyle {
         .init(shapeStyle: AnyShapeStyle(color))
     }
 }
@@ -232,16 +232,16 @@ public extension ToggleStyle where Self == ToggleCheckboxStyle {
         }
         
         Toggle("ToggleStyle", isOn: $checked4)
-            .toggleStyle(.checkbox)
+            .toggleStyle(.apoloCheckbox)
             .tint(.primary)
 
         Toggle("ToggleStyle with color", isOn: $checked5)
-            .toggleStyle(.checkbox(.purple))
+            .toggleStyle(.apoloCheckbox(.purple))
             .tint(.primary)
             .body()
 
         Toggle("ToggleStyle with ShapStyle", isOn: $checked6)
-            .toggleStyle(.checkbox(LinearGradient.init(colors: [.yellow, .green], startPoint: .leading, endPoint: .trailing)))
+            .toggleStyle(.apoloCheckbox(LinearGradient.init(colors: [.yellow, .green], startPoint: .leading, endPoint: .trailing)))
             .callout()
             .tint(.primary)
     }

@@ -66,18 +66,33 @@ public struct Checkbox: View {
 
     private var checkboxSymbol: some View {
         let fill: AnyShapeStyle = {
-            if let style = shapeStyle {
-                return isChecked ? style : AnyShapeStyle(Tokens.Color.secondarySystemFill.color)
+            if let shapeStyle {
+                return isChecked ? shapeStyle : AnyShapeStyle(Tokens.Color.secondarySystemFill.color)
             } else {
                 return AnyShapeStyle(isChecked ? Tokens.Color.label.color : Tokens.Color.secondarySystemFill.color)
             }
         }()
 
-        return Image(systemName: isChecked ? "checkmark.square.fill" : "square")
-            .large()
-            .foregroundStyle(fill)
-            .scaleEffect(animate ? 0.85 : 1)
-            .animation(.bouncy(duration: 0.3), value: animate)
+        if #available(iOS 18.0, *) {
+            return Image(systemName: isChecked ? "checkmark.square.fill" : "square")
+                .large()
+                .foregroundStyle(fill)
+                .scaleEffect(animate ? 0.85 : 1)
+                .animation(.bouncy(duration: 0.3), value: animate)
+                .contentTransition(
+                    .symbolEffect(
+                        .replace.magic(fallback: .downUp.byLayer),
+                        options: .nonRepeating
+                    )
+                )
+        } else {
+            return Image(systemName: isChecked ? "checkmark.square.fill" : "square")
+                .large()
+                .foregroundStyle(fill)
+                .scaleEffect(animate ? 0.85 : 1)
+                .animation(.bouncy(duration: 0.3), value: animate)
+                .transition(.opacity)
+        }
     }
 
     private var labelStack: some View {
@@ -118,6 +133,70 @@ public struct Checkbox: View {
     }
 }
 
+// MARK: - Toogle Modifier
+
+public struct ToggleCheckboxStyle: ToggleStyle {
+    @State private var animate: Bool = false
+    private let shapeStyle: AnyShapeStyle?
+
+    public init(shapeStyle: AnyShapeStyle? = nil) {
+        self.shapeStyle = shapeStyle
+    }
+
+    public func makeBody(configuration: Configuration) -> some View {
+        Button {
+            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+            configuration.isOn.toggle()
+        } label: {
+            HStack {
+                let fill: AnyShapeStyle = {
+                    if let shapeStyle {
+                        return configuration.isOn ? shapeStyle : AnyShapeStyle(Tokens.Color.secondarySystemFill.color)
+                    } else {
+                        return AnyShapeStyle(configuration.isOn ? Tokens.Color.label.color : Tokens.Color.secondarySystemFill.color)
+                    }
+                }()
+                
+                if #available(iOS 18.0, *) {
+                    Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
+                        .large()
+                        .foregroundStyle(fill)
+                        .scaleEffect(animate ? 0.85 : 1)
+                        .animation(.bouncy(duration: 0.3), value: animate)
+                        .contentTransition(
+                            .symbolEffect(
+                                .replace.magic(fallback: .downUp.byLayer),
+                                options: .nonRepeating
+                            )
+                        )
+                } else {
+                    Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
+                        .large()
+                        .foregroundStyle(fill)
+                        .scaleEffect(animate ? 0.85 : 1)
+                        .animation(.bouncy(duration: 0.3), value: animate)
+                        .transition(.opacity)
+                }
+                
+                configuration.label
+                    .multilineTextAlignment(.leading)
+            }
+        }
+    }
+}
+
+public extension ToggleStyle where Self == ToggleCheckboxStyle {
+    public static var checkbox: ToggleCheckboxStyle { .init() }
+    
+    public static func checkbox<S: ShapeStyle>(_ shapeStyle: S) -> ToggleCheckboxStyle {
+        .init(shapeStyle: AnyShapeStyle(shapeStyle))
+    }
+    
+    public static func checkbox(_ color: Color) -> ToggleCheckboxStyle {
+        .init(shapeStyle: AnyShapeStyle(color))
+    }
+}
+
 // MARK: - Previews
 
 @available(iOS 17.0, *)
@@ -125,6 +204,9 @@ public struct Checkbox: View {
     @Previewable @State var checked1 = false
     @Previewable @State var checked2 = true
     @Previewable @State var checked3 = true
+    @Previewable @State var checked4 = true
+    @Previewable @State var checked5 = true
+    @Previewable @State var checked6 = true
 
     VStack(alignment: .leading, spacing: 16) {
         Checkbox(label: "Default Checkbox", isChecked: $checked1) { newValue in
@@ -148,6 +230,20 @@ public struct Checkbox: View {
         ) { newValue in
             print("Checkbox tapped \(newValue)")
         }
+        
+        Toggle("ToggleStyle", isOn: $checked4)
+            .toggleStyle(.checkbox)
+            .tint(.primary)
+
+        Toggle("ToggleStyle with color", isOn: $checked5)
+            .toggleStyle(.checkbox(.purple))
+            .tint(.primary)
+            .body()
+
+        Toggle("ToggleStyle with ShapStyle", isOn: $checked6)
+            .toggleStyle(.checkbox(LinearGradient.init(colors: [.yellow, .green], startPoint: .leading, endPoint: .trailing)))
+            .callout()
+            .tint(.primary)
     }
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding()

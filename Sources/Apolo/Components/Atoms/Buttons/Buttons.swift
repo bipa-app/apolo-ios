@@ -124,6 +124,7 @@ private extension View {
         _ shape: CustomButtonShape,
         _ tintColor: Color,
         _ borderColor: Color,
+        _ backgroundColor: Color,
         _ size: ControlSize,
         _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
         _ preventDoubleTap: Bool
@@ -133,7 +134,8 @@ private extension View {
                 shape: shape,
                 tintColor: tintColor,
                 borderColor: borderColor,
-                size: size
+                size: size,
+                backgroundColor: backgroundColor
             )
         )
         .font(.abcGinto(style: .subheadline, weight: .regular))
@@ -189,11 +191,12 @@ public extension Button {
         shape: CustomButtonShape = .capsule,
         tintColor: Color = .primary,
         borderColor: Color = .primary,
+        backgroundColor: Color = .clear,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
         preventDoubleTap: Bool = true
     ) -> some View {
-        strokedStyle(shape, tintColor, borderColor, size, hapticStyle, preventDoubleTap)
+        strokedStyle(shape, tintColor, borderColor, backgroundColor, size, hapticStyle, preventDoubleTap)
     }
 }
 
@@ -234,11 +237,12 @@ public extension ShareLink {
         shape: CustomButtonShape = .capsule,
         tintColor: Color = .primary,
         borderColor: Color = .primary,
+        backgroundColor: Color = .clear,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
         preventDoubleTap: Bool = true
     ) -> some View {
-        strokedStyle(shape, tintColor, borderColor, size, hapticStyle, preventDoubleTap)
+        strokedStyle(shape, tintColor, borderColor, backgroundColor, size, hapticStyle, preventDoubleTap)
     }
 }
 
@@ -309,7 +313,8 @@ public struct StrokedButtonModifier: ViewModifier {
     public let tintColor: Color
     public let borderColor: Color
     public let size: ControlSize
-
+    public let backgroundColor: Color
+    
     @Environment(\.isEnabled) private var isEnabled
 
     private func sizeValues(for size: ControlSize) -> (height: CGFloat, padding: CGFloat) {
@@ -334,18 +339,30 @@ public struct StrokedButtonModifier: ViewModifier {
             .padding(.vertical, Tokens.Spacing.small)
             .padding(.horizontal, sizes.padding)
             .frame(minHeight: sizes.height)
-            .overlay(
+            .background(
                 Group {
                     switch self.shape {
                     case .capsule:
                         Capsule()
                             .strokeBorder(borderColor.opacity(0.15), lineWidth: 1)
+                            .background {
+                                backgroundColor
+                                    .clipShape(Capsule())
+                            }
                     case .circle:
                         Circle()
                             .strokeBorder(borderColor.opacity(0.15), lineWidth: 1)
+                            .background {
+                                backgroundColor
+                                    .clipShape(Circle())
+                            }
                     case .roundedRectangle:
                         RoundedRectangle(cornerRadius: Tokens.CornerRadius.small)
                             .strokeBorder(borderColor.opacity(0.15), lineWidth: 1)
+                            .background {
+                                backgroundColor
+                                    .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.small))
+                            }
                     }
                 }
             )
@@ -419,6 +436,18 @@ public struct HapticFeedbackModifier: ViewModifier {
             }
             .strokedStyle(shape: .circle, size: .large)
             
+            Button(systemImage: "bitcoinsign.circle.fill") {
+                print("Hello")
+            }
+            .strokedStyle(shape: .circle, backgroundColor: .white, size: .large)
+
+            Button(action: {
+                print("strokedStyle")
+            }, label: {
+                Text("Stroked with background")
+            })
+            .strokedStyle(shape: .capsule, backgroundColor: .white, size: .large)
+
             Button(action: {
                 print("strokedStyle")
             }, label: {
@@ -437,5 +466,11 @@ public struct HapticFeedbackModifier: ViewModifier {
             }
             .borderedProminentStyle()
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
+    }
+    .background {
+        Color(.quaternarySystemFill)
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
+            .ignoresSafeArea()
     }
 }

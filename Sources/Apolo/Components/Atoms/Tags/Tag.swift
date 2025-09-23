@@ -102,6 +102,21 @@ public struct Tag: View {
                 return .init(backgroundColor)
             }
         }
+        
+        var backgroundColor: Color {
+            switch self {
+            case .label, .turbo, .premium:
+                return Color.clear
+            case .success:
+                return Color.green
+            case .warning:
+                return Color.yellow
+            case .error:
+                return Color.red
+            case let .custom(_, backgroundColor, _, _, _):
+                return backgroundColor
+            }
+        }
     }
 
     // MARK: - Properties

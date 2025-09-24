@@ -78,6 +78,22 @@ private extension View {
         }
     }
     
+    func borderedProminentStyleNoGlass(
+        _ shape: CustomButtonShape,
+        _ color: Color,
+        _ size: ControlSize,
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ preventDoubleTap: Bool
+    ) -> some View {
+        return buttonStyle(.borderedProminent)
+            .controlSize(size)
+            .modifier(ButtonShapeModifier(shape: shape))
+            .tint(color)
+            .font(.abcGinto(style: .body, weight: .regular))
+            .modifier(HapticFeedbackModifier(style: hapticStyle))
+            .preventDoubleTap(enabled: preventDoubleTap)
+    }
+    
     func borderedProminentStyle<S: ShapeStyle>(
         _ shape: CustomButtonShape,
         _ shapeStyle: S,
@@ -160,9 +176,14 @@ public extension Button {
         color: Color = .green,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
-        preventDoubleTap: Bool = true
+        preventDoubleTap: Bool = true,
+        glassEnabled: Bool = true
     ) -> some View {
-        borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap)
+        if glassEnabled {
+            return AnyView(self.borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap))
+        } else {
+            return AnyView(self.borderedProminentStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
+        }
     }
     
     func borderedProminentStyle<S: ShapeStyle>(

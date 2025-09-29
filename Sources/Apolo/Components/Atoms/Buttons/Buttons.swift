@@ -568,7 +568,11 @@ public extension View {
         self
             .if(condition: {
                 if #available(iOS 26.0, *) {
-                    return false
+                    if color == .clear {
+                        return true
+                    } else {
+                        return false
+                    }
                 } else {
                     return true
                 }

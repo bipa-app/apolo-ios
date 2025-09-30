@@ -510,18 +510,25 @@ public struct HapticFeedbackModifier: ViewModifier {
 public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
     var color: Color?
     var shape: S?
-    
-    init(color: Color? = nil, shape: S? = nil) {
+    var isClear: Bool
+
+    init(color: Color? = nil, shape: S? = nil, isClear: Bool) {
         self.color = color
         self.shape = shape
+        self.isClear = isClear
     }
     
     public func body(content: Content) -> some View {
         Group {
             if #available(iOS 26.0, *) {
                 if let shape {
-                    content
-                        .glassEffect(.regular.tint(color).interactive(), in: shape)
+                    if isClear {
+                        content
+                            .glassEffect(.clear.tint(color).interactive(), in: shape)
+                    } else {
+                        content
+                            .glassEffect(.regular.tint(color).interactive(), in: shape)
+                    }
                 }
             } else {
                 
@@ -532,12 +539,18 @@ public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
 
 public struct GlassEffectModifier: ViewModifier {
     var color: Color?
+    var isClear: Bool
     
     public func body(content: Content) -> some View {
         Group {
             if #available(iOS 26.0, *) {
-                content
-                    .glassEffect(.regular.tint(color).interactive())
+                if isClear {
+                    content
+                        .glassEffect(.clear.tint(color).interactive())
+                } else {
+                    content
+                        .glassEffect(.regular.tint(color).interactive())
+                }
             }
         }
     }
@@ -552,7 +565,7 @@ public extension View {
     ///
     /// - Parameter radius: The maximum blur radius to apply.
     /// - Returns: A view with the progressive blur effect applied.
-    func glassEffectIfAvailable<T, S: Shape>(color: Color?, shape: S?, orElse: (Self) -> T) -> some View where T : View {
+    func glassEffectIfAvailable<T, S: Shape>(color: Color?, isClear: Bool, shape: S?, orElse: (Self) -> T) -> some View where T : View {
         self
             .if(condition: {
                 if #available(iOS 26.0, *) {
@@ -561,10 +574,10 @@ public extension View {
                     return true
                 }
             }, transform: orElse)
-            .modifier(GlassEffectModifierShape(color: color, shape: shape))
+            .modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
     }
     
-    func glassEffectIfAvailable<T>(color: Color?, orElse: (Self) -> T) -> some View where T : View {
+    func glassEffectIfAvailable<T>(color: Color?, isClear: Bool, orElse: (Self) -> T) -> some View where T : View {
         self
             .if(condition: {
                 if #available(iOS 26.0, *) {
@@ -577,15 +590,15 @@ public extension View {
                     return true
                 }
             }, transform: orElse)
-            .modifier(GlassEffectModifier(color: color))
+            .modifier(GlassEffectModifier(color: color, isClear: isClear))
     }
     
-    func glassEffectIfAvailable<S: Shape>(color: Color?, shape: S?) -> some View {
-        modifier(GlassEffectModifierShape(color: color, shape: shape))
+    func glassEffectIfAvailable<S: Shape>(color: Color?, shape: S?, isClear: Bool) -> some View {
+        modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
     }
     
-    func glassEffectIfAvailable(color: Color?) -> some View {
-        modifier(GlassEffectModifier(color: color))
+    func glassEffectIfAvailable(color: Color?, isClear: Bool) -> some View {
+        modifier(GlassEffectModifier(color: color, isClear: isClear))
     }
 }
 

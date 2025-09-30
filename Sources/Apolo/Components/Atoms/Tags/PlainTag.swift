@@ -37,7 +37,7 @@ struct PlainTag: View {
         }
         .padding(.vertical, size.verticalPadding)
         .padding(.horizontal, size.horizontalPadding)
-        .glassEffectIfAvailable(color: style.backgroundColor, orElse: { content in
+        .glassEffectIfAvailable(color: style.backgroundColor, isClear: true, orElse: { content in
             content
                 .background(
                     Capsule()

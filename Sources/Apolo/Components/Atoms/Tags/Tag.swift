@@ -90,16 +90,31 @@ public struct Tag: View {
             case .label, .turbo, .premium:
                 return .init(Color.clear)
             case .success:
-                return .init(Color.green)
+                return .init(Tokens.Color.green.color)
             case .warning:
-                return .init(Color.yellow)
+                return .init(Tokens.Color.yellow.color)
             case .error:
-                return .init(Color.red)
+                return .init(Tokens.Color.red.color)
             case let .custom(shapeStyle, backgroundColor, _, _, _):
                 if let shapeStyle {
                     return .init(shapeStyle)
                 }
                 return .init(backgroundColor)
+            }
+        }
+        
+        var backgroundColor: Color {
+            switch self {
+            case .label, .turbo, .premium:
+                return Color.clear
+            case .success:
+                return Tokens.Color.green.color
+            case .warning:
+                return Tokens.Color.yellow.color
+            case .error:
+                return Tokens.Color.red.color
+            case let .custom(_, backgroundColor, _, _, _):
+                return backgroundColor
             }
         }
     }
@@ -215,6 +230,15 @@ extension Tag.Style: Equatable {
                     title: "Bitcoin",
                     size: .small
                 )
+                
+                Tag(
+                    style: .custom(
+                        shapeStyle: .quaternary,
+                        textColor: .white
+                    ),
+                    title: "Conheça agora"
+                )
+                .multilineTextAlignment(.center)
                 
                 Tag(
                     style: .custom(

@@ -59,7 +59,33 @@ private extension View {
         _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
         _ preventDoubleTap: Bool
     ) -> some View {
-        buttonStyle(.borderedProminent)
+        if #available(iOS 26.0, *) {
+            return buttonStyle(.glassProminent)
+                .controlSize(size)
+                .modifier(ButtonShapeModifier(shape: shape))
+                .tint(color)
+                .font(.abcGinto(style: .body, weight: .regular))
+                .modifier(HapticFeedbackModifier(style: hapticStyle))
+                .preventDoubleTap(enabled: preventDoubleTap)
+        } else {
+            return buttonStyle(.borderedProminent)
+                .controlSize(size)
+                .modifier(ButtonShapeModifier(shape: shape))
+                .tint(color)
+                .font(.abcGinto(style: .body, weight: .regular))
+                .modifier(HapticFeedbackModifier(style: hapticStyle))
+                .preventDoubleTap(enabled: preventDoubleTap)
+        }
+    }
+    
+    func borderedProminentStyleNoGlass(
+        _ shape: CustomButtonShape,
+        _ color: Color,
+        _ size: ControlSize,
+        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ preventDoubleTap: Bool
+    ) -> some View {
+        return buttonStyle(.borderedProminent)
             .controlSize(size)
             .modifier(ButtonShapeModifier(shape: shape))
             .tint(color)
@@ -152,9 +178,14 @@ public extension Button {
         color: Color = .green,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
-        preventDoubleTap: Bool = true
+        preventDoubleTap: Bool = true,
+        glassEnabled: Bool = true
     ) -> some View {
-        borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap)
+        if glassEnabled {
+            return AnyView(self.borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap))
+        } else {
+            return AnyView(self.borderedProminentStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
+        }
     }
     
     func borderedProminentStyle<S: ShapeStyle>(
@@ -472,5 +503,98 @@ public struct HapticFeedbackModifier: ViewModifier {
         Color(.quaternarySystemFill)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
+    }
+}
+
+
+public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
+    var color: Color?
+    var shape: S?
+    
+    init(color: Color? = nil, shape: S? = nil) {
+        self.color = color
+        self.shape = shape
+    }
+    
+    public func body(content: Content) -> some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                if let shape {
+                    content
+                        .glassEffect(.regular.tint(color).interactive(), in: shape)
+                }
+            } else {
+                
+            }
+        }
+    }
+}
+
+public struct GlassEffectModifier: ViewModifier {
+    var color: Color?
+    
+    public func body(content: Content) -> some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                content
+                    .glassEffect(.regular.tint(color).interactive())
+            }
+        }
+    }
+}
+
+public extension View {
+    /// Applies a progressive blur effect to the view.
+    ///
+    /// This modifier creates a blur effect that gradually increases in intensity.
+    /// On iOS 17 and later, it uses a custom shader to create a smooth transition
+    /// from clear to blurred. On earlier iOS versions, it falls back to a standard blur.
+    ///
+    /// - Parameter radius: The maximum blur radius to apply.
+    /// - Returns: A view with the progressive blur effect applied.
+    func glassEffectIfAvailable<T, S: Shape>(color: Color?, shape: S?, orElse: (Self) -> T) -> some View where T : View {
+        self
+            .if(condition: {
+                if #available(iOS 26.0, *) {
+                    return false
+                } else {
+                    return true
+                }
+            }, transform: orElse)
+            .modifier(GlassEffectModifierShape(color: color, shape: shape))
+    }
+    
+    func glassEffectIfAvailable<T>(color: Color?, orElse: (Self) -> T) -> some View where T : View {
+        self
+            .if(condition: {
+                if #available(iOS 26.0, *) {
+                    if color == .clear {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    return true
+                }
+            }, transform: orElse)
+            .modifier(GlassEffectModifier(color: color))
+    }
+    
+    func glassEffectIfAvailable<S: Shape>(color: Color?, shape: S?) -> some View {
+        modifier(GlassEffectModifierShape(color: color, shape: shape))
+    }
+    
+    func glassEffectIfAvailable(color: Color?) -> some View {
+        modifier(GlassEffectModifier(color: color))
+    }
+}
+
+public extension View {
+    @ViewBuilder func `if`<T>(condition: (()  -> Bool), transform: (Self) -> T) -> some View where T : View {
+        if condition() {
+            transform(self)
+        } else {
+            self
+        }
     }
 }

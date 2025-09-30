@@ -124,19 +124,22 @@ public struct Tag: View {
     private let style: Style
     private let title: String?
     private let size: Size
+    private let clearGlass: Bool
 
     // MARK: - Initialization
 
-    public init(style: Style = .label(), size: Size = .regular) {
+    public init(style: Style = .label(), size: Size = .regular, clearGlass: Bool = true) {
         self.style = style
         title = nil
         self.size = size
+        self.clearGlass = clearGlass
     }
 
-    public init(style: Style = .label(), title: String, size: Size = .regular) {
+    public init(style: Style = .label(), title: String, size: Size = .regular, clearGlass: Bool = true) {
         self.style = style
         self.title = title
         self.size = size
+        self.clearGlass = clearGlass
     }
 
     // MARK: - Body
@@ -148,7 +151,7 @@ public struct Tag: View {
         if case .turbo = style {
             TurboTag()
         } else if let title {
-            PlainTag(style: style, title: title, size: size)
+            PlainTag(style: style, title: title, size: size, clearGlass: clearGlass)
         }
     }
 }
@@ -203,7 +206,8 @@ extension Tag.Style: Equatable {
                         secondaryIcon: "chevron.down"
                     ),
                     title: "Bitcoin",
-                    size: .regular
+                    size: .regular,
+                    clearGlass: false
                 )
             }
             
@@ -228,7 +232,8 @@ extension Tag.Style: Equatable {
                         secondaryIcon: "chevron.down"
                     ),
                     title: "Bitcoin",
-                    size: .small
+                    size: .small,
+                    clearGlass: false
                 )
                 
                 Tag(

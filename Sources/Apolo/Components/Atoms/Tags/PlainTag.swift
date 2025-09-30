@@ -13,7 +13,8 @@ struct PlainTag: View {
     let style: Tag.Style
     let title: String
     let size: Tag.Size
-
+    var clearGlass: Bool = true
+    
     var body: some View {
         HStack(spacing: Tokens.Spacing.extraExtraSmall) {
             if let icon = style.icon {
@@ -37,7 +38,7 @@ struct PlainTag: View {
         }
         .padding(.vertical, size.verticalPadding)
         .padding(.horizontal, size.horizontalPadding)
-        .glassEffectIfAvailable(color: style.backgroundColor, orElse: { content in
+        .glassEffectIfAvailable(color: style.backgroundColor, isClear: clearGlass, orElse: { content in
             content
                 .background(
                     Capsule()

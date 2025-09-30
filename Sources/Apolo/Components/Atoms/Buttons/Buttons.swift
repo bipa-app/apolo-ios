@@ -531,7 +531,7 @@ public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
                     }
                 }
             } else {
-                
+                content
             }
         }
     }
@@ -551,6 +551,8 @@ public struct GlassEffectModifier: ViewModifier {
                     content
                         .glassEffect(.regular.tint(color).interactive())
                 }
+            } else {
+                content
             }
         }
     }

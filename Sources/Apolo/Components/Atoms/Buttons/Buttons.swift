@@ -51,6 +51,21 @@ public enum CustomButtonShape {
 
 // MARK: - View
 
+@available(iOS 26.0, *)
+public struct ProminentButtonGlassModifier: ViewModifier {
+    @Environment(\.isEnabled) private var isEnabled
+
+    public func body(content: Content) -> some View {
+        if isEnabled {
+            content
+                .buttonStyle(.glassProminent)
+        } else {
+            content
+                .buttonStyle(.borderedProminent)
+        }
+    }
+}
+
 private extension View {
     func borderedProminentStyle(
         _ shape: CustomButtonShape,
@@ -60,7 +75,7 @@ private extension View {
         _ preventDoubleTap: Bool
     ) -> some View {
         if #available(iOS 26.0, *) {
-            return buttonStyle(.glassProminent)
+            return modifier(ProminentButtonGlassModifier())
                 .controlSize(size)
                 .modifier(ButtonShapeModifier(shape: shape))
                 .tint(color)
@@ -420,7 +435,10 @@ public struct HapticFeedbackModifier: ViewModifier {
 
 // MARK: - Preview
 
+@available(iOS 17.0, *)
 #Preview {
+    @Previewable @State var isEnabled = false
+    
     ScrollView {
         VStack(spacing: 20) {
             Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
@@ -428,9 +446,19 @@ public struct HapticFeedbackModifier: ViewModifier {
             }
             .borderedProminentStyle(color: Color(.violet), size: .large)
             
-            
+            Button {
+            } label: {
+                Text("Prosseguir")
+                    .body()
+                    .foregroundStyle(isEnabled ? Tokens.Color.systemBackground.color : Tokens.Color.tertiaryLabel.color)
+                    .frame(maxWidth: .infinity)
+            }
+            .borderedProminentStyle(color: .primary)
+            .disabled(!isEnabled)
+
             Button(".borderedProminentStyle") {
                 print("borderedProminentStyle")
+                isEnabled.toggle()
             }
             .borderedProminentStyle(
                 shapeStyle: LinearGradient(

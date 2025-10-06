@@ -18,6 +18,7 @@ struct LoadingModifier: ViewModifier {
                     ZStack {
                         Color.black.opacity(0.01)
                             .frame(maxWidth: .infinity, maxHeight: .infinity)
+                            .ignoresSafeArea()
                             .disabled(true)
 
                         ProgressView()

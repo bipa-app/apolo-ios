@@ -136,13 +136,25 @@ private extension View {
         _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
         _ preventDoubleTap: Bool
     ) -> some View {
-        buttonStyle(.bordered)
-            .controlSize(size)
-            .modifier(ButtonShapeModifier(shape: shape))
-            .tint(color)
-            .font(.abcGinto(style: .body, weight: .regular))
-            .modifier(HapticFeedbackModifier(style: hapticStyle))
-            .preventDoubleTap(enabled: preventDoubleTap)
+        if #available(iOS 26.0, *) {
+            return buttonStyle(.bordered)
+                .controlSize(size)
+                .modifier(ButtonShapeModifier(shape: shape))
+                .tint(color)
+                .foregroundStyle(color)
+                .font(.abcGinto(style: .body, weight: .regular))
+                .modifier(HapticFeedbackModifier(style: hapticStyle))
+                .preventDoubleTap(enabled: preventDoubleTap)
+                .glassEffect(.regular.interactive(), in: shape.toViewShape)
+        } else {
+            return buttonStyle(.bordered)
+                .controlSize(size)
+                .modifier(ButtonShapeModifier(shape: shape))
+                .tint(color)
+                .font(.abcGinto(style: .body, weight: .regular))
+                .modifier(HapticFeedbackModifier(style: hapticStyle))
+                .preventDoubleTap(enabled: preventDoubleTap)
+        }
     }
 
     func plainStyle(

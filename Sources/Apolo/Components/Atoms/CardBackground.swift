@@ -29,8 +29,14 @@ public struct CardBackground: View {
     }
     
     public var body: some View {
-        RoundedRectangle(cornerRadius: cornerRadius)
-            .fill(color)
+        if #available(iOS 26.0, *) {
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .fill(color)
+                .glassEffect(.clear.interactive(), in: RoundedRectangle(cornerRadius: cornerRadius))
+        } else {
+            RoundedRectangle(cornerRadius: cornerRadius)
+                .fill(color)
+        }
     }
 }
 
@@ -99,8 +105,25 @@ public extension View {
         Label("Label", systemImage: "gear")
             .padding()
             .background(CardBackground())
+        
+        VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
+            Group {
+                Text("Liberação do Satsback®")
+                    .callout(weight: .bold)
+                    .foregroundStyle(Tokens.Color.label.color)
+                
+                Text("Seu Satsback® ficará disponível para resgate após o fechamento e pagamento da primeira fatura do seu cartão de crédito.")
+                    .subheadline()
+                    .foregroundStyle(Tokens.Color.secondaryLabel.color)
+            }
+        }
+        .padding()
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .cardBackground(.secondary)
+        .padding(.horizontal, Tokens.Spacing.medium)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .cardBackground(color: .secondary)
     .padding()
+    .tint(.primary)
 }

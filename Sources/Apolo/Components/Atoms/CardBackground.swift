@@ -31,7 +31,8 @@ public struct CardBackground: View {
     public var body: some View {
         if #available(iOS 26.0, *) {
             RoundedRectangle(cornerRadius: cornerRadius)
-                .glassEffect(.regular.tint(color).interactive(), in: RoundedRectangle(cornerRadius: cornerRadius))
+                .fill(color)
+                .glassEffect(.clear.interactive(), in: RoundedRectangle(cornerRadius: cornerRadius))
         } else {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(color)

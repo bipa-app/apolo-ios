@@ -134,7 +134,8 @@ private extension View {
         _ color: Color,
         _ size: ControlSize,
         _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
-        _ preventDoubleTap: Bool
+        _ preventDoubleTap: Bool,
+        _ isClear: Bool
     ) -> some View {
         if #available(iOS 26.0, *) {
             return buttonStyle(.bordered)
@@ -145,7 +146,7 @@ private extension View {
                 .font(.abcGinto(style: .body, weight: .regular))
                 .modifier(HapticFeedbackModifier(style: hapticStyle))
                 .preventDoubleTap(enabled: preventDoubleTap)
-                .glassEffect(.regular.interactive(), in: shape.toViewShape)
+                .glassEffect(isClear ? .clear.interactive() : .regular.interactive(), in: shape.toViewShape)
         } else {
             return buttonStyle(.bordered)
                 .controlSize(size)
@@ -247,10 +248,11 @@ public extension Button {
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
         preventDoubleTap: Bool = true,
-        glassEnabled: Bool = true
+        glassEnabled: Bool = true,
+        isClear: Bool = true
     ) -> some View {
         if glassEnabled {
-            return AnyView(borderedStyle(shape, color, size, hapticStyle, preventDoubleTap))
+            return AnyView(borderedStyle(shape, color, size, hapticStyle, preventDoubleTap, isClear))
         } else {
             return AnyView(borderedStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
         }
@@ -297,9 +299,10 @@ public extension ShareLink {
         color: Color = .green,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
-        preventDoubleTap: Bool = true
+        preventDoubleTap: Bool = true,
+        isClear: Bool = false
     ) -> some View {
-        borderedStyle(shape, color, size, hapticStyle, preventDoubleTap)
+        borderedStyle(shape, color, size, hapticStyle, preventDoubleTap, isClear)
     }
 
     func plainStyle(

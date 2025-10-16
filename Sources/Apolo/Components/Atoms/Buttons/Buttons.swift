@@ -249,7 +249,7 @@ public extension Button {
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
         preventDoubleTap: Bool = true,
         glassEnabled: Bool = true,
-        isClear: Bool = true
+        isClear: Bool = false
     ) -> some View {
         if glassEnabled {
             return AnyView(borderedStyle(shape, color, size, hapticStyle, preventDoubleTap, isClear))

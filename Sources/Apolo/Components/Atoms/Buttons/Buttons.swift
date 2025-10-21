@@ -197,7 +197,9 @@ private extension View {
         _ backgroundColor: Color,
         _ size: ControlSize,
         _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
-        _ preventDoubleTap: Bool
+        _ preventDoubleTap: Bool,
+        _ isGlassEnabled: Bool,
+        _ isGlassClear: Bool
     ) -> some View {
         modifier(
             StrokedButtonModifier(
@@ -205,7 +207,9 @@ private extension View {
                 tintColor: tintColor,
                 borderColor: borderColor,
                 size: size,
-                backgroundColor: backgroundColor
+                backgroundColor: backgroundColor,
+                isGlassEnabled: isGlassEnabled,
+                isGlassClear: isGlassClear
             )
         )
         .font(.abcGinto(style: .subheadline, weight: .regular))
@@ -275,9 +279,21 @@ public extension Button {
         backgroundColor: Color = .clear,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
-        preventDoubleTap: Bool = true
+        preventDoubleTap: Bool = true,
+        isGlassEnabled: Bool = true,
+        isGlassClear: Bool = true
     ) -> some View {
-        strokedStyle(shape, tintColor, borderColor, backgroundColor, size, hapticStyle, preventDoubleTap)
+        strokedStyle(
+            shape,
+            tintColor,
+            borderColor,
+            backgroundColor,
+            size,
+            hapticStyle,
+            preventDoubleTap,
+            isGlassEnabled,
+            isGlassClear
+        )
     }
 }
 
@@ -322,9 +338,21 @@ public extension ShareLink {
         backgroundColor: Color = .clear,
         size: ControlSize = .large,
         hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
-        preventDoubleTap: Bool = true
+        preventDoubleTap: Bool = true,
+        isGlassEnabled: Bool = true,
+        isGlassClear: Bool = true
     ) -> some View {
-        strokedStyle(shape, tintColor, borderColor, backgroundColor, size, hapticStyle, preventDoubleTap)
+        strokedStyle(
+            shape,
+            tintColor,
+            borderColor,
+            backgroundColor,
+            size,
+            hapticStyle,
+            preventDoubleTap,
+            isGlassEnabled,
+            isGlassClear
+        )
     }
 }
 
@@ -396,7 +424,9 @@ public struct StrokedButtonModifier: ViewModifier {
     public let borderColor: Color
     public let size: ControlSize
     public let backgroundColor: Color
-    
+    public let isGlassEnabled: Bool
+    public let isGlassClear: Bool
+
     @Environment(\.isEnabled) private var isEnabled
 
     private func sizeValues(for size: ControlSize) -> (height: CGFloat, padding: CGFloat) {
@@ -426,21 +456,21 @@ public struct StrokedButtonModifier: ViewModifier {
                     switch self.shape {
                     case .capsule:
                         Capsule()
-                            .strokeBorder(borderColor.opacity(0.15), lineWidth: 1)
+                            .strokeBorder(borderColor.opacity(0.15), lineWidth: 1.5)
                             .background {
                                 backgroundColor
                                     .clipShape(Capsule())
                             }
                     case .circle:
                         Circle()
-                            .strokeBorder(borderColor.opacity(0.15), lineWidth: 1)
+                            .strokeBorder(borderColor.opacity(0.15), lineWidth: 1.5)
                             .background {
                                 backgroundColor
                                     .clipShape(Circle())
                             }
                     case .roundedRectangle:
                         RoundedRectangle(cornerRadius: Tokens.CornerRadius.small)
-                            .strokeBorder(borderColor.opacity(0.15), lineWidth: 1)
+                            .strokeBorder(borderColor.opacity(0.15), lineWidth: 1.5)
                             .background {
                                 backgroundColor
                                     .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.small))
@@ -448,6 +478,16 @@ public struct StrokedButtonModifier: ViewModifier {
                     }
                 }
             )
+            .if(condition: { isGlassEnabled }) { view in
+                view
+                    .modifier(
+                        GlassEffectModifierShape(
+                            color: nil,
+                            shape: shape.toViewShape,
+                            isClear: isGlassClear
+                        )
+                    )
+            }
             .opacity(isEnabled ? 1.0 : 0.5)
     }
 }
@@ -466,6 +506,109 @@ public struct HapticFeedbackModifier: ViewModifier {
             let impact = UIImpactFeedbackGenerator(style: self.style)
             impact.impactOccurred()
         })
+    }
+}
+
+// MARK: - Glass
+
+public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
+    var color: Color?
+    var shape: S?
+    var isClear: Bool
+
+    init(color: Color? = nil, shape: S? = nil, isClear: Bool) {
+        self.color = color
+        self.shape = shape
+        self.isClear = isClear
+    }
+    
+    public func body(content: Content) -> some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                if let shape {
+                    if isClear {
+                        content
+                            .glassEffect(.clear.tint(color).interactive(), in: shape)
+                    } else {
+                        content
+                            .glassEffect(.regular.tint(color).interactive(), in: shape)
+                    }
+                } else {
+                    content
+                }
+            } else {
+                content
+            }
+        }
+    }
+}
+
+public struct GlassEffectModifier: ViewModifier {
+    var color: Color?
+    var isClear: Bool
+    
+    public func body(content: Content) -> some View {
+        Group {
+            if #available(iOS 26.0, *) {
+                if isClear {
+                    content
+                        .glassEffect(.clear.tint(color).interactive())
+                } else {
+                    content
+                        .glassEffect(.regular.tint(color).interactive())
+                }
+            } else {
+                content
+            }
+        }
+    }
+}
+
+public extension View {
+    func glassEffectIfAvailable<T, S: Shape>(color: Color?, isClear: Bool, shape: S?, orElse: (Self) -> T) -> some View where T : View {
+        self
+            .if(condition: {
+                if #available(iOS 26.0, *) {
+                    return false
+                } else {
+                    return true
+                }
+            }, transform: orElse)
+            .modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
+    }
+    
+    func glassEffectIfAvailable<T>(color: Color?, isClear: Bool, orElse: (Self) -> T) -> some View where T : View {
+        self
+            .if(condition: {
+                if #available(iOS 26.0, *) {
+                    if color == .clear {
+                        return true
+                    } else {
+                        return false
+                    }
+                } else {
+                    return true
+                }
+            }, transform: orElse)
+            .modifier(GlassEffectModifier(color: color, isClear: isClear))
+    }
+    
+    func glassEffectIfAvailable<S: Shape>(color: Color?, shape: S?, isClear: Bool) -> some View {
+        modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
+    }
+    
+    func glassEffectIfAvailable(color: Color?, isClear: Bool) -> some View {
+        modifier(GlassEffectModifier(color: color, isClear: isClear))
+    }
+}
+
+public extension View {
+    @ViewBuilder func `if`<T>(condition: (()  -> Bool), transform: (Self) -> T) -> some View where T : View {
+        if condition() {
+            transform(self)
+        } else {
+            self
+        }
     }
 }
 
@@ -514,7 +657,7 @@ public struct HapticFeedbackModifier: ViewModifier {
             Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
-            .strokedStyle(shape: .capsule, size: .large)
+            .strokedStyle(shape: .capsule, size: .large, isGlassEnabled: true)
             
             Button(systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
@@ -531,25 +674,34 @@ public struct HapticFeedbackModifier: ViewModifier {
             }
             .strokedStyle(shape: .circle, size: .large)
             
-            Button(systemImage: "bitcoinsign.circle.fill") {
+            Button(systemImage: "dollarsign.circle.fill") {
                 print("Hello")
             }
-            .strokedStyle(shape: .circle, backgroundColor: .white, size: .large)
+            .strokedStyle(shape: .circle, backgroundColor: .mint, size: .large)
 
             Button(action: {
                 print("strokedStyle")
             }, label: {
                 Text("Stroked with background")
+                    .foregroundStyle(.black)
             })
             .strokedStyle(shape: .capsule, backgroundColor: .white, size: .large)
 
             Button(action: {
                 print("strokedStyle")
             }, label: {
-                Text(".strokedStyle")
+                Text(".strokedStyle glass enabled")
                     .foregroundStyle(.orange)
             })
-            .strokedStyle(shape: .capsule, borderColor: .orange, size: .large)
+            .strokedStyle(shape: .capsule, borderColor: .orange, size: .large, isGlassClear: false)
+            
+            Button(action: {
+                print("strokedStyle")
+            }, label: {
+                Text(".strokedStyle glass disabled")
+                    .foregroundStyle(.orange)
+            })
+            .strokedStyle(shape: .capsule, borderColor: .orange, size: .large, isGlassEnabled: false)
             
             ShareLink(item: "Share me") {
                 Text("Compartilhar")
@@ -567,113 +719,5 @@ public struct HapticFeedbackModifier: ViewModifier {
         Color(.quaternarySystemFill)
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
-    }
-}
-
-
-public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
-    var color: Color?
-    var shape: S?
-    var isClear: Bool
-
-    init(color: Color? = nil, shape: S? = nil, isClear: Bool) {
-        self.color = color
-        self.shape = shape
-        self.isClear = isClear
-    }
-    
-    public func body(content: Content) -> some View {
-        Group {
-            if #available(iOS 26.0, *) {
-                if let shape {
-                    if isClear {
-                        content
-                            .glassEffect(.clear.tint(color).interactive(), in: shape)
-                    } else {
-                        content
-                            .glassEffect(.regular.tint(color).interactive(), in: shape)
-                    }
-                }
-            } else {
-                content
-            }
-        }
-    }
-}
-
-public struct GlassEffectModifier: ViewModifier {
-    var color: Color?
-    var isClear: Bool
-    
-    public func body(content: Content) -> some View {
-        Group {
-            if #available(iOS 26.0, *) {
-                if isClear {
-                    content
-                        .glassEffect(.clear.tint(color).interactive())
-                } else {
-                    content
-                        .glassEffect(.regular.tint(color).interactive())
-                }
-            } else {
-                content
-            }
-        }
-    }
-}
-
-public extension View {
-    /// Applies a progressive blur effect to the view.
-    ///
-    /// This modifier creates a blur effect that gradually increases in intensity.
-    /// On iOS 17 and later, it uses a custom shader to create a smooth transition
-    /// from clear to blurred. On earlier iOS versions, it falls back to a standard blur.
-    ///
-    /// - Parameter radius: The maximum blur radius to apply.
-    /// - Returns: A view with the progressive blur effect applied.
-    func glassEffectIfAvailable<T, S: Shape>(color: Color?, isClear: Bool, shape: S?, orElse: (Self) -> T) -> some View where T : View {
-        self
-            .if(condition: {
-                if #available(iOS 26.0, *) {
-                    return false
-                } else {
-                    return true
-                }
-            }, transform: orElse)
-            .modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
-    }
-    
-    func glassEffectIfAvailable<T>(color: Color?, isClear: Bool, orElse: (Self) -> T) -> some View where T : View {
-        self
-            .if(condition: {
-                if #available(iOS 26.0, *) {
-                    if color == .clear {
-                        return true
-                    } else {
-                        return false
-                    }
-                } else {
-                    return true
-                }
-            }, transform: orElse)
-            .modifier(GlassEffectModifier(color: color, isClear: isClear))
-    }
-    
-    func glassEffectIfAvailable<S: Shape>(color: Color?, shape: S?, isClear: Bool) -> some View {
-        modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
-    }
-    
-    func glassEffectIfAvailable(color: Color?, isClear: Bool) -> some View {
-        modifier(GlassEffectModifier(color: color, isClear: isClear))
-    }
-}
-
-public extension View {
-    @ViewBuilder func `if`<T>(condition: (()  -> Bool), transform: (Self) -> T) -> some View where T : View {
-        if condition() {
-            transform(self)
-        } else {
-            self
-        }
     }
 }

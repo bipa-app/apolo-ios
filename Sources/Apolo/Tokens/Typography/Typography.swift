@@ -289,6 +289,23 @@ public extension View {
     }
 }
 
+public extension Font {
+    /// Mega large title style (80/100, Medium)
+    static func megaLargeTitle(weight: FontWeight = .medium) -> Font {
+        .abcGinto(size: 80, weight: weight)
+    }
+    
+    /// Super large title style (48/60, Bold)
+    func superLargeTitle(weight: FontWeight = .bold) -> Font {
+        .abcGinto(size: 60, weight: weight)
+    }
+    
+    /// Extra large title style (44/55, Bold)
+    func extraLargeTitle(weight: FontWeight = .bold) -> Font {
+        .abcGinto(size: 44, weight: weight)
+    }
+}
+
 #Preview {
     ScrollView {
         VStack(alignment: .leading) {

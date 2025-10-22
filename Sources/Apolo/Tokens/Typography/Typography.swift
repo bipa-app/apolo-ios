@@ -296,77 +296,77 @@ public extension Font {
     }
     
     /// Extremely large title style (80/80, Bold)
-    func extremelyLargeTitle(weight: FontWeight = .bold) -> Font {
+    static func extremelyLargeTitle(weight: FontWeight = .bold) -> Font {
         .abcGinto(size: 80, weight: weight)
     }
     
     /// Super large title style (48/60, Bold)
-    func superLargeTitle(weight: FontWeight = .bold) -> Font {
+    static func superLargeTitle(weight: FontWeight = .bold) -> Font {
         .abcGinto(size: 60, weight: weight)
     }
     
     /// Extra large title style (44/55, Bold)
-    func extraLargeTitle(weight: FontWeight = .bold) -> Font {
+    static func extraLargeTitle(weight: FontWeight = .bold) -> Font {
         .abcGinto(size: 44, weight: weight)
     }
     
     /// Extra large title 2 style (36/45, Bold)
-    func extraLargeTitle2(weight: FontWeight = .bold) -> Font {
+    static func extraLargeTitle2(weight: FontWeight = .bold) -> Font {
         .abcGinto(size: 36, weight: weight)
     }
 
     /// Large title  (34/41, Medium)
-    func largeTitle(weight: FontWeight = .medium) -> Font {
+    static func largeTitle(weight: FontWeight = .medium) -> Font {
         .abcGinto(size: 34, weight: weight)
     }
 
     /// Title 1 style (28/34, Bold)
-    func title1(weight: FontWeight = .medium) -> Font {
+    static func title1(weight: FontWeight = .medium) -> Font {
         .abcGinto(style: .title, weight: weight)
     }
 
     /// Title 2 style (22/28, Bold)
-    func title2(weight: FontWeight = .medium) -> Font {
+    static func title2(weight: FontWeight = .medium) -> Font {
         .abcGinto(style: .title2, weight: weight)
     }
 
     /// Title 3 style with weight option (20/25)
-    func title3(weight: FontWeight = .bold) -> Font {
+    static func title3(weight: FontWeight = .bold) -> Font {
         .abcGinto(style: .title3, weight: weight)
     }
 
     /// Headline style (17/24, Medium)
-    func headline() -> Font {
+    static func headline() -> Font {
         .abcGinto(style: .headline, weight: .medium)
     }
 
     /// Body style with weight option (17/22)
-    func body(weight: FontWeight = .regular) -> Font {
+    static func body(weight: FontWeight = .regular) -> Font {
         .abcGinto(style: .body, weight: weight)
     }
 
     /// Callout style with weight option (16/21)
-    func callout(weight: FontWeight = .medium) -> Font {
+    static func callout(weight: FontWeight = .medium) -> Font {
         .abcGinto(style: .callout, weight: weight)
     }
 
     /// Subheadline style with weight option (15/20)
-    func subheadline(weight: FontWeight = .regular) -> Font {
+    static func subheadline(weight: FontWeight = .regular) -> Font {
         .abcGinto(style: .subheadline, weight: weight)
     }
 
     /// Footnote style with weight option (13/18)
-    func footnote(weight: FontWeight = .regular) -> Font {
+    static func footnote(weight: FontWeight = .regular) -> Font {
         .abcGinto(style: .footnote, weight: weight)
     }
 
     /// Caption 1 style with weight option (12/16)
-    func caption1(weight: FontWeight = .regular) -> Font {
+    static func caption1(weight: FontWeight = .regular) -> Font {
         .abcGinto(style: .caption, weight: weight)
     }
 
     /// Caption 2 style with weight option (11/13)
-    func caption2(weight: FontWeight = .regular) -> Font {
+    static func caption2(weight: FontWeight = .regular) -> Font {
         .abcGinto(style: .caption2, weight: weight)
     }
 }

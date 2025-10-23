@@ -58,8 +58,9 @@ public struct Checkbox: View {
             checkboxSymbol
             labelStack
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.rect)
-        .gesture(tapGesture.simultaneously(with: pressGesture))
+        .gesture(tapGesture)
     }
 
     // MARK: - UI Components
@@ -77,8 +78,8 @@ public struct Checkbox: View {
             return Image(systemName: isChecked ? "checkmark.square.fill" : "square")
                 .large()
                 .foregroundStyle(fill)
-                .scaleEffect(animate ? 0.85 : 1)
-                .animation(.bouncy(duration: 0.3), value: animate)
+                .scaleEffect(animate ? 0.95 : 1)
+                .animation(.bouncy(duration: 0.2), value: animate)
                 .contentTransition(
                     .symbolEffect(
                         .replace.magic(fallback: .downUp.byLayer),
@@ -89,8 +90,8 @@ public struct Checkbox: View {
             return Image(systemName: isChecked ? "checkmark.square.fill" : "square")
                 .large()
                 .foregroundStyle(fill)
-                .scaleEffect(animate ? 0.85 : 1)
-                .animation(.bouncy(duration: 0.3), value: animate)
+                .scaleEffect(animate ? 0.95 : 1)
+                .animation(.bouncy(duration: 0.2), value: animate)
                 .transition(.opacity)
         }
     }
@@ -114,22 +115,21 @@ public struct Checkbox: View {
 
     // MARK: - Gestures
 
-    private var pressGesture: some Gesture {
-        DragGesture(minimumDistance: 0)
-            .onChanged { _ in
-                animate = true
-                feedbackGenerator.prepare()
-            }
-            .onEnded { _ in animate = false }
-    }
-
     private var tapGesture: some Gesture {
         TapGesture()
             .onEnded {
                 feedbackGenerator.impactOccurred()
+                withAnimation(.bouncy(duration: 0.2)) {
+                    animate = true
+                }
                 isChecked.toggle()
                 onCheck?(isChecked)
-        }
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.12) {
+                    withAnimation(.bouncy(duration: 0.2)) {
+                        animate = false
+                    }
+                }
+            }
     }
 }
 
@@ -161,8 +161,8 @@ public struct ToggleCheckboxStyle: ToggleStyle {
                     Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
                         .large()
                         .foregroundStyle(fill)
-                        .scaleEffect(animate ? 0.85 : 1)
-                        .animation(.bouncy(duration: 0.3), value: animate)
+                        .scaleEffect(animate ? 0.95 : 1)
+                        .animation(.bouncy(duration: 0.2), value: animate)
                         .contentTransition(
                             .symbolEffect(
                                 .replace.magic(fallback: .downUp.byLayer),
@@ -173,15 +173,19 @@ public struct ToggleCheckboxStyle: ToggleStyle {
                     Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
                         .large()
                         .foregroundStyle(fill)
-                        .scaleEffect(animate ? 0.85 : 1)
-                        .animation(.bouncy(duration: 0.3), value: animate)
+                        .scaleEffect(animate ? 0.95 : 1)
+                        .animation(.bouncy(duration: 0.2), value: animate)
                         .transition(.opacity)
                 }
                 
                 configuration.label
                     .multilineTextAlignment(.leading)
+                Spacer(minLength: 0)
             }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .contentShape(Rectangle())
         }
+        .buttonStyle(.plain)
     }
 }
 

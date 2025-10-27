@@ -138,9 +138,11 @@ public struct Checkbox: View {
 public struct ToggleCheckboxStyle: ToggleStyle {
     @State private var animate: Bool = false
     private let shapeStyle: AnyShapeStyle?
-
-    public init(shapeStyle: AnyShapeStyle? = nil) {
+    private let hasLabel: Bool
+    
+    public init(shapeStyle: AnyShapeStyle? = nil, hasLabel: Bool) {
         self.shapeStyle = shapeStyle
+        self.hasLabel = hasLabel
     }
 
     public func makeBody(configuration: Configuration) -> some View {
@@ -178,11 +180,13 @@ public struct ToggleCheckboxStyle: ToggleStyle {
                         .transition(.opacity)
                 }
                 
-                configuration.label
-                    .multilineTextAlignment(.leading)
+                if hasLabel {
+                    configuration.label
+                        .multilineTextAlignment(.leading)
+                }
                 Spacer(minLength: 0)
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: hasLabel ? .infinity : nil, alignment: .leading)
             .contentShape(Rectangle())
         }
         .buttonStyle(.plain)
@@ -190,14 +194,14 @@ public struct ToggleCheckboxStyle: ToggleStyle {
 }
 
 public extension ToggleStyle where Self == ToggleCheckboxStyle {
-    public static var apoloCheckbox: ToggleCheckboxStyle { .init() }
+    static var apoloCheckbox: ToggleCheckboxStyle { .init(hasLabel: true) }
     
-    public static func apoloCheckbox<S: ShapeStyle>(_ shapeStyle: S) -> ToggleCheckboxStyle {
-        .init(shapeStyle: AnyShapeStyle(shapeStyle))
+    static func apoloCheckbox<S: ShapeStyle>(_ shapeStyle: S, hasLabel: Bool = true) -> ToggleCheckboxStyle {
+        .init(shapeStyle: AnyShapeStyle(shapeStyle), hasLabel: hasLabel)
     }
     
-    public static func apoloCheckbox(_ color: Color) -> ToggleCheckboxStyle {
-        .init(shapeStyle: AnyShapeStyle(color))
+    static func apoloCheckbox(_ color: Color, hasLabel: Bool = true) -> ToggleCheckboxStyle {
+        .init(shapeStyle: AnyShapeStyle(color), hasLabel: hasLabel)
     }
 }
 

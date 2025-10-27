@@ -183,8 +183,9 @@ public struct ToggleCheckboxStyle: ToggleStyle {
                 if hasLabel {
                     configuration.label
                         .multilineTextAlignment(.leading)
+                    
+                    Spacer(minLength: 0)
                 }
-                Spacer(minLength: 0)
             }
             .frame(maxWidth: hasLabel ? .infinity : nil, alignment: .leading)
             .contentShape(Rectangle())

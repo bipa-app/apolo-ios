@@ -66,7 +66,22 @@ public struct ProminentButtonGlassModifier: ViewModifier {
     }
 }
 
-private extension View {
+public extension View {
+    func borderedProminentStyle(
+        shape: CustomButtonShape = .capsule,
+        color: Color = .green,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true,
+        glassEnabled: Bool = true
+    ) -> some View {
+        if glassEnabled {
+            return AnyView(self.borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap))
+        } else {
+            return AnyView(self.borderedProminentStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
+        }
+    }
+    
     func borderedProminentStyle(
         _ shape: CustomButtonShape,
         _ color: Color,
@@ -110,6 +125,16 @@ private extension View {
     }
     
     func borderedProminentStyle<S: ShapeStyle>(
+        shape: CustomButtonShape = .capsule,
+        shapeStyle: S,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
+    ) -> some View {
+        borderedProminentStyle(shape, shapeStyle, size, hapticStyle, preventDoubleTap)
+    }
+    
+    func borderedProminentStyle<S: ShapeStyle>(
         _ shape: CustomButtonShape,
         _ shapeStyle: S,
         _ size: ControlSize,
@@ -129,6 +154,22 @@ private extension View {
             .preventDoubleTap(enabled: preventDoubleTap)
     }
 
+    func borderedStyle(
+        shape: CustomButtonShape = .capsule,
+        color: Color = .green,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true,
+        glassEnabled: Bool = true,
+        isClear: Bool = false
+    ) -> some View {
+        if glassEnabled {
+            return AnyView(borderedStyle(shape, color, size, hapticStyle, preventDoubleTap, isClear))
+        } else {
+            return AnyView(borderedStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
+        }
+    }
+    
     func borderedStyle(
         _ shape: CustomButtonShape,
         _ color: Color,
@@ -175,6 +216,16 @@ private extension View {
     }
 
     func plainStyle(
+        shape: CustomButtonShape = .capsule,
+        color: Color = .green,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true
+    ) -> some View {
+        plainStyle(shape, color, size, hapticStyle, preventDoubleTap)
+    }
+    
+    func plainStyle(
         _ shape: CustomButtonShape,
         _ color: Color,
         _ size: ControlSize,
@@ -190,6 +241,30 @@ private extension View {
             .preventDoubleTap(enabled: preventDoubleTap)
     }
 
+    func strokedStyle(
+        shape: CustomButtonShape = .capsule,
+        tintColor: Color = .primary,
+        borderColor: Color = .primary,
+        backgroundColor: Color = .clear,
+        size: ControlSize = .large,
+        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        preventDoubleTap: Bool = true,
+        isGlassEnabled: Bool = true,
+        isGlassClear: Bool = true
+    ) -> some View {
+        strokedStyle(
+            shape,
+            tintColor,
+            borderColor,
+            backgroundColor,
+            size,
+            hapticStyle,
+            preventDoubleTap,
+            isGlassEnabled,
+            isGlassClear
+        )
+    }
+    
     func strokedStyle(
         _ shape: CustomButtonShape,
         _ tintColor: Color,

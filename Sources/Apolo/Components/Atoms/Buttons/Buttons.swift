@@ -599,7 +599,7 @@ public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
     
     public func body(content: Content) -> some View {
         Group {
-            if #available(iOS 26.0, *) {
+            if #available(iOS 26.0.1, *) {
                 if let shape {
                     if isClear {
                         content
@@ -624,7 +624,7 @@ public struct GlassEffectModifier: ViewModifier {
     
     public func body(content: Content) -> some View {
         Group {
-            if #available(iOS 26.0, *) {
+            if #available(iOS 26.0.1, *) {
                 if isClear {
                     content
                         .glassEffect(.clear.tint(color).interactive())
@@ -640,22 +640,10 @@ public struct GlassEffectModifier: ViewModifier {
 }
 
 public extension View {
-    func glassEffectIfAvailable<T, S: Shape>(color: Color?, isClear: Bool, shape: S?, orElse: (Self) -> T) -> some View where T : View {
-        self
-            .if(condition: {
-                if #available(iOS 26.0, *) {
-                    return false
-                } else {
-                    return true
-                }
-            }, transform: orElse)
-            .modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
-    }
-    
     func glassEffectIfAvailable<T>(color: Color?, isClear: Bool, orElse: (Self) -> T) -> some View where T : View {
         self
             .if(condition: {
-                if #available(iOS 26.0, *) {
+                if #available(iOS 26.0.1, *) {
                     if color == .clear {
                         return true
                     } else {
@@ -667,11 +655,7 @@ public extension View {
             }, transform: orElse)
             .modifier(GlassEffectModifier(color: color, isClear: isClear))
     }
-    
-    func glassEffectIfAvailable<S: Shape>(color: Color?, shape: S?, isClear: Bool) -> some View {
-        modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
-    }
-    
+        
     func glassEffectIfAvailable(color: Color?, isClear: Bool) -> some View {
         modifier(GlassEffectModifier(color: color, isClear: isClear))
     }

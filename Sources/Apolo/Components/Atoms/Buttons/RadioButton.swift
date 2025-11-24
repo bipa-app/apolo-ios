@@ -70,6 +70,7 @@ extension RadioButtonGroup {
                     selectedValue = option.value
                     onSelect?(option.value)
                 }
+                .id(option.id)
                 
                 if index < options.count - 1 {
                     Separator()
@@ -89,6 +90,7 @@ extension RadioButtonGroup {
                     selectedValue = option.value
                     onSelect?(option.value)
                 }
+                .id(option.id)
                 .padding(Tokens.Spacing.medium)
                 .frame(minHeight: 72)
                 .cardBackground(style)
@@ -108,6 +110,7 @@ extension RadioButtonGroup {
                         selectedValue = option.value
                         onSelect?(option.value)
                     }
+                    .id(option.id)
                     .cardBackground(style)
                 } else {
                     RadioButton(
@@ -118,6 +121,7 @@ extension RadioButtonGroup {
                         selectedValue = option.value
                         onSelect?(option.value)
                     }
+                    .id(option.id)
                 }
             }
         }
@@ -131,8 +135,11 @@ public enum RadioButtonStyle {
     /// Body label with footnote description
     case standard
     
-    /// Footnote label with body description/
+    /// Footnote label with body description
     case reversed
+    
+    /// Just use this style in case of customView initializer
+    case custom
 }
 
 public struct RadioButtonIconConfiguration {
@@ -153,16 +160,19 @@ public struct RadioButtonIconConfiguration {
 public struct RadioOption<T: Hashable>: Identifiable {
     public let id: String
     public let value: T
-    public let label: String
+    public let label: String?
     public let description: String?
     public let style: RadioButtonStyle
     public let iconConfiguration: RadioButtonIconConfiguration?
     public let tag: Tag?
+    public let customView: AnyView?
+
+    // MARK: Default initializer
 
     public init(
         id: String,
         value: T,
-        label: String,
+        label: String? = nil,
         description: String? = nil,
         style: RadioButtonStyle = .standard,
         iconConfiguration: RadioButtonIconConfiguration? = nil,
@@ -175,14 +185,30 @@ public struct RadioOption<T: Hashable>: Identifiable {
         self.style = style
         self.iconConfiguration = iconConfiguration
         self.tag = tag
+        self.customView = nil
+    }
+    
+    // MARK: CustomView initializer
+    
+    public init<CustomView: View>(
+        id: String,
+        value: T,
+        @ViewBuilder customView: () -> CustomView
+    ) {
+        self.id = id
+        self.value = value
+        self.label = nil
+        self.description = nil
+        self.style = .custom
+        self.iconConfiguration = nil
+        self.tag = nil
+        self.customView = AnyView(customView())
     }
 }
 
 // MARK: - Radio Button
 
-public struct RadioButton<T: Hashable>: View {
-    // MARK: - Properties
-    
+public struct RadioButton<T: Hashable>: View {    
     private let option: RadioOption<T>
     private let isSelected: Bool
     private let style: RadioButtonStyle
@@ -207,20 +233,11 @@ public struct RadioButton<T: Hashable>: View {
     public var body: some View {
         HStack(spacing: Tokens.Spacing.medium) {
             radioCircle
-
-            if let iconConfig = option.iconConfiguration, let image = iconConfig.image {
-                image
-                    .large()
-                    .foregroundColor(iconConfig.color ?? .primary)
-            }
             
-            labelStack
-                .frame(maxWidth: .infinity, alignment: .leading)
-            
-            if let tag = option.tag {
-                tag
-                    .minimumScaleFactor(0.8)
-                    .lineLimit(1)
+            if let customView = option.customView {
+                customView
+            } else {
+                defaultView
             }
         }
         .padding(Tokens.Spacing.medium)
@@ -237,7 +254,7 @@ public struct RadioButton<T: Hashable>: View {
             }
         }
     }
-    
+        
     // MARK: - UI Components
     
     private var radioCircle: some View {
@@ -254,6 +271,24 @@ public struct RadioButton<T: Hashable>: View {
     }
     
     @ViewBuilder
+    private var defaultView: some View {
+        if let iconConfig = option.iconConfiguration, let image = iconConfig.image {
+            image
+                .large()
+                .foregroundColor(iconConfig.color ?? .primary)
+        }
+        
+        labelStack
+            .frame(maxWidth: .infinity, alignment: .leading)
+        
+        if let tag = option.tag {
+            tag
+                .minimumScaleFactor(0.8)
+                .lineLimit(1)
+        }
+    }
+    
+    @ViewBuilder
     private var labelStack: some View {
         switch style {
         case .standard:
@@ -261,13 +296,18 @@ public struct RadioButton<T: Hashable>: View {
             
         case .reversed:
             reversedLabel
+            
+        case .custom:
+            EmptyView()
         }
     }
     
     private var standardLabel: some View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
-            Text(option.label)
+            if let label = option.label {
+                Text(label)
                 .callout(weight: .medium)
+            }
             
             if let description = option.description {
                 Text(description)
@@ -279,9 +319,11 @@ public struct RadioButton<T: Hashable>: View {
     
     private var reversedLabel: some View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
-            Text(option.label)
-                .subheadline()
-                .foregroundStyle(Color.secondary)
+            if let label = option.label {
+                Text(label)
+                    .subheadline()
+                    .foregroundStyle(Color.secondary)
+            }
             
             if let description = option.description {
                 Text(description)
@@ -334,8 +376,51 @@ private enum PreviewOption: String, CaseIterable {
         )
     ]
     
+    let customViewOptions: [RadioOption] = [
+        RadioOption(
+            id: 1.description,
+            value: PreviewOption.first,
+            customView: {
+                VStack {
+                    Text("Customize the view how u want")
+                        .body()
+                        .background(.yellow)
+                    Text("Customize the view how u want")
+                        .body()
+                        .background(.green)
+                    Text("Customize the view how u want")
+                        .body()
+                        .background(.blue)
+                }
+            }
+        ),
+        RadioOption(
+            id: 2.description,
+            value: PreviewOption.second,
+            customView: {
+                VStack {
+                    Text("Customize the view how u want")
+                        .callout()
+                        .foregroundStyle(.red)
+                    HStack {
+                        Image(systemName: "bitcoinsign")
+                        Image(systemName: "dollarsign")
+                        Image(systemName: "bitcoinsign")
+                        Image(systemName: "dollarsign")
+                        Image(systemName: "bitcoinsign")
+                        Image(systemName: "dollarsign")
+                        Image(systemName: "bitcoinsign")
+                        Image(systemName: "dollarsign")
+                        Image(systemName: "bitcoinsign")
+                        Image(systemName: "dollarsign")
+                    }
+                }
+            }
+        )
+    ]
+    
     ScrollView(.vertical) {
-        VStack {
+        VStack(spacing: Tokens.Spacing.extraExtraLarge) {
             Section("RadioButtonGroupStyle - Plain") {
                 RadioButtonGroup(
                     style: .plain,
@@ -345,9 +430,7 @@ private enum PreviewOption: String, CaseIterable {
                     print("Selected option: \(newSelectedValue)")
                 }
             }
-            
-            Spacer(minLength: Tokens.Spacing.extraExtraLarge)
-            
+                        
             Section("RadioButtonGroupStyle - Card") {
                 RadioButtonGroup(
                     style: .card(.secondary),
@@ -355,13 +438,19 @@ private enum PreviewOption: String, CaseIterable {
                     selectedValue: $selectedValue
                 )
             }
-            
-            Spacer(minLength: Tokens.Spacing.extraExtraLarge)
-            
+                        
             Section("RadioButtonGroupStyle - SelectedCard") {
                 RadioButtonGroup(
                     style: .selectedCard(.secondary),
                     options: options,
+                    selectedValue: $selectedValue
+                )
+            }
+                        
+            Section("RadioButtonGroupStyle - CustomView") {
+                RadioButtonGroup(
+                    style: .plain,
+                    options: customViewOptions,
                     selectedValue: $selectedValue
                 )
             }

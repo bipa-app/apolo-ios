@@ -9,7 +9,7 @@ import SwiftUI
 
 // MARK: Tag
 
-public struct Tag: View {
+public struct Tag: View, Equatable {
     
     // MARK: - Size
 

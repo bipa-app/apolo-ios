@@ -14,28 +14,30 @@ struct CardTag: View {
     
     @State private var phase: CGFloat = 0
 
+    var colors: [Color] {
+        type == .credit ? [Tokens.Color.violet.color, Tokens.Color.blue.color] : [Tokens.Color.green.color, Tokens.Color.mint.color]
+    }
+    
     var body: some View {
         Text(type == .credit ? "Crédito" : "Pré-pago")
-            .body(weight: .italic)
+            .caption1(weight: .italic)
             .foregroundStyle(.white)
-            .padding(.vertical, Tokens.Spacing.extraSmall)
+            .padding(.vertical, Tokens.Spacing.extraExtraSmall)
             .padding(.horizontal, Tokens.Spacing.small)
             .background(
                 Rectangle()
                     .fill(
                         LinearGradient(
-                            colors: type == .credit ? [Tokens.Color.violet.color, Tokens.Color.blue.color] : [Tokens.Color.green.color, Tokens.Color.mint.color],
+                            colors: phase == 0 ? colors.reversed() : colors,
                             startPoint: .leading,
                             endPoint: .trailing
                         )
                     )
-                    .modifier(FlowEffect(phase: phase))
-                    .scaleEffect(4)
             )
             .clipShape(.capsule)
             .task {
-                withAnimation(.linear(duration: 10).repeatForever(autoreverses: false)) {
-                    phase = .pi * 2
+                withAnimation(.linear(duration: 10).repeatForever(autoreverses: true)) {
+                    phase = 1
                 }
             }
     }

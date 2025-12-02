@@ -50,6 +50,7 @@ public struct Tag: View, Equatable {
         case error
         case turbo
         case premium
+        case card(type: CardType)
         case custom(
             shapeStyle: (any ShapeStyle)? = nil,
             backgroundColor: Color = .clear,
@@ -64,14 +65,14 @@ public struct Tag: View, Equatable {
             case .success: "checkmark.circle.fill"
             case .warning: "clock.fill"
             case .error: "exclamationmark.triangle.fill"
-            case .turbo, .premium: nil
+            case .turbo, .premium, .card: nil
             case let .custom(_, _, _, icon, _): icon
             }
         }
 
         var secondaryIcon: String? {
             switch self {
-            case .label, .success, .warning, .error, .turbo, .premium: nil
+            case .label, .success, .warning, .error, .turbo, .premium, .card: nil
             case let .custom(_, _, _, _, icon): icon
             }
         }
@@ -80,14 +81,14 @@ public struct Tag: View, Equatable {
             switch self {
             case let .custom(_, _, textColor, _, _): textColor
             case .label: .primary
-            case .turbo: .white
+            case .turbo, .card: .white
             default: Color(uiColor: .systemBackground)
             }
         }
         
         var background: AnyShapeStyle {
             switch self {
-            case .label, .turbo, .premium:
+            case .label, .turbo, .premium, .card:
                 return .init(Color.clear)
             case .success:
                 return .init(Tokens.Color.green.color)
@@ -105,7 +106,7 @@ public struct Tag: View, Equatable {
         
         var backgroundColor: Color {
             switch self {
-            case .label, .turbo, .premium:
+            case .label, .turbo, .premium, .card:
                 return Color.clear
             case .success:
                 return Tokens.Color.green.color
@@ -116,6 +117,11 @@ public struct Tag: View, Equatable {
             case let .custom(_, backgroundColor, _, _, _):
                 return backgroundColor
             }
+        }
+        
+        public enum CardType {
+            case prepaid
+            case credit
         }
     }
 
@@ -145,13 +151,17 @@ public struct Tag: View, Equatable {
     // MARK: - Body
 
     public var body: some View {
-        if case .premium = style {
+        switch style {
+        case .premium:
             PremiumTag()
-        }
-        if case .turbo = style {
+        case .turbo:
             TurboTag()
-        } else if let title {
-            PlainTag(style: style, title: title, size: size, clearGlass: clearGlass)
+        case let .card(type):
+            CardTag(type: type)
+        default:
+            if let title {
+                PlainTag(style: style, title: title, size: size, clearGlass: clearGlass)
+            }
         }
     }
 }
@@ -195,6 +205,9 @@ extension Tag.Style: Equatable {
                 Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
                 Tag(style: .turbo)
                 Tag(style: .premium)
+                Tag(style: .card(type: .credit))
+                Tag(style: .card(type: .prepaid))
+
                 Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom Color")
                 Tag(style: .custom(shapeStyle: .ultraThinMaterial), title: "Custom ShapeStyle")
                 

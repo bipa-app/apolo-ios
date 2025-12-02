@@ -17,12 +17,14 @@ public enum FontWeight {
     case regular
     case medium
     case bold
-
+    case italic
+    
     var fontName: String {
         switch self {
         case .regular: return "Regular"
         case .medium: return "Medium"
         case .bold: return "Bold"
+        case .italic: return "RegularItalic"
         }
     }
 }

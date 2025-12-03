@@ -12,34 +12,31 @@ import SwiftUI
 struct CardTag: View {
     let type: Tag.Style.CardType
     
-    @State private var phase: CGFloat = 0
-
     var colors: [Color] {
         type == .credit ? [Tokens.Color.violet.color, Tokens.Color.blue.color] : [Tokens.Color.green.color, Tokens.Color.mint.color]
+    }
+    
+    var foregroundColor: Color {
+        type == .credit ? .white : Tokens.Color.systemBackground.color
     }
     
     var body: some View {
         Text(type == .credit ? "Crédito" : "Pré-pago")
             .caption1(weight: .italic)
-            .foregroundStyle(.white)
-            .padding(.vertical, Tokens.Spacing.extraExtraSmall)
+            .foregroundStyle(foregroundColor)
+            .padding(.vertical, Tokens.Spacing.extraSmall)
             .padding(.horizontal, Tokens.Spacing.small)
             .background(
                 Rectangle()
                     .fill(
                         LinearGradient(
-                            colors: phase == 0 ? colors.reversed() : colors,
+                            colors: colors,
                             startPoint: .leading,
                             endPoint: .trailing
                         )
                     )
             )
             .clipShape(.capsule)
-            .task {
-                withAnimation(.linear(duration: 10).repeatForever(autoreverses: true)) {
-                    phase = 1
-                }
-            }
     }
 }
 

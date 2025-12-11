@@ -120,8 +120,17 @@ public struct Tag: View, Equatable {
         }
         
         public enum CardType {
-            case prepaid
-            case credit
+            case prepaid(isTurbo: Bool)
+            case credit(isTurbo: Bool)
+            
+            var name: String {
+                switch self {
+                case .prepaid:
+                    "Pré-Pago"
+                case .credit:
+                    "Crédito"
+                }
+            }
         }
     }
 
@@ -205,8 +214,10 @@ extension Tag.Style: Equatable {
                 Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
                 Tag(style: .turbo)
                 Tag(style: .premium)
-                Tag(style: .card(type: .credit))
-                Tag(style: .card(type: .prepaid))
+                Tag(style: .card(type: .credit(isTurbo: false)))
+                Tag(style: .card(type: .prepaid(isTurbo: false)))
+                Tag(style: .card(type: .credit(isTurbo: true)))
+                Tag(style: .card(type: .prepaid(isTurbo: true)))
 
                 Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom Color")
                 Tag(style: .custom(shapeStyle: .ultraThinMaterial), title: "Custom ShapeStyle")

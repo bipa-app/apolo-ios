@@ -17,9 +17,11 @@ struct TurboTag: View {
             Text("Bipa")
                 .subheadline()
             Text("Turbo")
-                .subheadline()
+                .subheadline(weight: .italic)
                 .fontWeight(.medium)
-                .italic()
+            
+            Image(systemName: "flame")
+                .small()
         }
         .foregroundStyle(.white)
         .padding(.vertical, Tokens.Spacing.extraSmall)

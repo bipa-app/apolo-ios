@@ -17,33 +17,38 @@ public struct CardBackground: View {
     public var color: Color
     public var cornerRadius: CGFloat
     public var glassEnabled: Bool
-    
+    public var glassInteractive: Bool
+
     public init(
         _ style: Style = .primary,
         cornerRadius: CGFloat = Tokens.CornerRadius.large,
-        glassEnabled: Bool = true
+        glassEnabled: Bool = true,
+        glassInteractive: Bool = true
     ) {
         self.style = style
         self.color = style.color
         self.cornerRadius = cornerRadius
         self.glassEnabled = glassEnabled
+        self.glassInteractive = glassInteractive
     }
     
     public init(
         color: Color,
         cornerRadius: CGFloat = Tokens.CornerRadius.large,
-        glassEnabled: Bool = true
+        glassEnabled: Bool = true,
+        glassInteractive: Bool = true
     ) {
         self.color = color
         self.cornerRadius = cornerRadius
         self.glassEnabled = glassEnabled
+        self.glassInteractive = glassInteractive
     }
     
     public var body: some View {
         if #available(iOS 26.0, *), glassEnabled {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(color)
-                .glassEffect(.clear.interactive(), in: RoundedRectangle(cornerRadius: cornerRadius))
+                .glassEffect(.clear.interactive(glassInteractive), in: RoundedRectangle(cornerRadius: cornerRadius))
         } else {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(color)
@@ -75,20 +80,22 @@ public extension View {
     func cardBackground(
         _ style: CardBackground.Style = .primary,
         cornerRadius: CGFloat = Tokens.CornerRadius.large,
-        glassEnabled: Bool = true
+        glassEnabled: Bool = true,
+        glassInteractive: Bool = true
     ) -> some View {
         self.background(
-            CardBackground(color: style.color, cornerRadius: cornerRadius, glassEnabled: glassEnabled)
+            CardBackground(color: style.color, cornerRadius: cornerRadius, glassEnabled: glassEnabled, glassInteractive: glassInteractive)
         )
     }
     
     func cardBackground(
         color: Color,
         cornerRadius: CGFloat = Tokens.CornerRadius.large,
-        glassEnabled: Bool = true
+        glassEnabled: Bool = true,
+        glassInteractive: Bool = true
     ) -> some View {
         self.background(
-            CardBackground(color: color, cornerRadius: cornerRadius, glassEnabled: glassEnabled)
+            CardBackground(color: color, cornerRadius: cornerRadius, glassEnabled: glassEnabled, glassInteractive: glassInteractive)
         )
     }
 }

@@ -36,15 +36,17 @@ struct CardTag: View {
     var body: some View {
         switch type {
         case let .credit(isTurbo, isPremium), let .prepaid(isTurbo, isPremium):
-            if isTurbo {
+            if isTurbo || isPremium {
                 HStack {
                     Text(type.name)
                         .caption1(weight: .italic)
                         .foregroundStyle(foregroundColor)
                     
-                    Image(systemName: "flame")
-                        .small()
-                        .foregroundStyle(foregroundColor)
+                    if isTurbo {
+                        Image(systemName: "flame")
+                            .small()
+                            .foregroundStyle(foregroundColor)
+                    }
                 }
                 .padding(.vertical, Tokens.Spacing.extraSmall)
                 .padding(.horizontal, Tokens.Spacing.small)
@@ -111,6 +113,8 @@ struct CardTag: View {
         CardTag(type: .credit(isTurbo: false, isPremium: false))
         CardTag(type: .prepaid(isTurbo: true, isPremium: true))
         CardTag(type: .credit(isTurbo: true, isPremium: true))
+        CardTag(type: .credit(isTurbo: false, isPremium: true))
+        CardTag(type: .prepaid(isTurbo: false, isPremium: true))
     }
 }
 

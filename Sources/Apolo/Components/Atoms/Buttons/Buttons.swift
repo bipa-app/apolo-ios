@@ -677,16 +677,6 @@ public extension View {
     }
 }
 
-public extension View {
-    @ViewBuilder func `if`<T>(condition: (()  -> Bool), transform: (Self) -> T) -> some View where T : View {
-        if condition() {
-            transform(self)
-        } else {
-            self
-        }
-    }
-}
-
 // MARK: - Preview
 
 @available(iOS 17.0, *)

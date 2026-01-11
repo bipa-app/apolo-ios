@@ -48,6 +48,7 @@ public enum CustomButtonShape {
             return AnyShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.small))
         }
     }
+    #endif
 }
 
 // MARK: - View

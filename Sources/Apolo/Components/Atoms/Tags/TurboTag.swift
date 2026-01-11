@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if !os(watchOS)
+
 // MARK: Turbo Tag
 
 struct TurboTag: View {
@@ -53,3 +55,5 @@ struct TurboTag: View {
 #Preview {
     TurboTag()
 }
+
+#endif

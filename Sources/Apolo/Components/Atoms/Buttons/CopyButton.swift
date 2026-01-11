@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if !os(watchOS)
+
 // MARK: CopyButton
 
 public struct CopyButton: View {
@@ -47,7 +49,9 @@ public struct CopyButton: View {
     public var body: some View {
         Button(
             action: {
+                #if !os(watchOS)
                 UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+                #endif
                 UIPasteboard.general.string = value
                 onCopied?(value)
                 
@@ -153,3 +157,5 @@ public extension CopyButton {
         .strokedStyle()
     }
 }
+
+#endif

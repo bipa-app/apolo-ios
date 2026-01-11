@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if !os(watchOS)
+
 // MARK: CardTag
 
 struct CardTag: View {
@@ -118,3 +120,5 @@ struct CardTag: View {
     }
 }
 
+
+#endif

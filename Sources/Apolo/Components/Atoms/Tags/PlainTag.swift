@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if !os(watchOS)
+
 // MARK: Plain Tag
 
 struct PlainTag: View {
@@ -47,3 +49,5 @@ struct PlainTag: View {
         })
     }
 }
+
+#endif

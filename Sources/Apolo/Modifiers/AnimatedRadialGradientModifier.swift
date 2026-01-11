@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if !os(watchOS)
+
 // MARK: - View Extension
 
 public extension View {
@@ -117,3 +119,5 @@ struct AnimatedRadialGradientModifier: ViewModifier {
     .animatedRadialGradient(animate: .constant(true))
     .padding()
 }
+
+#endif

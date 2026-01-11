@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if !os(watchOS)
+
 // MARK: Tag
 
 public struct Tag: View, Equatable {
@@ -283,4 +285,6 @@ extension Tag.Style: Equatable {
         .padding()
     }
 }
+#endif
+
 #endif

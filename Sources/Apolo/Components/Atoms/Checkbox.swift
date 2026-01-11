@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if !os(watchOS)
+
 public struct Checkbox: View {
     
     // MARK: - Properties
@@ -17,7 +19,9 @@ public struct Checkbox: View {
     @State private var animate: Bool = false
     private let shapeStyle: AnyShapeStyle?
     private let onCheck: ((Bool) -> Void)?
+    #if !os(watchOS)
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    #endif
     private let titleFont: Font?
     
     public init(
@@ -118,7 +122,9 @@ public struct Checkbox: View {
     private var tapGesture: some Gesture {
         TapGesture()
             .onEnded {
+                #if !os(watchOS)
                 feedbackGenerator.impactOccurred()
+                #endif
                 withAnimation(.bouncy(duration: 0.2)) {
                     animate = true
                 }
@@ -147,7 +153,9 @@ public struct ToggleCheckboxStyle: ToggleStyle {
 
     public func makeBody(configuration: Configuration) -> some View {
         Button {
+            #if !os(watchOS)
             UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+            #endif
             configuration.isOn.toggle()
         } label: {
             HStack {
@@ -257,3 +265,5 @@ public extension ToggleStyle where Self == ToggleCheckboxStyle {
     .frame(maxWidth: .infinity, alignment: .leading)
     .padding()
 }
+
+#endif

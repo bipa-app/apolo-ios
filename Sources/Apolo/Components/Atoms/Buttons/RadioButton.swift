@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if !os(watchOS)
+
 // MARK: - RadioButtonGroupStyle
 
 public enum RadioButtonGroupStyle {
@@ -214,7 +216,9 @@ public struct RadioButton<T: Hashable>: View {
     private let style: RadioButtonStyle
     private let action: () -> Void
     @State private var animate: Bool = false
+    #if !os(watchOS)
     private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    #endif
     
     init(
         option: RadioOption<T>,
@@ -246,7 +250,9 @@ public struct RadioButton<T: Hashable>: View {
         .contentShape(.containerRelative)
         .onTapGesture {
             animate = true
-            feedbackGenerator.impactOccurred()
+            #if !os(watchOS)
+                feedbackGenerator.impactOccurred()
+                #endif
             action()
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -458,3 +464,5 @@ private enum PreviewOption: String, CaseIterable {
         .padding()
     }
 }
+
+#endif

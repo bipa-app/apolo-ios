@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+#if !os(watchOS)
+
 // MARK: PremiumTag
 
 struct PremiumTag: View {
@@ -52,3 +54,5 @@ struct PremiumTag: View {
 #Preview {
     PremiumTag()
 }
+
+#endif

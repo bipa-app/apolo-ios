@@ -200,6 +200,7 @@ extension Tag.Style: Equatable {
 
 // MARK: - Preview
 
+#if !os(watchOS)
 #Preview {
     ScrollView(.vertical) {
         VStack(alignment: .leading, spacing: Tokens.Spacing.medium) {
@@ -282,3 +283,4 @@ extension Tag.Style: Equatable {
         .padding()
     }
 }
+#endif

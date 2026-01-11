@@ -680,6 +680,7 @@ public extension View {
 // MARK: - Preview
 
 @available(iOS 17.0, *)
+#if !os(watchOS)
 #Preview {
     @Previewable @State var isEnabled = false
     
@@ -786,3 +787,4 @@ public extension View {
             .ignoresSafeArea()
     }
 }
+#endif

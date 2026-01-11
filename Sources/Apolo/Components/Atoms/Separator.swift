@@ -32,11 +32,17 @@ public struct Separator: View {
     /// Defaults to `Color(.secondarySystemFill)` if not specified.
     public let color: Color
 
+    #if os(watchOS)
+    private static let defaultColor = Color.gray.opacity(0.3)
+    #else
+    private static let defaultColor = Color(.secondarySystemFill)
+    #endif
+
     /// Creates a new separator with the specified color.
     ///
     /// - Parameter color: The color to use for the separator line.
     ///   Defaults to the system's secondary fill color if not specified.
-    public init(color: Color = Color(.secondarySystemFill)) {
+    public init(color: Color = defaultColor) {
         self.color = color
     }
 

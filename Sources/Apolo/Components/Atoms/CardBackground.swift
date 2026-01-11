@@ -7,7 +7,9 @@
 
 import Foundation
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
 // MARK: CardBackground
 
@@ -31,7 +33,7 @@ public struct CardBackground: View {
         self.glassEnabled = glassEnabled
         self.glassInteractive = glassInteractive
     }
-    
+
     public init(
         color: Color,
         cornerRadius: CGFloat = Tokens.CornerRadius.large,
@@ -43,8 +45,9 @@ public struct CardBackground: View {
         self.glassEnabled = glassEnabled
         self.glassInteractive = glassInteractive
     }
-    
+
     public var body: some View {
+        #if os(iOS)
         if #available(iOS 26.0, *), glassEnabled {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(color)
@@ -53,6 +56,10 @@ public struct CardBackground: View {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(color)
         }
+        #else
+        RoundedRectangle(cornerRadius: cornerRadius)
+            .fill(color)
+        #endif
     }
 }
 
@@ -66,9 +73,17 @@ public extension CardBackground {
         var color: Color {
             switch self {
             case .primary:
+                #if os(watchOS)
+                return Color.black.opacity(0.3)
+                #else
                 return Color(.secondarySystemGroupedBackground)
+                #endif
             case .secondary:
+                #if os(watchOS)
+                return Color.gray.opacity(0.15)
+                #else
                 return Color(.quaternarySystemFill)
+                #endif
             }
         }
     }
@@ -87,7 +102,7 @@ public extension View {
             CardBackground(color: style.color, cornerRadius: cornerRadius, glassEnabled: glassEnabled, glassInteractive: glassInteractive)
         )
     }
-    
+
     func cardBackground(
         color: Color,
         cornerRadius: CGFloat = Tokens.CornerRadius.large,
@@ -102,12 +117,13 @@ public extension View {
 
 // MARK: - Preview
 
+#if !os(watchOS)
 #Preview {
     VStack {
         Text("Primary")
             .padding()
             .cardBackground()
-        
+
         Text("Secondary")
             .padding()
             .cardBackground(.secondary)
@@ -115,23 +131,23 @@ public extension View {
         Text("Custom Color")
             .padding()
             .cardBackground(color: .yellow)
-        
+
         Button(action: {}, label: {
             Text("Button with Primary")
                 .padding()
                 .cardBackground(.primary)
         })
-        
+
         Label("Label", systemImage: "gear")
             .padding()
             .background(CardBackground())
-        
+
         VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
             Group {
                 Text("Liberação do Satsback®")
                     .callout(weight: .bold)
                     .foregroundStyle(Tokens.Color.label.color)
-                
+
                 Text("Seu Satsback® ficará disponível para resgate após o fechamento e pagamento da primeira fatura do seu cartão de crédito.")
                     .subheadline()
                     .foregroundStyle(Tokens.Color.secondaryLabel.color)
@@ -147,3 +163,4 @@ public extension View {
     .padding()
     .tint(.primary)
 }
+#endif

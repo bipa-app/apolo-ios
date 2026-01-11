@@ -33,9 +33,9 @@ public struct Separator: View {
     public let color: Color
 
     #if os(watchOS)
-    private static let defaultColor = Color.gray.opacity(0.3)
+    public static let defaultColor = Color.gray.opacity(0.3)
     #else
-    private static let defaultColor = Color(.secondarySystemFill)
+    public static let defaultColor = Color(.secondarySystemFill)
     #endif
 
     /// Creates a new separator with the specified color.

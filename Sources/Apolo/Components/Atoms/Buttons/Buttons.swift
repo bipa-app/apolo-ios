@@ -14,7 +14,8 @@ public enum CustomButtonShape {
     case circle
     case roundedRectangle
 
-    @available(iOS 17.0, *)
+    #if !os(watchOS)
+@available(iOS 17.0, *)
     public var toButtonBorderShape: ButtonBorderShape {
         switch self {
         case .capsule:
@@ -679,8 +680,8 @@ public extension View {
 
 // MARK: - Preview
 
-@available(iOS 17.0, *)
 #if !os(watchOS)
+@available(iOS 17.0, *)
 #Preview {
     @Previewable @State var isEnabled = false
     

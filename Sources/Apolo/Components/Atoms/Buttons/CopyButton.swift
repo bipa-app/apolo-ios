@@ -63,7 +63,7 @@ public struct CopyButton: View {
             print("Copied value is: \(value)")
         }
 
-        CopyButton(value: "Nice animation!", successColor: Color(.violet)) { value in
+        CopyButton(value: "Nice animation!", successColor: Tokens.Color.violet.color) { value in
             print("Copied value is: \(value)")
         }
     }

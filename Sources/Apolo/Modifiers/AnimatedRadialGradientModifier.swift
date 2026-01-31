@@ -15,7 +15,7 @@ public extension View {
         cornerRadius: CGFloat = 30,
         blurRadius: CGFloat = 4
     ) -> some View {
-        self.modifier(
+        modifier(
             AnimatedRadialGradientModifier(
                 animate: animate,
                 cornerRadius: cornerRadius,
@@ -28,17 +28,16 @@ public extension View {
 // MARK: - AnimatedRadialGradientModifier
 
 struct AnimatedRadialGradientModifier: ViewModifier {
-    
     init(
         animate: Binding<Bool>,
         cornerRadius: CGFloat = 30,
         blurRadius: CGFloat = 4
     ) {
-        self._animate = animate
+        _animate = animate
         self.cornerRadius = cornerRadius
         self.blurRadius = blurRadius
     }
-    
+
     @Binding private var animate: Bool
     private let cornerRadius: CGFloat
     private let blurRadius: CGFloat
@@ -104,16 +103,22 @@ struct AnimatedRadialGradientModifier: ViewModifier {
 // MARK: - Preview
 
 #Preview {
-    Button(
-        action: {},
-        label: {
-            Text("Animated Radial Gradient")
-                .font(.headline)
-                .foregroundStyle(.white)
-                .frame(maxWidth: .infinity)
-        }
-    )
-    .borderedProminentStyle(color: .black, size: .large)
-    .animatedRadialGradient(animate: .constant(true))
-    .padding()
+    VStack {
+        Button(
+            action: {},
+            label: {
+                Text("Animated Radial Gradient")
+                    .font(.headline)
+                    .foregroundStyle(.white)
+                    .frame(maxWidth: .infinity)
+            }
+        )
+        .borderedProminentStyle(color: .black, size: .large)
+        .animatedRadialGradient(animate: .constant(true))
+        .padding()
+
+        Button("") {}
+            .borderedProminentStyle(shape: .circle, color: .clear, size: .large)
+            .animatedRadialGradient(animate: .constant(true))
+    }
 }

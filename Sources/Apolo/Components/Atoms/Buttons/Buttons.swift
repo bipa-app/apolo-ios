@@ -218,7 +218,7 @@ public struct ButtonShapeModifier: ViewModifier {
 
 public struct PreventDoubleTapModifier: ViewModifier {
     @State private var isDisabled = false
-    
+
     public func body(content: Content) -> some View {
         content
             .disabled(isDisabled)
@@ -237,7 +237,7 @@ public struct PreventDoubleTapModifier: ViewModifier {
 
 public extension View {
     func preventDoubleTap() -> some View {
-        self.modifier(PreventDoubleTapModifier())
+        modifier(PreventDoubleTapModifier())
     }
 }
 
@@ -318,27 +318,62 @@ public struct HapticFeedbackModifier: ViewModifier {
         Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .borderedProminentStyle(color: Color(.violet), size: .large)
+        .borderedProminentStyle(color: Tokens.Color.violet.color, size: .large)
 
         Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .borderedStyle(color: Color(.violet), size: .regular, hapticStyle: .rigid)
+        .borderedStyle(color: Tokens.Color.violet.color, size: .regular, hapticStyle: .rigid)
 
         Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
         .strokedStyle(shape: .capsule, size: .large)
 
-        Button(systemImage: "bitcoinsign.circle.fill") {
+        Button(systemImage: "paperplane.fill") {
             print("Hello")
         }
-        .borderedProminentStyle(shape: .circle, color: Color(.violet), size: .large)
+        .borderedProminentStyle(shape: .circle, color: Tokens.Color.violet.color, size: .large)
+
+        Button {}
+            label: {
+                Image(systemName: "xmark")
+                    .small()
+                    .foregroundStyle(Tokens.Color.systemBackground.color)
+                    .animatedRadialGradient(animate: .constant(true))
+            }
+            .borderedProminentStyle(
+                shape: .circle,
+                color: Tokens.Color.label.color,
+                size: .regular
+            )
+            .accessibilityLabel("Enviar mensagem")
+            .accessibilityHint("Toque duas vezes para enviar sua mensagem")
+        Button {} label: {
+            Text("Confirmar")
+                .body()
+                .dynamicTypeSize(.xSmall ... .xxxLarge)
+                .foregroundStyle(.white)
+                .frame(maxWidth: .infinity)
+        }
+        .borderedProminentStyle(color: .black, size: .large)
+        .animatedRadialGradient(animate: .constant(true))
+
+        Button(systemImage: "stop.fill") {
+            // Stop action
+        }
+        .borderedProminentStyle(
+            shape: .circle,
+            color: Tokens.Color.label.color,
+            size: .regular
+        )
+        .accessibilityLabel("Parar")
+        .accessibilityHint("Para a geração da resposta")
 
         Button(systemImage: "bitcoinsign.circle.fill") {
             print("Hello")
         }
-        .borderedStyle(shape: .circle, color: Color(.violet), size: .large)
+        .borderedStyle(shape: .circle, color: Tokens.Color.violet.color, size: .large)
 
         Button(systemImage: "bitcoinsign.circle.fill") {
             print("Hello")

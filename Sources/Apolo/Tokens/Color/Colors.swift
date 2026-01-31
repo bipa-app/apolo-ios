@@ -57,63 +57,59 @@ public extension Tokens {
         case indigo
         case cyan
         case mint
+        case pink
 
         public var color: SwiftUI.Color {
             switch self {
                 // MARK: - Custom Colors
 
-                case .violet: return SwiftUI.Color("Violet", bundle: .module)
-                case .rose: return SwiftUI.Color("Rose", bundle: .module)
+            case .violet: return SwiftUI.Color("Violet", bundle: .module)
+            case .rose: return SwiftUI.Color("Rose", bundle: .module)
 
-                // MARK: - Text Colors
+            // MARK: - Text Colors
+            case .lightText: return SwiftUI.Color(.lightText)
+            case .darkText: return SwiftUI.Color(.darkText)
+            case .placeholderText: return SwiftUI.Color(.placeholderText)
 
-                case .lightText: return SwiftUI.Color(.lightText)
-                case .darkText: return SwiftUI.Color(.darkText)
-                case .placeholderText: return SwiftUI.Color(.placeholderText)
+            // MARK: - Label Colors
+            case .label: return SwiftUI.Color(.label)
+            case .secondaryLabel: return SwiftUI.Color(.secondaryLabel)
+            case .tertiaryLabel: return SwiftUI.Color(.tertiaryLabel)
+            case .quaternaryLabel: return SwiftUI.Color(.quaternaryLabel)
 
-                // MARK: - Label Colors
+            // MARK: - Background Colors
+            case .systemBackground: return SwiftUI.Color(.systemBackground)
+            case .secondarySystemBackground: return SwiftUI.Color(.secondarySystemBackground)
+            case .tertiarySystemBackground: return SwiftUI.Color(.tertiarySystemBackground)
 
-                case .label: return SwiftUI.Color(.label)
-                case .secondaryLabel: return SwiftUI.Color(.secondaryLabel)
-                case .tertiaryLabel: return SwiftUI.Color(.tertiaryLabel)
-                case .quaternaryLabel: return SwiftUI.Color(.quaternaryLabel)
+            // MARK: - Fill Colors
+            case .systemFill: return SwiftUI.Color(.systemFill)
+            case .secondarySystemFill: return SwiftUI.Color(.secondarySystemFill)
+            case .tertiarySystemFill: return SwiftUI.Color(.tertiarySystemFill)
+            case .quaternarySystemFill: return SwiftUI.Color(.quaternarySystemFill)
 
-                // MARK: - Background Colors
+            // MARK: - Grouped Background Colors
+            case .systemGroupedBackground: return SwiftUI.Color(.systemGroupedBackground)
+            case .secondarySystemGroupedBackground: return SwiftUI.Color(.secondarySystemGroupedBackground)
+            case .tertiarySystemGroupedBackground: return SwiftUI.Color(.tertiarySystemGroupedBackground)
 
-                case .systemBackground: return SwiftUI.Color(.systemBackground)
-                case .secondarySystemBackground: return SwiftUI.Color(.secondarySystemBackground)
-                case .tertiarySystemBackground: return SwiftUI.Color(.tertiarySystemBackground)
-
-                // MARK: - Fill Colors
-
-                case .systemFill: return SwiftUI.Color(.systemFill)
-                case .secondarySystemFill: return SwiftUI.Color(.secondarySystemFill)
-                case .tertiarySystemFill: return SwiftUI.Color(.tertiarySystemFill)
-                case .quaternarySystemFill: return SwiftUI.Color(.quaternarySystemFill)
-
-                // MARK: - Grouped Background Colors
-
-                case .systemGroupedBackground: return SwiftUI.Color(.systemGroupedBackground)
-                case .secondarySystemGroupedBackground: return SwiftUI.Color(.secondarySystemGroupedBackground)
-                case .tertiarySystemGroupedBackground: return SwiftUI.Color(.tertiarySystemGroupedBackground)
-
-                // MARK: - System Colors
-
-                case .blue: return SwiftUI.Color(.systemBlue)
-                case .green: return SwiftUI.Color(.systemGreen)
-                case .yellow: return SwiftUI.Color(.systemYellow)
-                case .orange: return SwiftUI.Color(.systemOrange)
-                case .red: return SwiftUI.Color(.systemRed)
-                case .teal: return SwiftUI.Color(.systemTeal)
-                case .indigo: return SwiftUI.Color(.systemIndigo)
-                case .cyan: return SwiftUI.Color(.systemCyan)
-                case .mint: return SwiftUI.Color(.systemMint)
+            // MARK: - System Colors
+            case .blue: return SwiftUI.Color(.systemBlue)
+            case .green: return SwiftUI.Color(.systemGreen)
+            case .yellow: return SwiftUI.Color(.systemYellow)
+            case .orange: return SwiftUI.Color(.systemOrange)
+            case .red: return SwiftUI.Color(.systemRed)
+            case .teal: return SwiftUI.Color(.systemTeal)
+            case .indigo: return SwiftUI.Color(.systemIndigo)
+            case .cyan: return SwiftUI.Color(.systemCyan)
+            case .mint: return SwiftUI.Color(.systemMint)
+            case .pink: return SwiftUI.Color(.systemPink)
             }
         }
 
         // MARK: - ShapeStyle Conformance
 
-        public func resolve(in environment: EnvironmentValues) -> some ShapeStyle {
+        public func resolve(in _: EnvironmentValues) -> some ShapeStyle {
             color
         }
     }

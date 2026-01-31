@@ -15,12 +15,20 @@ let package = Package(
             targets: ["Apolo"]
         )
     ],
+    dependencies: [
+        .package(url: "https://github.com/gonzalezreal/swift-markdown-ui", from: "2.4.1"),
+        .package(url: "https://github.com/bipa-app/textual", branch: "ios16")
+    ],
     targets: [
         .target(
             name: "Apolo",
-            path: "Sources",
+            dependencies: [
+                .product(name: "MarkdownUI", package: "swift-markdown-ui"),
+                .product(name: "Textual", package: "textual")
+            ],
+            path: "Sources/Apolo",
             resources: [
-                .process("Apolo/Resources")
+                .process("Resources")
             ]
         )
     ]

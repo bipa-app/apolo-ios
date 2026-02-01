@@ -20,6 +20,9 @@ import Textual
 /// // Secondary (muted) styling
 /// MarkdownText("# Hello World", style: .secondary)
 ///
+/// // With line limit
+/// MarkdownText("Long content...", lineLimit: 3)
+///
 /// // Custom configuration
 /// MarkdownText("# Hello World", style: .init(textColor: .tertiaryLabel))
 /// ```
@@ -28,6 +31,7 @@ public struct MarkdownText: View {
 
     private let content: String
     private let style: MarkdownStyleConfiguration
+    private let lineLimit: Int?
 
     // MARK: - Initialization
 
@@ -35,9 +39,15 @@ public struct MarkdownText: View {
     /// - Parameters:
     ///   - content: The markdown string to render.
     ///   - style: The style configuration to use. Defaults to `.default`.
-    public init(_ content: String, style: MarkdownStyleConfiguration = .default) {
+    ///   - lineLimit: The maximum number of lines to display. Pass `nil` for unlimited lines.
+    public init(
+        _ content: String,
+        style: MarkdownStyleConfiguration = .default,
+        lineLimit: Int? = nil
+    ) {
         self.content = content
         self.style = style
+        self.lineLimit = lineLimit
     }
 
     // MARK: - Body
@@ -48,9 +58,11 @@ public struct MarkdownText: View {
                 .font(.abcGinto(style: .body))
                 .foregroundStyle(style.textColor.color)
                 .textual.structuredTextStyle(.bipa(style))
+                .lineLimit(lineLimit)
         } else {
             Markdown(content)
                 .markdownTheme(.bipa(style))
+                .lineLimit(lineLimit)
         }
     }
 }

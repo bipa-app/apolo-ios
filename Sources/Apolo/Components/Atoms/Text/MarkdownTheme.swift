@@ -59,12 +59,14 @@ public struct MarkdownStyleConfiguration {
     /// Secondary style with muted text color.
     public static let secondary = MarkdownStyleConfiguration(
         textColor: .secondaryLabel,
+        accentColor: .label,
         secondaryTextColor: .tertiaryLabel
     )
 
     /// Tertiary style with even more muted text color.
     public static let tertiary = MarkdownStyleConfiguration(
         textColor: .tertiaryLabel,
+        accentColor: .secondaryLabel,
         secondaryTextColor: .quaternaryLabel
     )
 }
@@ -655,15 +657,15 @@ public extension StructuredText {
 
         public init(_ configuration: MarkdownStyleConfiguration = .default) {
             Bundle.ensureFontsRegistered()
-            self.inlineStyle = .bipa(configuration)
-            self.headingStyle = .bipa(configuration)
-            self.paragraphStyle = .bipa
-            self.blockQuoteStyle = .bipa(configuration)
-            self.codeBlockStyle = .bipa(configuration)
-            self.listItemStyle = .bipa(configuration)
-            self.tableStyle = .bipa(configuration)
-            self.tableCellStyle = .bipa
-            self.thematicBreakStyle = .bipa(configuration)
+            inlineStyle = .bipa(configuration)
+            headingStyle = .bipa(configuration)
+            paragraphStyle = .bipa
+            blockQuoteStyle = .bipa(configuration)
+            codeBlockStyle = .bipa(configuration)
+            listItemStyle = .bipa(configuration)
+            tableStyle = .bipa(configuration)
+            tableCellStyle = .bipa
+            thematicBreakStyle = .bipa(configuration)
         }
     }
 }

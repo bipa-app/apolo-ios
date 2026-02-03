@@ -76,12 +76,12 @@ public extension View {
         glassEnabled: Bool = true
     ) -> some View {
         if glassEnabled {
-            return AnyView(self.borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap))
+            return AnyView(borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap))
         } else {
-            return AnyView(self.borderedProminentStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
+            return AnyView(borderedProminentStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
         }
     }
-    
+
     func borderedProminentStyle(
         _ shape: CustomButtonShape,
         _ color: Color,
@@ -90,9 +90,9 @@ public extension View {
         _ preventDoubleTap: Bool
     ) -> some View {
         if #available(iOS 26.0, *) {
-            return modifier(ProminentButtonGlassModifier())
+            return modifier(ButtonShapeModifier(shape: shape))
+                .modifier(ProminentButtonGlassModifier())
                 .controlSize(size)
-                .modifier(ButtonShapeModifier(shape: shape))
                 .tint(color)
                 .font(.abcGinto(style: .body, weight: .regular))
                 .modifier(HapticFeedbackModifier(style: hapticStyle))
@@ -107,7 +107,7 @@ public extension View {
                 .preventDoubleTap(enabled: preventDoubleTap)
         }
     }
-    
+
     func borderedProminentStyleNoGlass(
         _ shape: CustomButtonShape,
         _ color: Color,
@@ -123,7 +123,7 @@ public extension View {
             .modifier(HapticFeedbackModifier(style: hapticStyle))
             .preventDoubleTap(enabled: preventDoubleTap)
     }
-    
+
     func borderedProminentStyle<S: ShapeStyle>(
         shape: CustomButtonShape = .capsule,
         shapeStyle: S,
@@ -133,7 +133,7 @@ public extension View {
     ) -> some View {
         borderedProminentStyle(shape, shapeStyle, size, hapticStyle, preventDoubleTap)
     }
-    
+
     func borderedProminentStyle<S: ShapeStyle>(
         _ shape: CustomButtonShape,
         _ shapeStyle: S,
@@ -169,7 +169,7 @@ public extension View {
             return AnyView(borderedStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
         }
     }
-    
+
     func borderedStyle(
         _ shape: CustomButtonShape,
         _ color: Color,
@@ -198,7 +198,7 @@ public extension View {
                 .preventDoubleTap(enabled: preventDoubleTap)
         }
     }
-    
+
     func borderedStyleNoGlass(
         _ shape: CustomButtonShape,
         _ color: Color,
@@ -224,7 +224,7 @@ public extension View {
     ) -> some View {
         plainStyle(shape, color, size, hapticStyle, preventDoubleTap)
     }
-    
+
     func plainStyle(
         _ shape: CustomButtonShape,
         _ color: Color,
@@ -264,7 +264,7 @@ public extension View {
             isGlassClear
         )
     }
-    
+
     func strokedStyle(
         _ shape: CustomButtonShape,
         _ tintColor: Color,
@@ -305,12 +305,12 @@ public extension Button {
         glassEnabled: Bool = true
     ) -> some View {
         if glassEnabled {
-            return AnyView(self.borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap))
+            return AnyView(borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap))
         } else {
-            return AnyView(self.borderedProminentStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
+            return AnyView(borderedProminentStyleNoGlass(shape, color, size, hapticStyle, preventDoubleTap))
         }
     }
-    
+
     func borderedProminentStyle<S: ShapeStyle>(
         shape: CustomButtonShape = .capsule,
         shapeStyle: S,
@@ -461,7 +461,6 @@ public struct ButtonShapeModifier: ViewModifier {
 // MARK: - PreventDoubleTapModifier
 
 public struct PreventDoubleTapModifier: ViewModifier {
-    
     let enabled: Bool
     @State private var allowTap = true
 
@@ -586,7 +585,6 @@ public struct HapticFeedbackModifier: ViewModifier {
 
 // MARK: - Glass
 
-
 public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
     var color: Color?
     var shape: S?
@@ -625,7 +623,7 @@ public struct GlassEffectModifier: ViewModifier {
 }
 
 public extension View {
-    func glassEffectIfAvailable<T, S: Shape>(color: Color?, isClear: Bool, shape: S?, orElse: (Self) -> T) -> some View where T : View {
+    func glassEffectIfAvailable<T, S: Shape>(color: Color?, isClear: Bool, shape: S?, orElse: (Self) -> T) -> some View where T: View {
         self
             .if(condition: {
                 if #available(iOS 26.0, *) {
@@ -636,8 +634,8 @@ public extension View {
             }, transform: orElse)
             .modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
     }
-    
-    func glassEffectIfAvailable<T>(color: Color?, isClear: Bool, orElse: (Self) -> T) -> some View where T : View {
+
+    func glassEffectIfAvailable<T>(color: Color?, isClear: Bool, orElse: (Self) -> T) -> some View where T: View {
         self
             .if(condition: {
                 if #available(iOS 26.0, *) {
@@ -652,11 +650,11 @@ public extension View {
             }, transform: orElse)
             .modifier(GlassEffectModifier(color: color, isClear: isClear))
     }
-    
+
     func glassEffectIfAvailable<S: Shape>(color: Color?, shape: S?, isClear: Bool) -> some View {
         modifier(GlassEffectModifierShape(color: color, shape: shape, isClear: isClear))
     }
-    
+
     func glassEffectIfAvailable(color: Color?, isClear: Bool) -> some View {
         modifier(GlassEffectModifier(color: color, isClear: isClear))
     }
@@ -667,16 +665,15 @@ public extension View {
 @available(iOS 17.0, *)
 #Preview {
     @Previewable @State var isEnabled = false
-    
+
     ScrollView {
         VStack(spacing: 20) {
             Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
             .borderedProminentStyle(color: Color(.violet), size: .large)
-            
-            Button {
-            } label: {
+
+            Button {} label: {
                 Text("Prosseguir")
                     .body()
                     .foregroundStyle(isEnabled ? Tokens.Color.systemBackground.color : Tokens.Color.tertiaryLabel.color)
@@ -698,32 +695,32 @@ public extension View {
                 size: .large
             )
             .foregroundStyle(.white)
-            
+
             Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
             .borderedStyle(color: Color(.violet), size: .regular, hapticStyle: .rigid)
-            
+
             Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
             .strokedStyle(shape: .capsule, size: .large, isGlassEnabled: true)
-            
+
             Button(systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
             .borderedProminentStyle(shape: .circle, color: Color(.violet), size: .large)
-            
+
             Button(systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
             .borderedStyle(shape: .circle, color: Color(.violet), size: .large)
-            
+
             Button(systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
             .strokedStyle(shape: .circle, size: .large)
-            
+
             Button(systemImage: "dollarsign.circle.fill") {
                 print("Hello")
             }
@@ -744,24 +741,27 @@ public extension View {
                     .foregroundStyle(.orange)
             })
             .strokedStyle(shape: .capsule, borderColor: .orange, size: .large, isGlassClear: false)
-            
+
             Button(action: {
                 print("strokedStyle")
             }, label: {
                 Text(".strokedStyle glass disabled")
                     .foregroundStyle(.orange)
             })
-            .strokedStyle(shape: .capsule, borderColor: .orange, size: .large, isGlassEnabled: false)
-            
+            .strokedStyle(shape: .capsule, borderColor: .orange, size: .large, isGlassEnabled: false, isGlassClear: true)
+
             ShareLink(item: "Share me") {
                 Text("Compartilhar")
             }
             .plainStyle()
-            
+
             ShareLink(item: "Share me") {
                 Text("Compartilhar")
             }
             .borderedProminentStyle()
+
+            Button(systemImage: "chevron.down") {}
+                .borderedProminentStyle(shape: .circle, color: Tokens.Color.secondarySystemBackground.color, size: .large, glassEnabled: true)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }

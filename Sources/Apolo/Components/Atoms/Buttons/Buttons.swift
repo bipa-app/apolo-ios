@@ -586,6 +586,7 @@ public struct HapticFeedbackModifier: ViewModifier {
 
 // MARK: - Glass
 
+
 public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
     var color: Color?
     var shape: S?
@@ -596,24 +597,14 @@ public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
         self.shape = shape
         self.isClear = isClear
     }
-    
+
+    @ViewBuilder
     public func body(content: Content) -> some View {
-        Group {
-            if #available(iOS 26.0, *) {
-                if let shape {
-                    if isClear {
-                        content
-                            .glassEffect(.clear.tint(color).interactive(), in: shape)
-                    } else {
-                        content
-                            .glassEffect(.regular.tint(color).interactive(), in: shape)
-                    }
-                } else {
-                    content
-                }
-            } else {
-                content
-            }
+        if #available(iOS 26.0, *), let shape {
+            content
+                .glassEffect(isClear ? .clear.tint(color).interactive() : .regular.tint(color).interactive(), in: shape)
+        } else {
+            content
         }
     }
 }
@@ -621,20 +612,14 @@ public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
 public struct GlassEffectModifier: ViewModifier {
     var color: Color?
     var isClear: Bool
-    
+
+    @ViewBuilder
     public func body(content: Content) -> some View {
-        Group {
-            if #available(iOS 26.0, *) {
-                if isClear {
-                    content
-                        .glassEffect(.clear.tint(color).interactive())
-                } else {
-                    content
-                        .glassEffect(.regular.tint(color).interactive())
-                }
-            } else {
-                content
-            }
+        if #available(iOS 26.0, *) {
+            content
+                .glassEffect(isClear ? .clear.tint(color).interactive() : .regular.tint(color).interactive())
+        } else {
+            content
         }
     }
 }

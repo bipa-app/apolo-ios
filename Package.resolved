@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/bipa-app/textual",
       "state" : {
-        "branch" : "ios16",
-        "revision" : "589668d19e5317d0479fcde61db728662911d9dc"
+        "branch" : "main",
+        "revision" : "b65e8f973f0621060e6122e16bfb519c65df8798"
       }
     }
   ],

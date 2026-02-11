@@ -28,7 +28,8 @@ let package = Package(
             ],
             path: "Sources/Apolo",
             resources: [
-                .process("Resources")
+                .process("Resources"),
+                .process("Tokens/Color/Colors.xcassets")
             ]
         )
     ]

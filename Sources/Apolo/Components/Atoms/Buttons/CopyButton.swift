@@ -115,7 +115,7 @@ public extension CopyButton {
             print("Copied value is: \(value)")
         }
 
-        CopyButton(value: "example2", successColor: Color(.violet)) {
+        CopyButton(value: "example2", successColor: Tokens.Color.violet.color) {
             value in
             print("Copied value is: \(value)")
         }

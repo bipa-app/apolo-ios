@@ -671,7 +671,7 @@ public extension View {
             Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
-            .borderedProminentStyle(color: Color(.violet), size: .large)
+            .borderedProminentStyle(color: Tokens.Color.violet.color, size: .large)
 
             Button {} label: {
                 Text("Prosseguir")
@@ -699,7 +699,7 @@ public extension View {
             Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
-            .borderedStyle(color: Color(.violet), size: .regular, hapticStyle: .rigid)
+            .borderedStyle(color: Tokens.Color.violet.color, size: .regular, hapticStyle: .rigid)
 
             Button("Bitcoin", systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
@@ -709,12 +709,12 @@ public extension View {
             Button(systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
-            .borderedProminentStyle(shape: .circle, color: Color(.violet), size: .large)
+            .borderedProminentStyle(shape: .circle, color: Tokens.Color.violet.color, size: .large)
 
             Button(systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")
             }
-            .borderedStyle(shape: .circle, color: Color(.violet), size: .large)
+            .borderedStyle(shape: .circle, color: Tokens.Color.violet.color, size: .large)
 
             Button(systemImage: "bitcoinsign.circle.fill") {
                 print("Hello")

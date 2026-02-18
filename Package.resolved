@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/bipa-app/textual",
       "state" : {
-        "branch" : "lfarah/fix-ios16-attribstr-crash",
-        "revision" : "f4fb39af6d0124f8902230b049bbe6a0cd264a40"
+        "branch" : "lucasfarah/fix-crash-ios16",
+        "revision" : "c53d88e2364e8b9fccedde13315a8af0c74e1048"
       }
     }
   ],

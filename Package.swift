@@ -17,7 +17,7 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/gonzalezreal/swift-markdown-ui", from: "2.4.1"),
-        .package(url: "https://github.com/bipa-app/textual", branch: "lfarah/fix-ios16-attribstr-crash")
+        .package(url: "https://github.com/bipa-app/textual", branch: "lucasfarah/fix-crash-ios16")
     ],
     targets: [
         .target(

@@ -51,7 +51,7 @@
       "location" : "https://github.com/bipa-app/textual",
       "state" : {
         "branch" : "lfarah/fix-ios16-attribstr-crash",
-        "revision" : "a32a0925e10be66eba976f495c3f53d5a0907a77"
+        "revision" : "f6e9910845e44f1eca0684804c77f83a6b2663b8"
       }
     }
   ],

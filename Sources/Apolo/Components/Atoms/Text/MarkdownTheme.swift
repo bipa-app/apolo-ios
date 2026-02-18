@@ -1,6 +1,6 @@
 import MarkdownUI
 import SwiftUI
-import Textual
+@_weakLinked import Textual
 
 // MARK: - Markdown Style Configuration
 

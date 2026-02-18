@@ -51,7 +51,7 @@
       "location" : "https://github.com/bipa-app/textual",
       "state" : {
         "branch" : "lucasfarah/fix-crash-ios16",
-        "revision" : "083d419185611e11d045605a014d15b2a74cc716"
+        "revision" : "255dc0f9750f156b654bb79e07896062a10970c0"
       }
     }
   ],

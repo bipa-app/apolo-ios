@@ -50,8 +50,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/bipa-app/textual",
       "state" : {
-        "branch" : "lucasfarah/fix-crash-ios16",
-        "revision" : "173b6cdbd44644c0d1470c1286d90271c5039efe"
+        "branch" : "main",
+        "revision" : "ca8c34bc0146e5992f7fc4fe6d0ef050bc996b9e"
       }
     }
   ],

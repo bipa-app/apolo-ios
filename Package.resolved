@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/bipa-app/swiftui-math",
       "state" : {
-        "branch" : "ios16",
-        "revision" : "fdcb6f2500097d659ceb0d8056b9440c1f099bcd"
+        "branch" : "main",
+        "revision" : "78d19f9cc73ec6eede1543271fb88a5cbd2aebbc"
       }
     },
     {
@@ -51,7 +51,7 @@
       "location" : "https://github.com/bipa-app/textual",
       "state" : {
         "branch" : "main",
-        "revision" : "b65e8f973f0621060e6122e16bfb519c65df8798"
+        "revision" : "ca8c34bc0146e5992f7fc4fe6d0ef050bc996b9e"
       }
     }
   ],

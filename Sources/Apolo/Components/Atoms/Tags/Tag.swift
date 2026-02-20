@@ -224,8 +224,8 @@ extension Tag.Style: Equatable {
                 
                 Tag(
                     style: .custom(
-                        backgroundColor: Color(.violet).opacity(0.15),
-                        textColor: Color(.violet),
+                        backgroundColor: Tokens.Color.violet.color.opacity(0.15),
+                        textColor: Tokens.Color.violet.color,
                         icon: "bitcoinsign.circle.fill",
                         secondaryIcon: "chevron.down"
                     ),
@@ -250,8 +250,8 @@ extension Tag.Style: Equatable {
                 
                 Tag(
                     style: .custom(
-                        backgroundColor: Color(.violet).opacity(0.15),
-                        textColor: Color(.violet),
+                        backgroundColor: Tokens.Color.violet.color.opacity(0.15),
+                        textColor: Tokens.Color.violet.color,
                         icon: "bitcoinsign.circle.fill",
                         secondaryIcon: "chevron.down"
                     ),

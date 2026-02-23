@@ -29,16 +29,19 @@ public struct RadioButtonGroup<T: Hashable>: View {
     private let options: [RadioOption<T>]
     @Binding private var selectedValue: T
     private let onSelect: ((T) -> Void)?
-    
+    var glassEnabled: Bool = true
+
     public init(
         style: RadioButtonGroupStyle,
         options: [RadioOption<T>],
         selectedValue: Binding<T>,
+        glassEnabled: Bool = true,
         onSelect: ((T) -> Void)? = nil
     ) {
         self.style = style
         self.options = options
         self._selectedValue = selectedValue
+        self.glassEnabled = glassEnabled
         self.onSelect = onSelect
     }
     
@@ -95,7 +98,7 @@ extension RadioButtonGroup {
                 .id(option.id)
                 .padding(Tokens.Spacing.medium)
                 .frame(minHeight: 72)
-                .cardBackground(style)
+                .cardBackground(style, glassEnabled: glassEnabled)
             }
         }
     }
@@ -114,7 +117,7 @@ extension RadioButtonGroup {
                         onSelect?(option.value)
                     }
                     .id(option.id)
-                    .cardBackground(style)
+                    .cardBackground(style, glassEnabled: glassEnabled)
                 } else {
                     RadioButton(
                         option: option,

@@ -270,7 +270,7 @@ public struct RadioButton<T: Hashable>: View {
     private var radioCircle: some View {
         ZStack {
             Circle()
-                .fill(!option.isEnabled ? Color(.tertiaryLabel) : isSelected ? Color.primary : Color.clear)
+                .fill(option.isEnabled && isSelected ? Color.primary : Color.clear)
                 .frame(width: 10, height: 10)
             Circle()
                 .stroke(!option.isEnabled ? Color(.tertiaryLabel) : .secondary.opacity(0.5), lineWidth: 1)

@@ -29,16 +29,19 @@ public struct RadioButtonGroup<T: Hashable>: View {
     private let options: [RadioOption<T>]
     @Binding private var selectedValue: T
     private let onSelect: ((T) -> Void)?
-    
+    var glassEnabled: Bool = true
+
     public init(
         style: RadioButtonGroupStyle,
         options: [RadioOption<T>],
         selectedValue: Binding<T>,
+        glassEnabled: Bool = true,
         onSelect: ((T) -> Void)? = nil
     ) {
         self.style = style
         self.options = options
         self._selectedValue = selectedValue
+        self.glassEnabled = glassEnabled
         self.onSelect = onSelect
     }
     
@@ -67,6 +70,7 @@ extension RadioButtonGroup {
                     isSelected: selectedValue == option.value,
                     style: option.style
                 ) {
+                    guard option.isEnabled else { return }
                     selectedValue = option.value
                     onSelect?(option.value)
                 }
@@ -87,13 +91,14 @@ extension RadioButtonGroup {
                     isSelected: selectedValue == option.value,
                     style: option.style
                 ) {
+                    guard option.isEnabled else { return }
                     selectedValue = option.value
                     onSelect?(option.value)
                 }
                 .id(option.id)
                 .padding(Tokens.Spacing.medium)
                 .frame(minHeight: 72)
-                .cardBackground(style)
+                .cardBackground(style, glassEnabled: glassEnabled)
             }
         }
     }
@@ -107,17 +112,19 @@ extension RadioButtonGroup {
                         isSelected: selectedValue == option.value,
                         style: option.style
                     ) {
+                        guard option.isEnabled else { return }
                         selectedValue = option.value
                         onSelect?(option.value)
                     }
                     .id(option.id)
-                    .cardBackground(style)
+                    .cardBackground(style, glassEnabled: glassEnabled)
                 } else {
                     RadioButton(
                         option: option,
                         isSelected: selectedValue == option.value,
                         style: option.style
                     ) {
+                        guard option.isEnabled else { return }
                         selectedValue = option.value
                         onSelect?(option.value)
                     }
@@ -163,6 +170,7 @@ public struct RadioOption<T: Hashable>: Identifiable {
     public let label: String?
     public let description: String?
     public let style: RadioButtonStyle
+    public let isEnabled: Bool
     public let iconConfiguration: RadioButtonIconConfiguration?
     public let tag: Tag?
     public let customView: AnyView?
@@ -175,6 +183,7 @@ public struct RadioOption<T: Hashable>: Identifiable {
         label: String? = nil,
         description: String? = nil,
         style: RadioButtonStyle = .standard,
+        isEnabled: Bool = true,
         iconConfiguration: RadioButtonIconConfiguration? = nil,
         withTag tag: Tag? = nil
     ) {
@@ -183,6 +192,7 @@ public struct RadioOption<T: Hashable>: Identifiable {
         self.label = label
         self.description = description
         self.style = style
+        self.isEnabled = isEnabled
         self.iconConfiguration = iconConfiguration
         self.tag = tag
         self.customView = nil
@@ -193,10 +203,12 @@ public struct RadioOption<T: Hashable>: Identifiable {
     public init<CustomView: View>(
         id: String,
         value: T,
+        isEnabled: Bool = true,
         @ViewBuilder customView: () -> CustomView
     ) {
         self.id = id
         self.value = value
+        self.isEnabled = isEnabled
         self.label = nil
         self.description = nil
         self.style = .custom
@@ -245,6 +257,7 @@ public struct RadioButton<T: Hashable>: View {
         .frame(maxWidth: .infinity, alignment: .leading)
         .contentShape(.containerRelative)
         .onTapGesture {
+            guard option.isEnabled else { return }
             animate = true
             feedbackGenerator.impactOccurred()
             action()
@@ -260,10 +273,10 @@ public struct RadioButton<T: Hashable>: View {
     private var radioCircle: some View {
         ZStack {
             Circle()
-                .fill(isSelected ? Color.primary : Color.clear)
+                .fill(option.isEnabled && isSelected ? Color.primary : Color.clear)
                 .frame(width: 10, height: 10)
             Circle()
-                .stroke(.secondary.opacity(0.5), lineWidth: 1)
+                .stroke(!option.isEnabled ? Color(.tertiaryLabel) : .secondary.opacity(0.5), lineWidth: 1)
                 .frame(width: 24, height: 24)
         }
         .scaleEffect(x: animate ? 0.95 : 1, y: animate ? 0.95 : 1)
@@ -307,6 +320,7 @@ public struct RadioButton<T: Hashable>: View {
             if let label = option.label {
                 Text(label)
                 .callout(weight: .medium)
+                .foregroundStyle(option.isEnabled ? Color.primary : Color(.tertiaryLabel))
             }
             
             if let description = option.description {
@@ -328,6 +342,7 @@ public struct RadioButton<T: Hashable>: View {
             if let description = option.description {
                 Text(description)
                     .callout(weight: .medium)
+                    .foregroundStyle(option.isEnabled ? Color.primary : Color(.tertiaryLabel))
             }
         }
     }
@@ -368,11 +383,13 @@ private enum PreviewOption: String, CaseIterable {
         RadioOption(
             id: PreviewOption.third.rawValue,
             value: PreviewOption.third,
-            label: "Third Option",
+            label: "Third Option (Disabled)",
+            isEnabled: false,
             iconConfiguration: RadioButtonIconConfiguration(
                 image: Image(systemName: "car"),
                 color: .primary
-            )
+            ),
+            withTag: Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Coming soon")
         )
     ]
     

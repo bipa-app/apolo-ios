@@ -140,21 +140,24 @@ public struct Tag: View, Equatable {
     private let title: String?
     private let size: Size
     private let clearGlass: Bool
+    private let glassInteractive: Bool
 
     // MARK: - Initialization
 
-    public init(style: Style = .label(), size: Size = .regular, clearGlass: Bool = true) {
+    public init(style: Style = .label(), size: Size = .regular, clearGlass: Bool = true, glassInteractive: Bool = true) {
         self.style = style
         title = nil
         self.size = size
         self.clearGlass = clearGlass
+        self.glassInteractive = glassInteractive
     }
 
-    public init(style: Style = .label(), title: String, size: Size = .regular, clearGlass: Bool = true) {
+    public init(style: Style = .label(), title: String, size: Size = .regular, clearGlass: Bool = true, glassInteractive: Bool = true) {
         self.style = style
         self.title = title
         self.size = size
         self.clearGlass = clearGlass
+        self.glassInteractive = glassInteractive
     }
 
     // MARK: - Body
@@ -169,7 +172,7 @@ public struct Tag: View, Equatable {
             CardTag(type: type)
         default:
             if let title {
-                PlainTag(style: style, title: title, size: size, clearGlass: clearGlass)
+                PlainTag(style: style, title: title, size: size, clearGlass: clearGlass, glassInteractive: glassInteractive)
             }
         }
     }

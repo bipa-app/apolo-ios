@@ -14,6 +14,10 @@ let package = Package(
         .library(
             name: "Apolo",
             targets: ["Apolo"]
+        ),
+        .library(
+            name: "ApoloWidget",
+            targets: ["ApoloWidget"]
         )
     ],
     dependencies: [
@@ -23,15 +27,25 @@ let package = Package(
     ],
     targets: [
         .target(
+            name: "ApoloWidget",
+            path: "Sources/ApoloWidget",
+            resources: [
+                .process("Resources"),
+                .process("Colors.xcassets")
+            ]
+        ),
+        .target(
             name: "Apolo",
             dependencies: [
+                "ApoloWidget",
                 .product(name: "MarkdownUI", package: "swift-markdown-ui", condition: .when(platforms: [.iOS])),
                 .product(name: "Textual", package: "textual", condition: .when(platforms: [.iOS])),
                 .product(name: "SwiftUIJSONRender", package: "swiftui-json-render", condition: .when(platforms: [.iOS]))
             ],
             path: "Sources/Apolo",
             resources: [
-                .process("Resources")
+                .process("Resources"),
+                .process("Colors.xcassets")
             ],
             swiftSettings: [
             ]

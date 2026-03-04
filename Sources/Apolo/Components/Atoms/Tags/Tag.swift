@@ -56,7 +56,8 @@ public struct Tag: View, Equatable {
             backgroundColor: Color = .clear,
             textColor: Color = .primary,
             icon: String? = nil,
-            secondaryIcon: String? = nil
+            secondaryIcon: String? = nil,
+            borderStyle: (any ShapeStyle)? = nil
         )
         
         var icon: String? {
@@ -66,20 +67,20 @@ public struct Tag: View, Equatable {
             case .warning: "clock.fill"
             case .error: "exclamationmark.triangle.fill"
             case .turbo, .premium, .card: nil
-            case let .custom(_, _, _, icon, _): icon
+            case let .custom(_, _, _, icon, _, _): icon
             }
         }
 
         var secondaryIcon: String? {
             switch self {
             case .label, .success, .warning, .error, .turbo, .premium, .card: nil
-            case let .custom(_, _, _, _, icon): icon
+            case let .custom(_, _, _, _, icon, _): icon
             }
         }
 
         var textColor: Color {
             switch self {
-            case let .custom(_, _, textColor, _, _): textColor
+            case let .custom(_, _, textColor, _, _, _): textColor
             case .label: .primary
             case .turbo, .card: .white
             default: Color(uiColor: .systemBackground)
@@ -96,7 +97,7 @@ public struct Tag: View, Equatable {
                 return .init(Tokens.Color.yellow.color)
             case .error:
                 return .init(Tokens.Color.red.color)
-            case let .custom(shapeStyle, backgroundColor, _, _, _):
+            case let .custom(shapeStyle, backgroundColor, _, _, _, _):
                 if let shapeStyle {
                     return .init(shapeStyle)
                 }
@@ -104,6 +105,18 @@ public struct Tag: View, Equatable {
             }
         }
         
+        var borderStyle: AnyShapeStyle? {
+            switch self {
+            case let .custom(_, _, _, _, _, borderStyle):
+                if let borderStyle {
+                    return .init(borderStyle)
+                }
+                return nil
+            default:
+                return nil
+            }
+        }
+
         var backgroundColor: Color {
             switch self {
             case .label, .turbo, .premium, .card:
@@ -114,7 +127,7 @@ public struct Tag: View, Equatable {
                 return Tokens.Color.yellow.color
             case .error:
                 return Tokens.Color.red.color
-            case let .custom(_, backgroundColor, _, _, _):
+            case let .custom(_, backgroundColor, _, _, _, _):
                 return backgroundColor
             }
         }
@@ -193,7 +206,7 @@ extension Tag.Style: Equatable {
              (.error, .error),
              (.turbo, .turbo):
             return true
-        case let (.custom(_, bg1, txt1, i1, s1), .custom(_, bg2, txt2, i2, s2)):
+        case let (.custom(_, bg1, txt1, i1, s1, _), .custom(_, bg2, txt2, i2, s2, _)):
             return bg1 == bg2 && txt1 == txt2 && i1 == i2 && s1 == s2
         default:
             return false
@@ -279,6 +292,20 @@ extension Tag.Style: Equatable {
                     ),
                     title: "Recomendado",
                     size: .small
+                )
+
+                Tag(
+                    style: .custom(
+                        backgroundColor: Color(uiColor: .systemBackground),
+                        textColor: .primary,
+                        borderStyle: LinearGradient(
+                            colors: [Tokens.Color.orange.color, Tokens.Color.red.color],
+                            startPoint: .leading,
+                            endPoint: .trailing
+                        )
+                    ),
+                    title: "1,5% de Satsback®",
+                    size: .regular
                 )
             }
         }

@@ -39,6 +39,12 @@ struct PlainTag: View {
         }
         .padding(.vertical, size.verticalPadding)
         .padding(.horizontal, size.horizontalPadding)
+        .overlay {
+            if let borderStyle = style.borderStyle {
+                Capsule()
+                    .strokeBorder(borderStyle, lineWidth: 2)
+            }
+        }
         .glassEffectIfAvailable(color: style.backgroundColor, isClear: clearGlass, interactive: glassInteractive, orElse: { content in
             content
                 .background(

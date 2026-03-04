@@ -17,7 +17,7 @@ public struct Checkbox: View {
     @State private var animate: Bool = false
     private let shapeStyle: AnyShapeStyle?
     private let onCheck: ((Bool) -> Void)?
-    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    private let hapticStyle: HapticStyle = .light
     private let titleFont: Font?
     
     public init(
@@ -74,7 +74,7 @@ public struct Checkbox: View {
             }
         }()
 
-        if #available(iOS 18.0, *) {
+        if #available(iOS 18.0, watchOS 11.0, *) {
             return Image(systemName: isChecked ? "checkmark.square.fill" : "square")
                 .large()
                 .foregroundStyle(fill)
@@ -118,7 +118,7 @@ public struct Checkbox: View {
     private var tapGesture: some Gesture {
         TapGesture()
             .onEnded {
-                feedbackGenerator.impactOccurred()
+                performHaptic(hapticStyle)
                 withAnimation(.bouncy(duration: 0.2)) {
                     animate = true
                 }
@@ -147,7 +147,7 @@ public struct ToggleCheckboxStyle: ToggleStyle {
 
     public func makeBody(configuration: Configuration) -> some View {
         Button {
-            UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+            performHaptic(.rigid)
             configuration.isOn.toggle()
         } label: {
             HStack {
@@ -159,7 +159,7 @@ public struct ToggleCheckboxStyle: ToggleStyle {
                     }
                 }()
                 
-                if #available(iOS 18.0, *) {
+                if #available(iOS 18.0, watchOS 11.0, *) {
                     Image(systemName: configuration.isOn ? "checkmark.square.fill" : "square")
                         .large()
                         .foregroundStyle(fill)

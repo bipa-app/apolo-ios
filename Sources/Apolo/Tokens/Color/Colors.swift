@@ -67,38 +67,81 @@ public extension Tokens {
 
                 // MARK: - Text Colors
 
+                #if os(watchOS)
+                case .lightText: return SwiftUI.Color.white.opacity(0.6)
+                case .darkText: return SwiftUI.Color.black
+                case .placeholderText: return SwiftUI.Color.gray
+                #else
                 case .lightText: return SwiftUI.Color(.lightText)
                 case .darkText: return SwiftUI.Color(.darkText)
                 case .placeholderText: return SwiftUI.Color(.placeholderText)
+                #endif
 
                 // MARK: - Label Colors
 
+                #if os(watchOS)
+                case .label: return SwiftUI.Color.primary
+                case .secondaryLabel: return SwiftUI.Color.secondary
+                case .tertiaryLabel: return SwiftUI.Color.secondary.opacity(0.6)
+                case .quaternaryLabel: return SwiftUI.Color.secondary.opacity(0.4)
+                #else
                 case .label: return SwiftUI.Color(.label)
                 case .secondaryLabel: return SwiftUI.Color(.secondaryLabel)
                 case .tertiaryLabel: return SwiftUI.Color(.tertiaryLabel)
                 case .quaternaryLabel: return SwiftUI.Color(.quaternaryLabel)
+                #endif
 
                 // MARK: - Background Colors
 
+                #if os(watchOS)
+                case .systemBackground: return SwiftUI.Color.black
+                case .secondarySystemBackground: return SwiftUI.Color(white: 0.11)
+                case .tertiarySystemBackground: return SwiftUI.Color(white: 0.17)
+                #else
                 case .systemBackground: return SwiftUI.Color(.systemBackground)
                 case .secondarySystemBackground: return SwiftUI.Color(.secondarySystemBackground)
                 case .tertiarySystemBackground: return SwiftUI.Color(.tertiarySystemBackground)
+                #endif
 
                 // MARK: - Fill Colors
 
+                #if os(watchOS)
+                case .systemFill: return SwiftUI.Color.gray.opacity(0.36)
+                case .secondarySystemFill: return SwiftUI.Color.gray.opacity(0.32)
+                case .tertiarySystemFill: return SwiftUI.Color.gray.opacity(0.24)
+                case .quaternarySystemFill: return SwiftUI.Color.gray.opacity(0.18)
+                #else
                 case .systemFill: return SwiftUI.Color(.systemFill)
                 case .secondarySystemFill: return SwiftUI.Color(.secondarySystemFill)
                 case .tertiarySystemFill: return SwiftUI.Color(.tertiarySystemFill)
                 case .quaternarySystemFill: return SwiftUI.Color(.quaternarySystemFill)
+                #endif
 
                 // MARK: - Grouped Background Colors
 
+                #if os(watchOS)
+                case .systemGroupedBackground: return SwiftUI.Color.black
+                case .secondarySystemGroupedBackground: return SwiftUI.Color(white: 0.11)
+                case .tertiarySystemGroupedBackground: return SwiftUI.Color(white: 0.17)
+                #else
                 case .systemGroupedBackground: return SwiftUI.Color(.systemGroupedBackground)
                 case .secondarySystemGroupedBackground: return SwiftUI.Color(.secondarySystemGroupedBackground)
                 case .tertiarySystemGroupedBackground: return SwiftUI.Color(.tertiarySystemGroupedBackground)
+                #endif
 
                 // MARK: - System Colors
 
+                #if os(watchOS)
+                case .blue: return SwiftUI.Color.blue
+                case .green: return SwiftUI.Color.green
+                case .yellow: return SwiftUI.Color.yellow
+                case .orange: return SwiftUI.Color.orange
+                case .red: return SwiftUI.Color.red
+                case .teal: return SwiftUI.Color.teal
+                case .indigo: return SwiftUI.Color.indigo
+                case .cyan: return SwiftUI.Color.cyan
+                case .mint: return SwiftUI.Color.mint
+                #else
                 case .blue: return SwiftUI.Color(.systemBlue)
                 case .green: return SwiftUI.Color(.systemGreen)
                 case .yellow: return SwiftUI.Color(.systemYellow)
@@ -108,6 +151,7 @@ public extension Tokens {
                 case .indigo: return SwiftUI.Color(.systemIndigo)
                 case .cyan: return SwiftUI.Color(.systemCyan)
                 case .mint: return SwiftUI.Color(.systemMint)
+                #endif
             }
         }
 

@@ -49,7 +49,7 @@ public struct MarkdownText: View {
     // MARK: - Body
 
     public var body: some View {
-        if #available(iOS 18.0, *) {
+        if #available(iOS 18.0, watchOS 11.0, *) {
             StructuredText(markdown: content)
                 .font(.abcGinto(style: .body))
                 .foregroundStyle(style.textColor.color)

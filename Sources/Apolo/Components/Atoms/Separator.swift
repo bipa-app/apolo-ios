@@ -36,7 +36,7 @@ public struct Separator: View {
     ///
     /// - Parameter color: The color to use for the separator line.
     ///   Defaults to the system's secondary fill color if not specified.
-    public init(color: Color = Color(.secondarySystemFill)) {
+    public init(color: Color = Tokens.Color.secondarySystemFill.color) {
         self.color = color
     }
 

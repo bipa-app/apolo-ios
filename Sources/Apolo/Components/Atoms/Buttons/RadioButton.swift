@@ -226,7 +226,7 @@ public struct RadioButton<T: Hashable>: View {
     private let style: RadioButtonStyle
     private let action: () -> Void
     @State private var animate: Bool = false
-    private let feedbackGenerator = UIImpactFeedbackGenerator(style: .light)
+    private let hapticStyle: HapticStyle = .light
     
     init(
         option: RadioOption<T>,
@@ -259,7 +259,7 @@ public struct RadioButton<T: Hashable>: View {
         .onTapGesture {
             guard option.isEnabled else { return }
             animate = true
-            feedbackGenerator.impactOccurred()
+            performHaptic(hapticStyle)
             action()
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
@@ -276,7 +276,7 @@ public struct RadioButton<T: Hashable>: View {
                 .fill(option.isEnabled && isSelected ? Color.primary : Color.clear)
                 .frame(width: 10, height: 10)
             Circle()
-                .stroke(!option.isEnabled ? Color(.tertiaryLabel) : .secondary.opacity(0.5), lineWidth: 1)
+                .stroke(!option.isEnabled ? Tokens.Color.tertiaryLabel.color : .secondary.opacity(0.5), lineWidth: 1)
                 .frame(width: 24, height: 24)
         }
         .scaleEffect(x: animate ? 0.95 : 1, y: animate ? 0.95 : 1)
@@ -320,7 +320,7 @@ public struct RadioButton<T: Hashable>: View {
             if let label = option.label {
                 Text(label)
                 .callout(weight: .medium)
-                .foregroundStyle(option.isEnabled ? Color.primary : Color(.tertiaryLabel))
+                .foregroundStyle(option.isEnabled ? Color.primary : Tokens.Color.tertiaryLabel.color)
             }
             
             if let description = option.description {
@@ -342,7 +342,7 @@ public struct RadioButton<T: Hashable>: View {
             if let description = option.description {
                 Text(description)
                     .callout(weight: .medium)
-                    .foregroundStyle(option.isEnabled ? Color.primary : Color(.tertiaryLabel))
+                    .foregroundStyle(option.isEnabled ? Color.primary : Tokens.Color.tertiaryLabel.color)
             }
         }
     }
@@ -389,7 +389,7 @@ private enum PreviewOption: String, CaseIterable {
                 image: Image(systemName: "car"),
                 color: .primary
             ),
-            withTag: Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Coming soon")
+            withTag: Tag(style: .custom(backgroundColor: Tokens.Color.quaternarySystemFill.color, textColor: .secondary), title: "Coming soon")
         )
     ]
     

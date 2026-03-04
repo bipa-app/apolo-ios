@@ -7,7 +7,9 @@
 
 import Foundation
 import SwiftUI
+#if canImport(UIKit)
 import UIKit
+#endif
 
 // MARK: CardBackground
 
@@ -45,7 +47,7 @@ public struct CardBackground: View {
     }
     
     public var body: some View {
-        if #available(iOS 26.0, *), glassEnabled {
+        if #available(iOS 26.0, watchOS 26.0, *), glassEnabled {
             RoundedRectangle(cornerRadius: cornerRadius)
                 .fill(color)
                 .glassEffect(.clear.interactive(glassInteractive), in: RoundedRectangle(cornerRadius: cornerRadius))
@@ -66,9 +68,9 @@ public extension CardBackground {
         var color: Color {
             switch self {
             case .primary:
-                return Color(.secondarySystemGroupedBackground)
+                return Tokens.Color.secondarySystemGroupedBackground.color
             case .secondary:
-                return Color(.quaternarySystemFill)
+                return Tokens.Color.quaternarySystemFill.color
             }
         }
     }

@@ -51,7 +51,7 @@ public enum CustomButtonShape {
 
 // MARK: - View
 
-@available(iOS 26.0, *)
+@available(iOS 26.0, watchOS 26.0, *)
 public struct ProminentButtonGlassModifier: ViewModifier {
     @Environment(\.isEnabled) private var isEnabled
 
@@ -71,7 +71,7 @@ public extension View {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true,
         glassEnabled: Bool = true
     ) -> some View {
@@ -86,10 +86,10 @@ public extension View {
         _ shape: CustomButtonShape,
         _ color: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ hapticStyle: HapticStyle,
         _ preventDoubleTap: Bool
     ) -> some View {
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, watchOS 26.0, *) {
             return modifier(ButtonShapeModifier(shape: shape))
                 .modifier(ProminentButtonGlassModifier())
                 .controlSize(size)
@@ -112,7 +112,7 @@ public extension View {
         _ shape: CustomButtonShape,
         _ color: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ hapticStyle: HapticStyle,
         _ preventDoubleTap: Bool
     ) -> some View {
         return buttonStyle(.borderedProminent)
@@ -128,7 +128,7 @@ public extension View {
         shape: CustomButtonShape = .capsule,
         shapeStyle: S,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true
     ) -> some View {
         borderedProminentStyle(shape, shapeStyle, size, hapticStyle, preventDoubleTap)
@@ -138,7 +138,7 @@ public extension View {
         _ shape: CustomButtonShape,
         _ shapeStyle: S,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ hapticStyle: HapticStyle,
         _ preventDoubleTap: Bool
     ) -> some View {
         buttonStyle(.borderedProminent)
@@ -158,7 +158,7 @@ public extension View {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true,
         glassEnabled: Bool = true,
         isClear: Bool = false
@@ -174,11 +174,11 @@ public extension View {
         _ shape: CustomButtonShape,
         _ color: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ hapticStyle: HapticStyle,
         _ preventDoubleTap: Bool,
         _ isClear: Bool
     ) -> some View {
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, watchOS 26.0, *) {
             return buttonStyle(.bordered)
                 .controlSize(size)
                 .modifier(ButtonShapeModifier(shape: shape))
@@ -203,7 +203,7 @@ public extension View {
         _ shape: CustomButtonShape,
         _ color: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ hapticStyle: HapticStyle,
         _ preventDoubleTap: Bool
     ) -> some View {
         return buttonStyle(.bordered)
@@ -219,7 +219,7 @@ public extension View {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true
     ) -> some View {
         plainStyle(shape, color, size, hapticStyle, preventDoubleTap)
@@ -229,7 +229,7 @@ public extension View {
         _ shape: CustomButtonShape,
         _ color: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ hapticStyle: HapticStyle,
         _ preventDoubleTap: Bool
     ) -> some View {
         buttonStyle(.plain)
@@ -247,7 +247,7 @@ public extension View {
         borderColor: Color = .primary,
         backgroundColor: Color = .clear,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true,
         isGlassEnabled: Bool = true,
         isGlassClear: Bool = true
@@ -271,7 +271,7 @@ public extension View {
         _ borderColor: Color,
         _ backgroundColor: Color,
         _ size: ControlSize,
-        _ hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle,
+        _ hapticStyle: HapticStyle,
         _ preventDoubleTap: Bool,
         _ isGlassEnabled: Bool,
         _ isGlassClear: Bool
@@ -300,7 +300,7 @@ public extension Button {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true,
         glassEnabled: Bool = true
     ) -> some View {
@@ -315,7 +315,7 @@ public extension Button {
         shape: CustomButtonShape = .capsule,
         shapeStyle: S,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true
     ) -> some View {
         borderedProminentStyle(shape, shapeStyle, size, hapticStyle, preventDoubleTap)
@@ -325,7 +325,7 @@ public extension Button {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true,
         glassEnabled: Bool = true,
         isClear: Bool = false
@@ -341,7 +341,7 @@ public extension Button {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true
     ) -> some View {
         plainStyle(shape, color, size, hapticStyle, preventDoubleTap)
@@ -353,7 +353,7 @@ public extension Button {
         borderColor: Color = .primary,
         backgroundColor: Color = .clear,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true,
         isGlassEnabled: Bool = true,
         isGlassClear: Bool = true
@@ -379,7 +379,7 @@ public extension ShareLink {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true
     ) -> some View {
         borderedProminentStyle(shape, color, size, hapticStyle, preventDoubleTap)
@@ -389,7 +389,7 @@ public extension ShareLink {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true,
         isClear: Bool = false
     ) -> some View {
@@ -400,7 +400,7 @@ public extension ShareLink {
         shape: CustomButtonShape = .capsule,
         color: Color = .green,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true
     ) -> some View {
         plainStyle(shape, color, size, hapticStyle, preventDoubleTap)
@@ -412,7 +412,7 @@ public extension ShareLink {
         borderColor: Color = .primary,
         backgroundColor: Color = .clear,
         size: ControlSize = .large,
-        hapticStyle: UIImpactFeedbackGenerator.FeedbackStyle = .soft,
+        hapticStyle: HapticStyle = .soft,
         preventDoubleTap: Bool = true,
         isGlassEnabled: Bool = true,
         isGlassClear: Bool = true
@@ -569,16 +569,15 @@ public struct StrokedButtonModifier: ViewModifier {
 // MARK: - HapticFeedbackModifier
 
 public struct HapticFeedbackModifier: ViewModifier {
-    let style: UIImpactFeedbackGenerator.FeedbackStyle
+    let style: HapticStyle
 
-    public init(style: UIImpactFeedbackGenerator.FeedbackStyle = .soft) {
+    public init(style: HapticStyle = .soft) {
         self.style = style
     }
 
     public func body(content: Content) -> some View {
         content.simultaneousGesture(TapGesture().onEnded { _ in
-            let impact = UIImpactFeedbackGenerator(style: self.style)
-            impact.impactOccurred()
+            performHaptic(self.style)
         })
     }
 }
@@ -600,7 +599,7 @@ public struct GlassEffectModifierShape<S: Shape>: ViewModifier {
 
     @ViewBuilder
     public func body(content: Content) -> some View {
-        if #available(iOS 26.0, *), let shape {
+        if #available(iOS 26.0, watchOS 26.0, *), let shape {
             content
                 .glassEffect(isClear ? .clear.tint(color).interactive(interactive) : .regular.tint(color).interactive(interactive), in: shape)
         } else {
@@ -616,7 +615,7 @@ public struct GlassEffectModifier: ViewModifier {
 
     @ViewBuilder
     public func body(content: Content) -> some View {
-        if #available(iOS 26.0, *) {
+        if #available(iOS 26.0, watchOS 26.0, *) {
             content
                 .glassEffect(isClear ? .clear.tint(color).interactive(interactive) : .regular.tint(color).interactive(interactive))
         } else {
@@ -629,7 +628,7 @@ public extension View {
     func glassEffectIfAvailable<T, S: Shape>(color: Color?, isClear: Bool, interactive: Bool = true, shape: S?, orElse: (Self) -> T) -> some View where T: View {
         self
             .if(condition: {
-                if #available(iOS 26.0, *) {
+                if #available(iOS 26.0, watchOS 26.0, *) {
                     return false
                 } else {
                     return true
@@ -641,7 +640,7 @@ public extension View {
     func glassEffectIfAvailable<T>(color: Color?, isClear: Bool, interactive: Bool = true, orElse: (Self) -> T) -> some View where T: View {
         self
             .if(condition: {
-                if #available(iOS 26.0, *) {
+                if #available(iOS 26.0, watchOS 26.0, *) {
                     if color == .clear {
                         return true
                     } else {
@@ -769,7 +768,7 @@ public extension View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
     .background {
-        Color(.quaternarySystemFill)
+        Tokens.Color.quaternarySystemFill.color
             .frame(maxWidth: .infinity, maxHeight: .infinity)
             .ignoresSafeArea()
     }

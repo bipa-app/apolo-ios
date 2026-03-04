@@ -142,6 +142,7 @@ enum MarkdownStyleConstants {
 
 // MARK: - Font.TextStyle Extension
 
+#if canImport(UIKit)
 private extension Font.TextStyle {
     /// Converts SwiftUI Font.TextStyle to UIKit UIFont.TextStyle.
     var uiFontTextStyle: UIFont.TextStyle {
@@ -167,6 +168,33 @@ private extension Font.TextStyle {
 /// Returns the preferred font size for a given text style, respecting Dynamic Type settings.
 private func preferredFontSize(for textStyle: UIFont.TextStyle) -> CGFloat {
     UIFont.preferredFont(forTextStyle: textStyle).pointSize
+}
+#else
+private func preferredFontSize(for textStyle: Font.TextStyle) -> CGFloat {
+    switch textStyle {
+    case .largeTitle: return 34
+    case .title: return 28
+    case .title2: return 22
+    case .title3: return 20
+    case .headline: return 17
+    case .subheadline: return 15
+    case .body: return 17
+    case .callout: return 16
+    case .footnote: return 13
+    case .caption: return 12
+    case .caption2: return 11
+    default: return 17
+    }
+}
+#endif
+
+/// Cross-platform helper to get the preferred font size for a Font.TextStyle.
+private func preferredSize(for style: Font.TextStyle) -> CGFloat {
+    #if canImport(UIKit)
+    return preferredFontSize(for: style.uiFontTextStyle)
+    #else
+    return preferredFontSize(for: style)
+    #endif
 }
 
 // MARK: - Bipa MarkdownUI Theme (iOS 16-17)
@@ -215,7 +243,7 @@ public extension Theme {
                 config.label
                     .markdownTextStyle {
                         FontFamily(.custom(MarkdownStyleConstants.mediumFont))
-                        FontSize(preferredFontSize(for: MarkdownStyleConstants.heading1Style.uiFontTextStyle))
+                        FontSize(preferredSize(for: MarkdownStyleConstants.heading1Style))
                         ForegroundColor(configuration.textColor.color)
                     }
                     .markdownMargin(top: MarkdownStyleConstants.Spacing.heading1Top, bottom: MarkdownStyleConstants.Spacing.heading1Bottom)
@@ -224,7 +252,7 @@ public extension Theme {
                 config.label
                     .markdownTextStyle {
                         FontFamily(.custom(MarkdownStyleConstants.mediumFont))
-                        FontSize(preferredFontSize(for: MarkdownStyleConstants.heading2Style.uiFontTextStyle))
+                        FontSize(preferredSize(for: MarkdownStyleConstants.heading2Style))
                         ForegroundColor(configuration.textColor.color)
                     }
                     .markdownMargin(top: MarkdownStyleConstants.Spacing.heading2Top, bottom: MarkdownStyleConstants.Spacing.heading2Bottom)
@@ -233,7 +261,7 @@ public extension Theme {
                 config.label
                     .markdownTextStyle {
                         FontFamily(.custom(MarkdownStyleConstants.mediumFont))
-                        FontSize(preferredFontSize(for: MarkdownStyleConstants.heading3Style.uiFontTextStyle))
+                        FontSize(preferredSize(for: MarkdownStyleConstants.heading3Style))
                         ForegroundColor(configuration.textColor.color)
                     }
                     .markdownMargin(top: MarkdownStyleConstants.Spacing.heading2Top, bottom: MarkdownStyleConstants.Spacing.heading2Bottom)
@@ -242,7 +270,7 @@ public extension Theme {
                 config.label
                     .markdownTextStyle {
                         FontFamily(.custom(MarkdownStyleConstants.mediumFont))
-                        FontSize(preferredFontSize(for: MarkdownStyleConstants.heading4Style.uiFontTextStyle))
+                        FontSize(preferredSize(for: MarkdownStyleConstants.heading4Style))
                         ForegroundColor(configuration.textColor.color)
                     }
                     .markdownMargin(top: MarkdownStyleConstants.Spacing.heading4Top, bottom: MarkdownStyleConstants.Spacing.heading4Bottom)
@@ -251,7 +279,7 @@ public extension Theme {
                 config.label
                     .markdownTextStyle {
                         FontFamily(.custom(MarkdownStyleConstants.mediumFont))
-                        FontSize(preferredFontSize(for: MarkdownStyleConstants.heading5Style.uiFontTextStyle))
+                        FontSize(preferredSize(for: MarkdownStyleConstants.heading5Style))
                         ForegroundColor(configuration.textColor.color)
                     }
                     .markdownMargin(top: MarkdownStyleConstants.Spacing.heading4Top, bottom: MarkdownStyleConstants.Spacing.heading4Bottom)
@@ -260,7 +288,7 @@ public extension Theme {
                 config.label
                     .markdownTextStyle {
                         FontFamily(.custom(MarkdownStyleConstants.mediumFont))
-                        FontSize(preferredFontSize(for: MarkdownStyleConstants.heading6Style.uiFontTextStyle))
+                        FontSize(preferredSize(for: MarkdownStyleConstants.heading6Style))
                         ForegroundColor(configuration.secondaryTextColor.color)
                     }
                     .markdownMargin(top: MarkdownStyleConstants.Spacing.heading6Top, bottom: MarkdownStyleConstants.Spacing.heading6Bottom)
@@ -311,12 +339,12 @@ public extension Theme {
             }
             .bulletedListMarker { _ in
                 Text("•")
-                    .font(.custom(MarkdownStyleConstants.regularFont, size: preferredFontSize(for: .body)))
+                    .font(.custom(MarkdownStyleConstants.regularFont, size: preferredSize(for: .body)))
                     .foregroundColor(configuration.accentColor.color)
             }
             .numberedListMarker { config in
                 Text("\(config.itemNumber).")
-                    .font(.custom(MarkdownStyleConstants.mediumFont, size: preferredFontSize(for: .body)))
+                    .font(.custom(MarkdownStyleConstants.mediumFont, size: preferredSize(for: .body)))
                     .foregroundColor(configuration.accentColor.color)
             }
 
@@ -341,7 +369,7 @@ public extension Theme {
                 config.label
                     .markdownTextStyle {
                         FontFamily(.custom(MarkdownStyleConstants.regularFont))
-                        FontSize(preferredFontSize(for: MarkdownStyleConstants.tableCellStyle.uiFontTextStyle))
+                        FontSize(preferredSize(for: MarkdownStyleConstants.tableCellStyle))
                     }
                     .padding(.horizontal, MarkdownStyleConstants.Spacing.tableCellHorizontal)
                     .padding(.vertical, MarkdownStyleConstants.Spacing.tableCellVertical)
@@ -351,7 +379,7 @@ public extension Theme {
 
 // MARK: - Bipa Textual Styles (iOS 18+)
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension InlineStyle {
     /// Bipa's custom InlineStyle with default configuration.
     static var bipa: InlineStyle {
@@ -372,7 +400,7 @@ public extension InlineStyle {
 
 // MARK: - Bipa Heading Style
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText {
     /// Bipa's custom heading style using ABCGinto font and Apolo spacing tokens.
     struct BipaHeadingStyle: HeadingStyle {
@@ -415,7 +443,7 @@ public extension StructuredText {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText.HeadingStyle where Self == StructuredText.BipaHeadingStyle {
     static var bipa: Self { .init() }
     static func bipa(_ configuration: MarkdownStyleConfiguration) -> Self { .init(configuration) }
@@ -423,7 +451,7 @@ public extension StructuredText.HeadingStyle where Self == StructuredText.BipaHe
 
 // MARK: - Bipa Paragraph Style
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText {
     /// Bipa's custom paragraph style with Apolo spacing tokens.
     struct BipaParagraphStyle: ParagraphStyle {
@@ -437,14 +465,14 @@ public extension StructuredText {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText.ParagraphStyle where Self == StructuredText.BipaParagraphStyle {
     static var bipa: Self { .init() }
 }
 
 // MARK: - Bipa BlockQuote Style
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText {
     /// Bipa's custom blockquote style with accent bar.
     struct BipaBlockQuoteStyle: BlockQuoteStyle {
@@ -470,7 +498,7 @@ public extension StructuredText {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText.BlockQuoteStyle where Self == StructuredText.BipaBlockQuoteStyle {
     static var bipa: Self { .init() }
     static func bipa(_ configuration: MarkdownStyleConfiguration) -> Self { .init(configuration) }
@@ -478,7 +506,7 @@ public extension StructuredText.BlockQuoteStyle where Self == StructuredText.Bip
 
 // MARK: - Bipa CodeBlock Style
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText {
     /// Bipa's custom code block style with secondary background and rounded corners.
     struct BipaCodeBlockStyle: CodeBlockStyle {
@@ -504,7 +532,7 @@ public extension StructuredText {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText.CodeBlockStyle where Self == StructuredText.BipaCodeBlockStyle {
     static var bipa: Self { .init() }
     static func bipa(_ configuration: MarkdownStyleConfiguration) -> Self { .init(configuration) }
@@ -512,7 +540,7 @@ public extension StructuredText.CodeBlockStyle where Self == StructuredText.Bipa
 
 // MARK: - Bipa ListItem Style
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText {
     /// Bipa's custom list item style with proper spacing.
     struct BipaListItemStyle: ListItemStyle {
@@ -532,7 +560,7 @@ public extension StructuredText {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText.ListItemStyle where Self == StructuredText.BipaListItemStyle {
     static var bipa: Self { .init() }
     static func bipa(_ configuration: MarkdownStyleConfiguration) -> Self { .init(configuration) }
@@ -540,7 +568,7 @@ public extension StructuredText.ListItemStyle where Self == StructuredText.BipaL
 
 // MARK: - Bipa ThematicBreak Style
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText {
     /// Bipa's custom thematic break (horizontal rule) style.
     struct BipaThematicBreakStyle: ThematicBreakStyle {
@@ -559,7 +587,7 @@ public extension StructuredText {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText.ThematicBreakStyle where Self == StructuredText.BipaThematicBreakStyle {
     static var bipa: Self { .init() }
     static func bipa(_ configuration: MarkdownStyleConfiguration) -> Self { .init(configuration) }
@@ -567,7 +595,7 @@ public extension StructuredText.ThematicBreakStyle where Self == StructuredText.
 
 // MARK: - Bipa Table Style
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText {
     /// Bipa's custom table style with subtle borders.
     struct BipaTableStyle: TableStyle {
@@ -608,7 +636,7 @@ public extension StructuredText {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText.TableStyle where Self == StructuredText.BipaTableStyle {
     static var bipa: Self { .init() }
     static func bipa(_ configuration: MarkdownStyleConfiguration) -> Self { .init(configuration) }
@@ -616,7 +644,7 @@ public extension StructuredText.TableStyle where Self == StructuredText.BipaTabl
 
 // MARK: - Bipa TableCell Style
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText {
     /// Bipa's custom table cell style.
     struct BipaTableCellStyle: TableCellStyle {
@@ -632,14 +660,14 @@ public extension StructuredText {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText.TableCellStyle where Self == StructuredText.BipaTableCellStyle {
     static var bipa: Self { .init() }
 }
 
 // MARK: - Bipa Complete Style
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText {
     /// Bipa's complete custom style for StructuredText using all Apolo design tokens.
     struct BipaStyle: Style {
@@ -670,7 +698,7 @@ public extension StructuredText {
     }
 }
 
-@available(iOS 18.0, *)
+@available(iOS 18.0, watchOS 11.0, *)
 public extension StructuredText.Style where Self == StructuredText.BipaStyle {
     /// Bipa's structured text style with default configuration.
     static var bipa: Self {

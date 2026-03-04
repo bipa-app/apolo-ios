@@ -83,7 +83,7 @@ public struct Tag: View, Equatable {
             case let .custom(_, _, textColor, _, _, _): textColor
             case .label: .primary
             case .turbo, .card: .white
-            default: Color(uiColor: .systemBackground)
+            default: Tokens.Color.systemBackground.color
             }
         }
         
@@ -227,7 +227,7 @@ extension Tag.Style: Equatable {
                 Tag(style: .success, title: "CONCLUÍDA")
                 Tag(style: .warning, title: "PENDENTE")
                 Tag(style: .error, title: "FALHADA")
-                Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual")
+                Tag(style: .custom(backgroundColor: Tokens.Color.quaternarySystemFill.color, textColor: .secondary), title: "Crédito Virtual")
                 Tag(style: .turbo)
                 Tag(style: .premium)
                 Tag(style: .card(type: .credit(isTurbo: false, isPremium: false)))
@@ -261,7 +261,7 @@ extension Tag.Style: Equatable {
                 Tag(style: .success, title: "CONCLUÍDA", size: .small)
                 Tag(style: .warning, title: "PENDENTE", size: .small)
                 Tag(style: .error, title: "FALHADA", size: .small)
-                Tag(style: .custom(backgroundColor: Color(uiColor: .quaternarySystemFill), textColor: .secondary), title: "Crédito Virtual", size: .small)
+                Tag(style: .custom(backgroundColor: Tokens.Color.quaternarySystemFill.color, textColor: .secondary), title: "Crédito Virtual", size: .small)
                 Tag(style: .custom(backgroundColor: .indigo, textColor: .mint), title: "Custom", size: .small)
                 
                 Tag(
@@ -296,7 +296,7 @@ extension Tag.Style: Equatable {
 
                 Tag(
                     style: .custom(
-                        backgroundColor: Color(uiColor: .systemBackground),
+                        backgroundColor: Tokens.Color.systemBackground.color,
                         textColor: .primary,
                         borderStyle: LinearGradient(
                             colors: [Tokens.Color.orange.color, Tokens.Color.red.color],

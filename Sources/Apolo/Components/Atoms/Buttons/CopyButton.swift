@@ -47,8 +47,10 @@ public struct CopyButton: View {
     public var body: some View {
         Button(
             action: {
-                UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+                performHaptic(.rigid)
+                #if !os(watchOS)
                 UIPasteboard.general.string = value
+                #endif
                 onCopied?(value)
                 
                 withAnimation { copied = true }
@@ -65,7 +67,7 @@ public struct CopyButton: View {
                             .multilineTextAlignment(.trailing)
                     }
                     
-                    if #available(iOS 18.0, *) {
+                    if #available(iOS 18.0, watchOS 11.0, *) {
                         image
                             .contentTransition(.symbolEffect(.replace.magic(fallback: .downUp.byLayer), options: .nonRepeating))
                     } else {

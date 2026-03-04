@@ -7,7 +7,8 @@ let package = Package(
     name: "Apolo",
     defaultLocalization: "pt-BR",
     platforms: [
-        .iOS(.v16)
+        .iOS(.v16),
+        .watchOS(.v11)
     ],
     products: [
         .library(
@@ -29,6 +30,9 @@ let package = Package(
             path: "Sources/Apolo",
             resources: [
                 .process("Resources")
+            ],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
             ]
         )
     ]

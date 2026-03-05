@@ -8,7 +8,7 @@ let package = Package(
     defaultLocalization: "pt-BR",
     platforms: [
         .iOS(.v16),
-        .watchOS(.v11)
+        .watchOS(.v10)
     ],
     products: [
         .library(
@@ -24,15 +24,14 @@ let package = Package(
         .target(
             name: "Apolo",
             dependencies: [
-                .product(name: "MarkdownUI", package: "swift-markdown-ui"),
-                .product(name: "Textual", package: "textual")
+                .product(name: "MarkdownUI", package: "swift-markdown-ui", condition: .when(platforms: [.iOS])),
+                .product(name: "Textual", package: "textual", condition: .when(platforms: [.iOS]))
             ],
             path: "Sources/Apolo",
             resources: [
                 .process("Resources")
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v5)
             ]
         )
     ]

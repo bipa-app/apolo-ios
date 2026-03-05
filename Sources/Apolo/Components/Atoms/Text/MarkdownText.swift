@@ -1,3 +1,4 @@
+#if !os(watchOS)
 import MarkdownUI
 import SwiftUI
 import Textual
@@ -161,3 +162,4 @@ public struct MarkdownText: View {
         .padding()
     }
 }
+#endif

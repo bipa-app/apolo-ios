@@ -1,3 +1,4 @@
+#if !os(watchOS)
 import MarkdownUI
 import SwiftUI
 import Textual
@@ -710,3 +711,4 @@ public extension StructuredText.Style where Self == StructuredText.BipaStyle {
         .init(configuration)
     }
 }
+#endif

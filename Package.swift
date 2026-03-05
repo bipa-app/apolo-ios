@@ -24,8 +24,8 @@ let package = Package(
         .target(
             name: "Apolo",
             dependencies: [
-                .product(name: "MarkdownUI", package: "swift-markdown-ui"),
-                .product(name: "Textual", package: "textual")
+                .product(name: "MarkdownUI", package: "swift-markdown-ui", condition: .when(platforms: [.iOS])),
+                .product(name: "Textual", package: "textual", condition: .when(platforms: [.iOS]))
             ],
             path: "Sources/Apolo",
             resources: [

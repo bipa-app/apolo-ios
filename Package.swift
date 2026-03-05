@@ -8,7 +8,7 @@ let package = Package(
     defaultLocalization: "pt-BR",
     platforms: [
         .iOS(.v16),
-        .watchOS(.v11)
+        .watchOS(.v10)
     ],
     products: [
         .library(
@@ -32,7 +32,6 @@ let package = Package(
                 .process("Resources")
             ],
             swiftSettings: [
-                .swiftLanguageMode(.v5)
             ]
         )
     ]

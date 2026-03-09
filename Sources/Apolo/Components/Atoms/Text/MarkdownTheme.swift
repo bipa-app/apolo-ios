@@ -318,15 +318,23 @@ public extension Theme {
                     .markdownMargin(top: MarkdownStyleConstants.Spacing.blockquoteVertical, bottom: MarkdownStyleConstants.Spacing.paragraphBottom)
             }
             .codeBlock { config in
-                ScrollView(.horizontal, showsIndicators: false) {
-                    config.label
-                        .markdownTextStyle {
-                            FontFamilyVariant(.monospaced)
-                            FontSize(.em(MarkdownStyleConstants.codeBlockScale))
-                        }
-                        .fixedSize(horizontal: false, vertical: true)
+                HStack(alignment: .top, spacing: 0) {
+                    ScrollView(.horizontal, showsIndicators: false) {
+                        config.label
+                            .markdownTextStyle {
+                                FontFamilyVariant(.monospaced)
+                                FontSize(.em(MarkdownStyleConstants.codeBlockScale))
+                            }
+                            .fixedSize(horizontal: false, vertical: true)
+                    }
+                    .padding(MarkdownStyleConstants.Spacing.codeBlockPadding)
+
+                    CodeBlockCopyButton {
+                        UIPasteboard.general.string = config.content
+                    }
+                    .padding(.top, MarkdownStyleConstants.Spacing.codeBlockPadding)
+                    .padding(.trailing, MarkdownStyleConstants.Spacing.codeBlockPadding)
                 }
-                .padding(MarkdownStyleConstants.Spacing.codeBlockPadding)
                 .background(configuration.codeBlockBackground.color)
                 .clipShape(RoundedRectangle(cornerRadius: MarkdownStyleConstants.codeBlockCornerRadius))
                 .markdownMargin(top: MarkdownStyleConstants.Spacing.blockquoteVertical, bottom: MarkdownStyleConstants.Spacing.paragraphBottom)
@@ -518,13 +526,21 @@ public extension StructuredText {
         }
 
         public func makeBody(configuration config: Configuration) -> some View {
-            Overflow {
-                config.label
-                    .textual.lineSpacing(.fontScaled(MarkdownStyleConstants.lineSpacingScale))
-                    .textual.fontScale(MarkdownStyleConstants.codeBlockScale)
-                    .fixedSize(horizontal: false, vertical: true)
-                    .monospaced()
-                    .padding(MarkdownStyleConstants.Spacing.codeBlockPadding)
+            HStack(alignment: .top, spacing: 0) {
+                Overflow {
+                    config.label
+                        .textual.lineSpacing(.fontScaled(MarkdownStyleConstants.lineSpacingScale))
+                        .textual.fontScale(MarkdownStyleConstants.codeBlockScale)
+                        .fixedSize(horizontal: false, vertical: true)
+                        .monospaced()
+                        .padding(MarkdownStyleConstants.Spacing.codeBlockPadding)
+                }
+
+                CodeBlockCopyButton {
+                    config.codeBlock.copyToPasteboard()
+                }
+                .padding(.top, MarkdownStyleConstants.Spacing.codeBlockPadding)
+                .padding(.trailing, MarkdownStyleConstants.Spacing.codeBlockPadding)
             }
             .background(configuration.codeBlockBackground.color)
             .clipShape(RoundedRectangle(cornerRadius: MarkdownStyleConstants.codeBlockCornerRadius))

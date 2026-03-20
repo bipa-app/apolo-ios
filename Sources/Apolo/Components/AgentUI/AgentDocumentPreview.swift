@@ -58,16 +58,16 @@ public struct AgentDocumentPreview<Content: View>: View {
             .frame(height: 200, alignment: .top)
             .clipped()
 
-            // Gradient frost: clear at top, frosted at bottom
+            // Gradient frost: lightly frosted at top, fully frosted at bottom
             Rectangle()
-                .fill(.ultraThinMaterial)
+                .fill(.regularMaterial)
                 .mask(
                     LinearGradient(
                         stops: [
-                            .init(color: .clear, location: 0),
-                            .init(color: .clear, location: 0.2),
-                            .init(color: .white.opacity(0.4), location: 0.55),
-                            .init(color: .white, location: 0.8),
+                            .init(color: .white.opacity(0.55), location: 0),
+                            .init(color: .white.opacity(0.6), location: 0.3),
+                            .init(color: .white.opacity(0.75), location: 0.55),
+                            .init(color: .white, location: 0.75),
                             .init(color: .white, location: 1.0)
                         ],
                         startPoint: .top,

@@ -37,6 +37,15 @@
       }
     },
     {
+      "identity" : "swiftui-json-render",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/bipa-app/swiftui-json-render.git",
+      "state" : {
+        "branch" : "feat/apolo-integration",
+        "revision" : "a53b6834c57e93fe2cfe1d5ee9ecf5f1f19612dd"
+      }
+    },
+    {
       "identity" : "swiftui-math",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/bipa-app/swiftui-math",

@@ -18,14 +18,16 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/gonzalezreal/swift-markdown-ui", from: "2.4.1"),
-        .package(url: "https://github.com/bipa-app/textual", from: "1.0.1")
+        .package(url: "https://github.com/bipa-app/textual", from: "1.0.1"),
+        .package(url: "https://github.com/bipa-app/swiftui-json-render.git", branch: "feat/apolo-integration")
     ],
     targets: [
         .target(
             name: "Apolo",
             dependencies: [
                 .product(name: "MarkdownUI", package: "swift-markdown-ui", condition: .when(platforms: [.iOS])),
-                .product(name: "Textual", package: "textual", condition: .when(platforms: [.iOS]))
+                .product(name: "Textual", package: "textual", condition: .when(platforms: [.iOS])),
+                .product(name: "SwiftUIJSONRender", package: "swiftui-json-render", condition: .when(platforms: [.iOS]))
             ],
             path: "Sources/Apolo",
             resources: [

@@ -34,6 +34,23 @@ public struct AgentMetric: View {
         self.iconColor = iconColor
     }
 
+    /// Convenience init with semantic colors.
+    public init(
+        label: String,
+        value: String,
+        caption: String? = nil,
+        captionSemantic: AgentSemanticColor? = nil,
+        icon: String? = nil,
+        iconSemantic: AgentSemanticColor? = nil
+    ) {
+        self.label = label
+        self.value = value
+        self.caption = caption
+        self.captionColor = captionSemantic?.color
+        self.icon = icon
+        self.iconColor = iconSemantic?.color
+    }
+
     public var body: some View {
         HStack(spacing: Tokens.Spacing.small) {
             if let icon {

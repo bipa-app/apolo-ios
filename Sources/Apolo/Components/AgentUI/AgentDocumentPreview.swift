@@ -112,24 +112,138 @@ public struct AgentDocumentPreview<Content: View>: View {
     }
 }
 
-// MARK: - Preview
+// MARK: - Previews
 
-#Preview("Document Preview") {
+private struct SampleDocument: View {
+    var body: some View {
+        VStack(spacing: Tokens.Spacing.medium) {
+            AgentCard {
+                AgentMetric(
+                    label: "Total gasto",
+                    value: "R$ 4.523,00",
+                    caption: "+12% vs fevereiro",
+                    captionColor: Tokens.Color.red.color,
+                    icon: "chart.bar.fill",
+                    iconColor: Tokens.Color.violet.color
+                )
+            }
+            AgentCard(title: "Por categoria") {
+                AgentList(items: [
+                    .init(title: "Alimentação", subtitle: "23 transações", trailing: "R$ 1.200", icon: "fork.knife"),
+                    .init(title: "Transporte", subtitle: "12 transações", trailing: "R$ 800", icon: "car.fill"),
+                    .init(title: "Moradia", subtitle: "3 transações", trailing: "R$ 600", icon: "house.fill"),
+                ], maxVisible: 10)
+            }
+        }
+    }
+}
+
+#Preview("Current — opacity scrim") {
     ScrollView {
         AgentDocumentPreview(title: "Relatório de gastos — Março 2026", preview: "R$ 4.523,00 em 47 transações") {
-            VStack(spacing: Tokens.Spacing.medium) {
-                AgentCard {
-                    AgentMetric(label: "Total gasto", value: "R$ 4.523,00", caption: "+12% vs fevereiro", captionColor: Tokens.Color.red.color)
-                }
-                AgentCard(title: "Por categoria") {
-                    AgentList(items: [
-                        .init(title: "Alimentação", subtitle: "23 transações", trailing: "R$ 1.200", icon: "fork.knife"),
-                        .init(title: "Transporte", subtitle: "12 transações", trailing: "R$ 800", icon: "car.fill"),
-                    ], maxVisible: 10)
-                }
-            }
+            SampleDocument()
         }
         .padding()
     }
     .background(Color(.systemGroupedBackground))
+}
+
+#Preview("Option A — ultraThinMaterial") {
+    ScrollView {
+        DocumentPreviewVariant(
+            title: "Relatório de gastos — Março 2026",
+            preview: "R$ 4.523,00 em 47 transações",
+            titleBackground: .ultraThinMaterial
+        ) { SampleDocument() }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("Option B — thinMaterial") {
+    ScrollView {
+        DocumentPreviewVariant(
+            title: "Relatório de gastos — Março 2026",
+            preview: "R$ 4.523,00 em 47 transações",
+            titleBackground: .thinMaterial
+        ) { SampleDocument() }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("Option C — regularMaterial") {
+    ScrollView {
+        DocumentPreviewVariant(
+            title: "Relatório de gastos — Março 2026",
+            preview: "R$ 4.523,00 em 47 transações",
+            titleBackground: .regularMaterial
+        ) { SampleDocument() }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("Option D — thickMaterial") {
+    ScrollView {
+        DocumentPreviewVariant(
+            title: "Relatório de gastos — Março 2026",
+            preview: "R$ 4.523,00 em 47 transações",
+            titleBackground: .thickMaterial
+        ) { SampleDocument() }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("Option E — ultraThickMaterial") {
+    ScrollView {
+        DocumentPreviewVariant(
+            title: "Relatório de gastos — Março 2026",
+            preview: "R$ 4.523,00 em 47 transações",
+            titleBackground: .ultraThickMaterial
+        ) { SampleDocument() }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+/// Preview helper to test different material backgrounds on the title bar.
+private struct DocumentPreviewVariant<Content: View, M: ShapeStyle>: View {
+    let title: String
+    let preview: String?
+    let titleBackground: M
+    @ViewBuilder let document: () -> Content
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            VStack(alignment: .leading, spacing: 0) {
+                document()
+                    .allowsHitTesting(false)
+            }
+            .frame(height: 200, alignment: .top)
+            .clipped()
+
+            // Material title bar
+            VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
+                Text(title)
+                    .callout(weight: .medium)
+                    .foregroundStyle(Tokens.Color.label.color)
+                    .lineLimit(1)
+
+                if let preview {
+                    Text(preview)
+                        .caption1()
+                        .foregroundStyle(Tokens.Color.secondaryLabel.color)
+                        .lineLimit(1)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, Tokens.Spacing.medium)
+            .padding(.vertical, Tokens.Spacing.small)
+            .background(titleBackground)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
+        .cardBackground()
+    }
 }

@@ -50,6 +50,7 @@ public struct AgentDocumentPreview<Content: View>: View {
 
     private var previewCard: some View {
         ZStack(alignment: .bottomLeading) {
+            // Content snapshot pinned to top
             VStack(alignment: .leading, spacing: 0) {
                 document()
                     .allowsHitTesting(false)
@@ -57,7 +58,24 @@ public struct AgentDocumentPreview<Content: View>: View {
             .frame(height: 200, alignment: .top)
             .clipped()
 
-            // Ultra thin material title bar
+            // Gradient frost: clear at top, frosted at bottom
+            Rectangle()
+                .fill(.ultraThinMaterial)
+                .mask(
+                    LinearGradient(
+                        stops: [
+                            .init(color: .clear, location: 0),
+                            .init(color: .clear, location: 0.2),
+                            .init(color: .white.opacity(0.4), location: 0.55),
+                            .init(color: .white, location: 0.8),
+                            .init(color: .white, location: 1.0)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+
+            // Title at bottom (in the fully frosted area)
             VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
                 Text(title)
                     .callout(weight: .medium)
@@ -72,8 +90,7 @@ public struct AgentDocumentPreview<Content: View>: View {
             }
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Tokens.Spacing.medium)
-            .padding(.vertical, Tokens.Spacing.small)
-            .background(.ultraThinMaterial)
+            .padding(.bottom, Tokens.Spacing.small)
         }
         .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
         .cardBackground()

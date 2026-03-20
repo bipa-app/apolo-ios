@@ -78,14 +78,17 @@ public struct AgentTable: View {
                         Image(systemName: "chevron.down")
                             .caption2()
                     }
-                    .foregroundStyle(Tokens.Color.violet.color)
+                    .foregroundStyle(AgentSemanticColor.accent.color)
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, Tokens.Spacing.small)
                 }
                 .buttonStyle(.plain)
             }
         }
-        .cardBackground(.secondary, cornerRadius: Tokens.CornerRadius.medium)
+        .background(
+            RoundedRectangle(cornerRadius: Tokens.CornerRadius.medium)
+                .fill(Tokens.Color.quaternarySystemFill.color)
+        )
     }
 }
 

@@ -68,7 +68,7 @@ public struct AgentMetric: View {
                     .title3(weight: .medium)
                     .foregroundStyle(Tokens.Color.label.color)
                     .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+                    .minimumScaleFactor(0.5)
                     .monospacedDigit()
 
                 if let caption {

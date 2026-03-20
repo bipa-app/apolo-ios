@@ -58,37 +58,28 @@ public struct AgentDocumentPreview<Content: View>: View {
             .frame(height: 200, alignment: .top)
             .clipped()
 
-            // Gradient frost: lightly frosted at top, fully frosted at bottom
-            Rectangle()
-                .fill(.regularMaterial)
-                .mask(
-                    LinearGradient(
-                        stops: [
-                            .init(color: .white.opacity(0.55), location: 0),
-                            .init(color: .white.opacity(0.6), location: 0.3),
-                            .init(color: .white.opacity(0.75), location: 0.55),
-                            .init(color: .white, location: 0.75),
-                            .init(color: .white, location: 1.0)
-                        ],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                )
+            // Dark gradient scrim
+            LinearGradient(
+                colors: [.clear, .black.opacity(0.85)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: 100)
 
-            // Title at bottom (in the fully frosted area)
+            // Title overlaid on the scrim
             VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
                 Text(title)
                     .callout(weight: .medium)
+                    .foregroundStyle(.white)
                     .lineLimit(1)
 
                 if let preview {
                     Text(preview)
                         .caption1()
-                        .foregroundStyle(.secondary)
+                        .foregroundStyle(.white.opacity(0.75))
                         .lineLimit(1)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Tokens.Spacing.medium)
             .padding(.bottom, Tokens.Spacing.small)
         }
@@ -148,48 +139,11 @@ private struct SampleDocument: View {
     }
 }
 
-#Preview("Current — gradient frost") {
+#Preview("Document Preview") {
     ScrollView {
         AgentDocumentPreview(title: "Relatório de gastos — Março 2026", preview: "R$ 4.523,00 em 47 transações") {
             SampleDocument()
         }
-        .padding()
-    }
-    .background(Color(.systemGroupedBackground))
-}
-
-#Preview("Original — black opacity scrim") {
-    ScrollView {
-        ZStack(alignment: .bottomLeading) {
-            VStack(alignment: .leading, spacing: 0) {
-                SampleDocument()
-                    .allowsHitTesting(false)
-            }
-            .frame(height: 200, alignment: .top)
-            .clipped()
-
-            LinearGradient(
-                colors: [.clear, .black.opacity(0.85)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .frame(height: 100)
-
-            VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
-                Text("Relatório de gastos — Março 2026")
-                    .callout(weight: .medium)
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
-                Text("R$ 4.523,00 em 47 transações")
-                    .caption1()
-                    .foregroundStyle(.white.opacity(0.75))
-                    .lineLimit(1)
-            }
-            .padding(.horizontal, Tokens.Spacing.medium)
-            .padding(.bottom, Tokens.Spacing.small)
-        }
-        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
-        .cardBackground()
         .padding()
     }
     .background(Color(.systemGroupedBackground))

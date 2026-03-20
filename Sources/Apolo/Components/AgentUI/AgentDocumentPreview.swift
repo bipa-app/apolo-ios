@@ -46,40 +46,32 @@ public struct AgentDocumentPreview<Content: View>: View {
 
     private var previewCard: some View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.zero) {
-            // Content snapshot
-            ZStack(alignment: .bottomLeading) {
+            // Content snapshot — pinned to top
+            VStack(alignment: .leading, spacing: 0) {
                 document()
-                    .frame(maxHeight: 180)
-                    .clipped()
                     .allowsHitTesting(false)
-
-                // Gradient scrim for title readability
-                LinearGradient(
-                    colors: [.clear, .black.opacity(0.6)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
-                .frame(height: 80)
-
-                // Overlaid title
-                VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
-                    Text(title)
-                        .callout(weight: .medium)
-                        .foregroundStyle(.white)
-                        .lineLimit(1)
-
-                    if let preview {
-                        Text(preview)
-                            .caption1()
-                            .foregroundStyle(.white.opacity(0.7))
-                            .lineLimit(1)
-                    }
-                }
-                .padding(.horizontal, Tokens.Spacing.medium)
-                .padding(.bottom, Tokens.Spacing.small)
             }
+            .frame(height: 180, alignment: .top)
+            .clipped()
+
+            // Title bar — solid background, always readable
+            VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
+                Text(title)
+                    .callout(weight: .medium)
+                    .foregroundStyle(Tokens.Color.label.color)
+                    .lineLimit(1)
+
+                if let preview {
+                    Text(preview)
+                        .caption1()
+                        .foregroundStyle(Tokens.Color.secondaryLabel.color)
+                        .lineLimit(1)
+                }
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal, Tokens.Spacing.medium)
+            .padding(.vertical, Tokens.Spacing.small)
         }
-        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
         .cardBackground()
         .matchedGeometryEffect(id: "document", in: documentNamespace)
     }

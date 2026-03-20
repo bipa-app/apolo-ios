@@ -38,7 +38,7 @@ public struct AgentCard<Content: View>: View {
                     if let icon {
                         Image(systemName: icon)
                             .large()
-                            .foregroundStyle(iconColor ?? Tokens.Color.violet.color)
+                            .foregroundStyle(iconColor ?? AgentSemanticColor.accent.color)
                     }
 
                     if let title {

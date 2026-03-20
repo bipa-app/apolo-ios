@@ -85,10 +85,8 @@ public struct AgentTable: View {
                 .buttonStyle(.plain)
             }
         }
-        .background(
-            RoundedRectangle(cornerRadius: Tokens.CornerRadius.medium)
-                .fill(Tokens.Color.quaternarySystemFill.color)
-        )
+        .padding(.vertical, Tokens.Spacing.extraExtraSmall)
+        .cardBackground(.secondary, cornerRadius: Tokens.CornerRadius.medium, glassEnabled: false)
     }
 }
 

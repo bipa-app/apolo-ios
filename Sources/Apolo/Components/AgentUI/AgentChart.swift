@@ -27,7 +27,7 @@ public struct AgentChart: View {
         style: AgentChartStyle = .sparkline,
         data: [Double],
         color: Color = Tokens.Color.violet.color,
-        height: CGFloat = 56
+        height: CGFloat = 80
     ) {
         self.style = style
         self.data = data

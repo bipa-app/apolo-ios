@@ -148,11 +148,48 @@ private struct SampleDocument: View {
     }
 }
 
-#Preview("Document Preview") {
+#Preview("Current — gradient frost") {
     ScrollView {
         AgentDocumentPreview(title: "Relatório de gastos — Março 2026", preview: "R$ 4.523,00 em 47 transações") {
             SampleDocument()
         }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("Original — black opacity scrim") {
+    ScrollView {
+        ZStack(alignment: .bottomLeading) {
+            VStack(alignment: .leading, spacing: 0) {
+                SampleDocument()
+                    .allowsHitTesting(false)
+            }
+            .frame(height: 200, alignment: .top)
+            .clipped()
+
+            LinearGradient(
+                colors: [.clear, .black.opacity(0.85)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: 100)
+
+            VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
+                Text("Relatório de gastos — Março 2026")
+                    .callout(weight: .medium)
+                    .foregroundStyle(.white)
+                    .lineLimit(1)
+                Text("R$ 4.523,00 em 47 transações")
+                    .caption1()
+                    .foregroundStyle(.white.opacity(0.75))
+                    .lineLimit(1)
+            }
+            .padding(.horizontal, Tokens.Spacing.medium)
+            .padding(.bottom, Tokens.Spacing.small)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
+        .cardBackground()
         .padding()
     }
     .background(Color(.systemGroupedBackground))

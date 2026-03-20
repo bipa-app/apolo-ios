@@ -12,10 +12,10 @@ import SwiftUI
 
 public struct AgentList: View {
     public let items: [Item]
-    public let maxVisible: Int
     public let expandLabel: String?
 
     @State private var showSheet = false
+    @Namespace private var listNamespace
 
     public struct Item: Identifiable {
         public let id: String
@@ -44,12 +44,15 @@ public struct AgentList: View {
 
     public init(items: [Item], maxVisible: Int = 3, expandLabel: String? = nil) {
         self.items = items
-        self.maxVisible = maxVisible
         self.expandLabel = expandLabel
     }
 
-    private var inlineItems: [Item] { Array(items.prefix(maxVisible)) }
-    private var hasMore: Bool { items.count > maxVisible }
+    /// < 5 items: show all. >= 5 items: show top 3.
+    private var inlineItems: [Item] {
+        items.count < 5 ? items : Array(items.prefix(3))
+    }
+
+    private var hasMore: Bool { items.count >= 5 }
 
     public var body: some View {
         VStack(spacing: .zero) {
@@ -63,26 +66,41 @@ public struct AgentList: View {
             }
 
             if hasMore {
-                Button {
-                    showSheet = true
-                } label: {
-                    HStack(spacing: Tokens.Spacing.extraSmall) {
-                        Image(systemName: "list.bullet")
-                            .small()
-                        Text(expandLabel ?? "Ver todas (\(items.count))")
-                            .subheadline(weight: .medium)
-                    }
-                    .foregroundStyle(Tokens.Color.violet.color)
-                    .frame(maxWidth: .infinity)
-                    .padding(Tokens.Spacing.medium)
-                }
-                .buttonStyle(.plain)
+                expandButton
             }
         }
         .cardBackground()
-        .sheet(isPresented: $showSheet) {
-            AgentListSheet(items: items)
+    }
+
+    @ViewBuilder
+    private var expandButton: some View {
+        if #available(iOS 18.0, *) {
+            Button { showSheet = true } label: { expandLabel_ }
+                .buttonStyle(.plain)
+                .matchedTransitionSource(id: "list", in: listNamespace)
+                .fullScreenCover(isPresented: $showSheet) {
+                    AgentListSheet(items: items)
+                        .navigationTransition(.zoom(sourceID: "list", in: listNamespace))
+                }
+        } else {
+            Button { showSheet = true } label: { expandLabel_ }
+                .buttonStyle(.plain)
+                .sheet(isPresented: $showSheet) {
+                    AgentListSheet(items: items)
+                }
         }
+    }
+
+    private var expandLabel_: some View {
+        HStack(spacing: Tokens.Spacing.extraSmall) {
+            Image(systemName: "list.bullet")
+                .small()
+            Text(expandLabel ?? "Ver todas (\(items.count))")
+                .subheadline(weight: .medium)
+        }
+        .foregroundStyle(AgentSemanticColor.accent.color)
+        .frame(maxWidth: .infinity)
+        .padding(Tokens.Spacing.medium)
     }
 }
 
@@ -174,18 +192,38 @@ private struct AgentListSheet: View {
     }
 }
 
-// MARK: - Preview
+// MARK: - Previews
 
-#Preview {
+#Preview("3 items — all visible") {
+    AgentList(items: [
+        .init(title: "PIX para Maria", subtitle: "18/03 14:32", trailing: "R$ 250", trailingColor: Tokens.Color.red.color, icon: "arrow.up.right"),
+        .init(title: "PIX recebido", subtitle: "18/03 10:15", trailing: "+R$ 1.500", trailingColor: Tokens.Color.green.color, icon: "arrow.down.left"),
+        .init(title: "iFood", subtitle: "17/03 20:45", trailing: "R$ 45,90", icon: "creditcard"),
+    ])
+    .padding()
+}
+
+#Preview("4 items — all visible") {
+    AgentList(items: [
+        .init(title: "PIX para Maria", subtitle: "18/03 14:32", trailing: "R$ 250", icon: "arrow.up.right"),
+        .init(title: "PIX recebido", subtitle: "18/03 10:15", trailing: "+R$ 1.500", trailingColor: Tokens.Color.green.color, icon: "arrow.down.left"),
+        .init(title: "iFood", subtitle: "17/03 20:45", trailing: "R$ 45,90", icon: "creditcard"),
+        .init(title: "Aluguel", subtitle: "15/03 08:00", trailing: "R$ 2.500", icon: "arrow.up.right"),
+    ])
+    .padding()
+}
+
+#Preview("5+ items — 3 shown + Ver todas") {
     AgentList(
         items: [
-            .init(title: "PIX para Maria Silva", subtitle: "18/03 14:32", trailing: "R$ 250", trailingColor: Tokens.Color.red.color, icon: "arrow.up.right"),
+            .init(title: "PIX para Maria", subtitle: "18/03 14:32", trailing: "R$ 250", trailingColor: Tokens.Color.red.color, icon: "arrow.up.right"),
             .init(title: "PIX recebido de João", subtitle: "18/03 10:15", trailing: "+R$ 1.500", trailingColor: Tokens.Color.green.color, icon: "arrow.down.left"),
             .init(title: "iFood", subtitle: "17/03 20:45", trailing: "R$ 45,90", icon: "creditcard"),
             .init(title: "Compra Bitcoin", subtitle: "17/03 09:00", trailing: "R$ 500", icon: "bitcoinsign.circle"),
             .init(title: "Aluguel", subtitle: "15/03 08:00", trailing: "R$ 2.500", trailingColor: Tokens.Color.red.color, icon: "arrow.up.right"),
+            .init(title: "Uber", subtitle: "14/03 22:30", trailing: "R$ 32,00", icon: "car.fill"),
+            .init(title: "Farmácia", subtitle: "14/03 15:00", trailing: "R$ 89,90", icon: "cross.fill"),
         ],
-        maxVisible: 3,
         expandLabel: "Ver todas (20)"
     )
     .padding()

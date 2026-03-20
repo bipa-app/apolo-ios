@@ -58,13 +58,17 @@ public struct AgentDocumentPreview<Content: View>: View {
             .frame(height: 200, alignment: .top)
             .clipped()
 
-            // Dark gradient scrim
+            // Heavier gradient scrim
             LinearGradient(
-                colors: [.clear, .black.opacity(0.85)],
+                stops: [
+                    .init(color: .clear, location: 0),
+                    .init(color: .black.opacity(0.5), location: 0.4),
+                    .init(color: .black.opacity(0.92), location: 0.7),
+                    .init(color: .black.opacity(0.92), location: 1.0)
+                ],
                 startPoint: .top,
                 endPoint: .bottom
             )
-            .frame(height: 100)
 
             // Title overlaid on the scrim
             VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
@@ -143,6 +147,135 @@ private struct SampleDocument: View {
     ScrollView {
         AgentDocumentPreview(title: "Relatório de gastos — Março 2026", preview: "R$ 4.523,00 em 47 transações") {
             SampleDocument()
+        }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+// Tap affordance variants — how to signal "tap to expand"
+// ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+/// Reusable preview card body (heavier scrim) for affordance comparison.
+private struct AffordancePreviewCard<Overlay: View>: View {
+    let overlay: Overlay
+
+    init(@ViewBuilder overlay: () -> Overlay) {
+        self.overlay = overlay()
+    }
+
+    var body: some View {
+        ZStack(alignment: .bottomLeading) {
+            VStack(alignment: .leading, spacing: 0) {
+                SampleDocument()
+                    .allowsHitTesting(false)
+            }
+            .frame(height: 200, alignment: .top)
+            .clipped()
+
+            LinearGradient(
+                stops: [
+                    .init(color: .clear, location: 0),
+                    .init(color: .black.opacity(0.5), location: 0.4),
+                    .init(color: .black.opacity(0.92), location: 0.7),
+                    .init(color: .black.opacity(0.92), location: 1.0)
+                ],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+
+            HStack {
+                VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
+                    Text("Relatório de gastos — Março 2026")
+                        .callout(weight: .medium)
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
+                    Text("R$ 4.523,00 em 47 transações")
+                        .caption1()
+                        .foregroundStyle(.white.opacity(0.75))
+                        .lineLimit(1)
+                }
+                Spacer(minLength: 0)
+                overlay
+            }
+            .padding(.horizontal, Tokens.Spacing.medium)
+            .padding(.bottom, Tokens.Spacing.small)
+        }
+        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
+        .cardBackground()
+    }
+}
+
+#Preview("A — Chevron icon") {
+    ScrollView {
+        AffordancePreviewCard {
+            Image(systemName: "chevron.right")
+                .footnote()
+                .foregroundStyle(.white.opacity(0.6))
+        }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("B — Expand arrows icon") {
+    ScrollView {
+        AffordancePreviewCard {
+            Image(systemName: "arrow.up.left.and.arrow.down.right")
+                .footnote()
+                .foregroundStyle(.white.opacity(0.6))
+        }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("C — 'Toque para abrir' text") {
+    ScrollView {
+        AffordancePreviewCard {
+            Text("Toque para abrir")
+                .caption2()
+                .foregroundStyle(.white.opacity(0.5))
+        }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("D — Pill button 'Abrir'") {
+    ScrollView {
+        AffordancePreviewCard {
+            Text("Abrir")
+                .caption1(weight: .medium)
+                .foregroundStyle(.white)
+                .padding(.horizontal, Tokens.Spacing.small)
+                .padding(.vertical, Tokens.Spacing.extraExtraSmall)
+                .background(.white.opacity(0.2), in: Capsule())
+        }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("E — Circle expand button") {
+    ScrollView {
+        AffordancePreviewCard {
+            Image(systemName: "arrow.up.left.and.arrow.down.right")
+                .caption1()
+                .foregroundStyle(.white)
+                .frame(width: 28, height: 28)
+                .background(.white.opacity(0.2), in: Circle())
+        }
+        .padding()
+    }
+    .background(Color(.systemGroupedBackground))
+}
+
+#Preview("F — No affordance (baseline)") {
+    ScrollView {
+        AffordancePreviewCard {
+            EmptyView()
         }
         .padding()
     }

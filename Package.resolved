@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/bipa-app/swiftui-json-render.git",
       "state" : {
-        "branch" : "feat/apolo-integration",
-        "revision" : "a53b6834c57e93fe2cfe1d5ee9ecf5f1f19612dd"
+        "revision" : "3d48d1046a11f9241b88618594fe6c9a5df0f532",
+        "version" : "0.2.0"
       }
     },
     {

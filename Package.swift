@@ -19,7 +19,7 @@ let package = Package(
     dependencies: [
         .package(url: "https://github.com/gonzalezreal/swift-markdown-ui", from: "2.4.1"),
         .package(url: "https://github.com/bipa-app/textual", from: "1.0.1"),
-        .package(url: "https://github.com/bipa-app/swiftui-json-render.git", branch: "feat/apolo-integration")
+        .package(url: "https://github.com/bipa-app/swiftui-json-render.git", from: "0.2.0")
     ],
     targets: [
         .target(

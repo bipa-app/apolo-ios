@@ -45,33 +45,41 @@ public struct AgentDocumentPreview<Content: View>: View {
     // MARK: - Preview Card
 
     private var previewCard: some View {
-        VStack(alignment: .leading, spacing: Tokens.Spacing.zero) {
+        ZStack(alignment: .bottomLeading) {
             // Content snapshot — pinned to top
             VStack(alignment: .leading, spacing: 0) {
                 document()
                     .allowsHitTesting(false)
             }
-            .frame(height: 180, alignment: .top)
+            .frame(height: 200, alignment: .top)
             .clipped()
 
-            // Title bar — solid background, always readable
+            // Gradient scrim — stronger opacity for readability
+            LinearGradient(
+                colors: [.clear, .black.opacity(0.85)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .frame(height: 100)
+
+            // Overlaid title
             VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
                 Text(title)
                     .callout(weight: .medium)
-                    .foregroundStyle(Tokens.Color.label.color)
+                    .foregroundStyle(.white)
                     .lineLimit(1)
 
                 if let preview {
                     Text(preview)
                         .caption1()
-                        .foregroundStyle(Tokens.Color.secondaryLabel.color)
+                        .foregroundStyle(.white.opacity(0.75))
                         .lineLimit(1)
                 }
             }
-            .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal, Tokens.Spacing.medium)
-            .padding(.vertical, Tokens.Spacing.small)
+            .padding(.bottom, Tokens.Spacing.small)
         }
+        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
         .cardBackground()
         .matchedGeometryEffect(id: "document", in: documentNamespace)
     }

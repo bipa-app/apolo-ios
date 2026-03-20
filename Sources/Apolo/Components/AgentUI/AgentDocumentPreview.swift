@@ -58,27 +58,37 @@ public struct AgentDocumentPreview<Content: View>: View {
             .frame(height: 200, alignment: .top)
             .clipped()
 
-            // Dark gradient scrim
+            // Heavier gradient scrim for title readability
             LinearGradient(
-                colors: [.clear, .black.opacity(0.85)],
+                stops: [
+                    .init(color: .clear, location: 0),
+                    .init(color: .black.opacity(0.5), location: 0.4),
+                    .init(color: .black.opacity(0.92), location: 0.7),
+                    .init(color: .black.opacity(0.92), location: 1.0)
+                ],
                 startPoint: .top,
                 endPoint: .bottom
             )
-            .frame(height: 100)
 
-            // Title overlaid on the scrim
-            VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
-                Text(title)
-                    .callout(weight: .medium)
-                    .foregroundStyle(.white)
-                    .lineLimit(1)
-
-                if let preview {
-                    Text(preview)
-                        .caption1()
-                        .foregroundStyle(.white.opacity(0.75))
+            // Title + expand affordance
+            HStack {
+                VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
+                    Text(title)
+                        .callout(weight: .medium)
+                        .foregroundStyle(.white)
                         .lineLimit(1)
+
+                    if let preview {
+                        Text(preview)
+                            .caption1()
+                            .foregroundStyle(.white.opacity(0.75))
+                            .lineLimit(1)
+                    }
                 }
+                Spacer(minLength: 0)
+                Image(systemName: "arrow.up.left.and.arrow.down.right")
+                    .footnote()
+                    .foregroundStyle(.white.opacity(0.6))
             }
             .padding(.horizontal, Tokens.Spacing.medium)
             .padding(.bottom, Tokens.Spacing.small)

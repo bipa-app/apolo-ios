@@ -46,54 +46,40 @@ public struct AgentDocumentPreview<Content: View>: View {
 
     private var previewCard: some View {
         VStack(alignment: .leading, spacing: Tokens.Spacing.zero) {
-            // Clipped snapshot of the actual document content
-            document()
-                .frame(maxHeight: 160)
-                .clipped()
-                .allowsHitTesting(false)
+            // Content snapshot
+            ZStack(alignment: .bottomLeading) {
+                document()
+                    .frame(maxHeight: 180)
+                    .clipped()
+                    .allowsHitTesting(false)
 
-            // Fade-out gradient at the bottom of the preview
-            LinearGradient(
-                colors: [
-                    Tokens.Color.secondarySystemGroupedBackground.color.opacity(0),
-                    Tokens.Color.secondarySystemGroupedBackground.color
-                ],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-            .frame(height: 32)
-            .offset(y: -32)
-            .padding(.bottom, -32)
+                // Gradient scrim for title readability
+                LinearGradient(
+                    colors: [.clear, .black.opacity(0.6)],
+                    startPoint: .top,
+                    endPoint: .bottom
+                )
+                .frame(height: 80)
 
-            // Title bar
-            HStack(spacing: Tokens.Spacing.small) {
-                Image(systemName: "doc.text.fill")
-                    .regular()
-                    .foregroundStyle(AgentSemanticColor.accent.color)
-
-                VStack(alignment: .leading, spacing: Tokens.Spacing.zero) {
+                // Overlaid title
+                VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
                     Text(title)
                         .callout(weight: .medium)
-                        .foregroundStyle(Tokens.Color.label.color)
+                        .foregroundStyle(.white)
                         .lineLimit(1)
 
                     if let preview {
                         Text(preview)
                             .caption1()
-                            .foregroundStyle(Tokens.Color.secondaryLabel.color)
+                            .foregroundStyle(.white.opacity(0.7))
                             .lineLimit(1)
                     }
                 }
-
-                Spacer()
-
-                Text("Abrir")
-                    .subheadline(weight: .medium)
-                    .foregroundStyle(AgentSemanticColor.accent.color)
+                .padding(.horizontal, Tokens.Spacing.medium)
+                .padding(.bottom, Tokens.Spacing.small)
             }
-            .padding(.horizontal, Tokens.Spacing.medium)
-            .padding(.vertical, Tokens.Spacing.small)
         }
+        .clipShape(RoundedRectangle(cornerRadius: Tokens.CornerRadius.large))
         .cardBackground()
         .matchedGeometryEffect(id: "document", in: documentNamespace)
     }
@@ -110,7 +96,7 @@ public struct AgentDocumentPreview<Content: View>: View {
             .background(Color(.systemGroupedBackground))
             .navigationTitle(title)
             #if os(iOS)
-            .navigationBarTitleDisplayMode(.large)
+            .navigationBarTitleDisplayMode(.inline)
             #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {

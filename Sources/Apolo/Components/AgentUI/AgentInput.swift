@@ -130,7 +130,6 @@ public struct AgentMultiChoiceInput: View {
                             }
                         }
                         performHaptic(.light)
-                        onSelect(Array(selectedIds))
                     } label: {
                         HStack(spacing: Tokens.Spacing.medium) {
                             Image(systemName: isSelected ? "checkmark.square.fill" : "square")
@@ -167,6 +166,16 @@ public struct AgentMultiChoiceInput: View {
                 }
             }
             .cardBackground(.secondary, cornerRadius: Tokens.CornerRadius.medium)
+
+            Button {
+                onSelect(Array(selectedIds))
+            } label: {
+                Text("Confirmar (\(selectedIds.count))")
+                    .body()
+                    .frame(maxWidth: .infinity)
+            }
+            .borderedProminentStyle(color: Tokens.Color.label.color)
+            .disabled(selectedIds.isEmpty)
         }
     }
 }

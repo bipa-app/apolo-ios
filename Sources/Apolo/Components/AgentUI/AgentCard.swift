@@ -85,7 +85,7 @@ public struct AgentDocumentPreview<Content: View>: View {
             HStack(spacing: Tokens.Spacing.small) {
                 Image(systemName: "doc.text.fill")
                     .large()
-                    .foregroundStyle(Tokens.Color.violet.color)
+                    .foregroundStyle(AgentSemanticColor.accent.color)
 
                 VStack(alignment: .leading, spacing: Tokens.Spacing.extraExtraSmall) {
                     Text(title)
@@ -121,7 +121,7 @@ public struct AgentDocumentPreview<Content: View>: View {
                 .background(Color(.systemGroupedBackground))
                 .navigationTitle(title)
                 #if os(iOS)
-                .navigationBarTitleDisplayMode(.inline)
+                .navigationBarTitleDisplayMode(.large)
                 #endif
                 .toolbar {
                     ToolbarItem(placement: .cancellationAction) {

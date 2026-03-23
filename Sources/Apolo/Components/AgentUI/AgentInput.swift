@@ -173,6 +173,7 @@ public struct AgentMultiChoiceInput: View {
                 Text("Confirmar (\(selectedIds.count))")
                     .body()
                     .frame(maxWidth: .infinity)
+                    .foregroundStyle(Tokens.Color.systemBackground.color)
             }
             .borderedProminentStyle(color: Tokens.Color.label.color)
             .disabled(selectedIds.isEmpty)
@@ -269,6 +270,7 @@ public struct AgentConfirmInput: View {
                     Text(confirmLabel)
                         .body()
                         .frame(maxWidth: .infinity)
+                        .foregroundStyle(Tokens.Color.systemBackground.color)
                 }
                 .borderedProminentStyle(color: Tokens.Color.label.color)
             }

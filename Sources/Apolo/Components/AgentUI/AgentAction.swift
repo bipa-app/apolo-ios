@@ -14,6 +14,17 @@ public enum AgentActionStyle {
     case primary
     case secondary
     case destructive
+
+    var foregroundColor: Color {
+        switch self {
+        case .primary:
+            Tokens.Color.systemBackground.color
+        case .secondary:
+            Tokens.Color.label.color
+        case .destructive:
+            Tokens.Color.systemBackground.color
+        }
+    }
 }
 
 // MARK: - Agent Action
@@ -49,6 +60,7 @@ public struct AgentAction: View {
                     .body()
                     .frame(maxWidth: .infinity)
             }
+            .foregroundStyle(style.foregroundColor)
         }
         .modifier(ActionStyleModifier(style: style))
     }

@@ -12,10 +12,11 @@ import SwiftUI
 
 /// Shows a clipped preview of the document content. Tapping zooms
 /// into the full-screen document view with a matched geometry transition.
-public struct AgentDocumentPreview<Content: View>: View {
+public struct AgentDocumentPreview<Content: View, TrailingToolbar: View>: View {
     public let title: String
     public let preview: String?
     @ViewBuilder public let document: () -> Content
+    @ViewBuilder public let trailingToolbar: () -> TrailingToolbar
 
     @State private var showDocument = false
     @Namespace private var zoomNamespace
@@ -24,10 +25,23 @@ public struct AgentDocumentPreview<Content: View>: View {
         title: String,
         preview: String? = nil,
         @ViewBuilder document: @escaping () -> Content
+    ) where TrailingToolbar == EmptyView {
+        self.title = title
+        self.preview = preview
+        self.document = document
+        self.trailingToolbar = { EmptyView() }
+    }
+
+    public init(
+        title: String,
+        preview: String? = nil,
+        @ViewBuilder document: @escaping () -> Content,
+        @ViewBuilder trailingToolbar: @escaping () -> TrailingToolbar
     ) {
         self.title = title
         self.preview = preview
         self.document = document
+        self.trailingToolbar = trailingToolbar
     }
 
     public var body: some View {
@@ -117,6 +131,9 @@ public struct AgentDocumentPreview<Content: View>: View {
                         Image(systemName: "xmark.circle.fill")
                             .foregroundStyle(Tokens.Color.secondaryLabel.color)
                     }
+                }
+                ToolbarItem(placement: .topBarTrailing) {
+                    trailingToolbar()
                 }
             }
         }

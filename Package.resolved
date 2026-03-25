@@ -41,8 +41,8 @@
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/bipa-app/swiftui-json-render.git",
       "state" : {
-        "revision" : "3d48d1046a11f9241b88618594fe6c9a5df0f532",
-        "version" : "0.2.0"
+        "revision" : "ceeb06dc96675cca37a9796d1ec99b8d198e8c74",
+        "version" : "0.2.1"
       }
     },
     {

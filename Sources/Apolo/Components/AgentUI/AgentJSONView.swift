@@ -226,7 +226,8 @@ struct ApoloListBuilder: ComponentBuilder {
                 subtitle: dict["subtitle"] as? String,
                 trailing: dict["trailing"] as? String,
                 trailingColor: resolveColor(dict["trailingColor"] as? String),
-                icon: dict["icon"] as? String
+                icon: dict["icon"] as? String,
+                url: (dict["url"] as? String).flatMap { URL(string: $0) }
             )
         } ?? []
         return AnyView(

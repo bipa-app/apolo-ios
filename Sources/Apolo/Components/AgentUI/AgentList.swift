@@ -24,6 +24,7 @@ public struct AgentList: View {
         public let trailing: String?
         public let trailingColor: Color?
         public let icon: String?
+        public let url: URL?
 
         public init(
             id: String = UUID().uuidString,
@@ -31,7 +32,8 @@ public struct AgentList: View {
             subtitle: String? = nil,
             trailing: String? = nil,
             trailingColor: Color? = nil,
-            icon: String? = nil
+            icon: String? = nil,
+            url: URL? = nil
         ) {
             self.id = id
             self.title = title
@@ -39,6 +41,7 @@ public struct AgentList: View {
             self.trailing = trailing
             self.trailingColor = trailingColor
             self.icon = icon
+            self.url = url
         }
     }
 
@@ -108,12 +111,28 @@ public struct AgentList: View {
 
 public struct AgentListRow: View {
     public let item: AgentList.Item
+    @Environment(\.openURL) private var openURL
 
     public init(item: AgentList.Item) {
         self.item = item
     }
 
     public var body: some View {
+        if let url = item.url {
+            Button {
+                openURL(url)
+            } label: {
+                rowContent
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityAddTraits(.isLink)
+        } else {
+            rowContent
+        }
+    }
+
+    private var rowContent: some View {
         HStack(spacing: Tokens.Spacing.small) {
             if let icon = item.icon {
                 Image(systemName: icon)
@@ -143,6 +162,12 @@ public struct AgentListRow: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.8)
                     .monospacedDigit()
+            }
+
+            if item.url != nil {
+                Image(systemName: "arrow.up.right")
+                    .small()
+                    .foregroundStyle(Tokens.Color.tertiaryLabel.color)
             }
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
@@ -226,5 +251,14 @@ private struct AgentListSheet: View {
         ],
         expandLabel: "Ver todas (20)"
     )
+    .padding()
+}
+
+#Preview("Sources with URLs — tappable") {
+    AgentList(items: [
+        .init(title: "CoinDesk — Short-term holders send $1.8B", subtitle: "coindesk.com", url: URL(string: "https://www.coindesk.com/article/123")),
+        .init(title: "CoinDesk — Bitcoin fails to sustain breakout", subtitle: "coindesk.com", url: URL(string: "https://www.coindesk.com/article/456")),
+        .init(title: "LiteFinance — Bitcoin Price as of 26/03/2026", subtitle: "litefinance.org", url: URL(string: "https://www.litefinance.org/bitcoin")),
+    ])
     .padding()
 }

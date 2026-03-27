@@ -14,16 +14,19 @@ public struct AgentTable: View {
     public let rows: [Row]
     public let maxVisible: Int?
 
+    @Environment(\.openURL) private var openURL
     @State private var expanded = false
 
     public struct Row: Identifiable {
         public let id = UUID()
         public let label: String
         public let value: String
+        public let url: URL?
 
-        public init(label: String, value: String) {
+        public init(label: String, value: String, url: URL? = nil) {
             self.label = label
             self.value = value
+            self.url = url
         }
     }
 
@@ -45,20 +48,17 @@ public struct AgentTable: View {
     public var body: some View {
         VStack(spacing: .zero) {
             ForEach(Array(visibleRows.enumerated()), id: \.element.id) { idx, row in
-                HStack(alignment: .center) {
-                    Text(row.label)
-                        .footnote()
-                        .foregroundStyle(Tokens.Color.secondaryLabel.color)
-
-                    Spacer()
-
-                    Text(row.value)
-                        .callout()
-                        .foregroundStyle(Tokens.Color.label.color)
-                        .multilineTextAlignment(.trailing)
+                if let url = row.url {
+                    Button {
+                        openURL(url)
+                    } label: {
+                        rowContent(row)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityAddTraits(.isLink)
+                } else {
+                    rowContent(row)
                 }
-                .padding(.horizontal, Tokens.Spacing.medium)
-                .padding(.vertical, Tokens.Spacing.small)
 
                 if idx < visibleRows.count - 1 || hasMore {
                     Separator()
@@ -88,6 +88,30 @@ public struct AgentTable: View {
         .padding(.vertical, Tokens.Spacing.extraExtraSmall)
         .cardBackground(.secondary, cornerRadius: Tokens.CornerRadius.medium, glassEnabled: false)
     }
+
+    private func rowContent(_ row: Row) -> some View {
+        HStack(alignment: .center) {
+            Text(row.label)
+                .footnote()
+                .foregroundStyle(Tokens.Color.secondaryLabel.color)
+
+            Spacer()
+
+            Text(row.value)
+                .callout()
+                .foregroundStyle(row.url != nil ? AgentSemanticColor.accent.color : Tokens.Color.label.color)
+                .multilineTextAlignment(.trailing)
+
+            if row.url != nil {
+                Image(systemName: "arrow.up.right")
+                    .small()
+                    .foregroundStyle(Tokens.Color.tertiaryLabel.color)
+            }
+        }
+        .padding(.horizontal, Tokens.Spacing.medium)
+        .padding(.vertical, Tokens.Spacing.small)
+        .contentShape(Rectangle())
+    }
 }
 
 // MARK: - Preview
@@ -105,6 +129,12 @@ public struct AgentTable: View {
         AgentTable(rows: [
             .init(label: "Ativo", value: "PIX"),
             .init(label: "Período", value: "Diurno"),
+        ])
+
+        AgentTable(rows: [
+            .init(label: "Código", value: "YHBRRY"),
+            .init(label: "Convites", value: "5"),
+            .init(label: "Link", value: "bipa.app/convite/YHBRRY", url: URL(string: "https://bipa.app/convite/YHBRRY")),
         ])
     }
     .padding()

@@ -16,17 +16,20 @@ public struct AgentTable: View {
 
     @Environment(\.openURL) private var openURL
     @State private var expanded = false
+    @State private var copiedRowID: UUID?
 
     public struct Row: Identifiable {
         public let id = UUID()
         public let label: String
         public let value: String
         public let url: URL?
+        public let copiable: String?
 
-        public init(label: String, value: String, url: URL? = nil) {
+        public init(label: String, value: String, url: URL? = nil, copiable: String? = nil) {
             self.label = label
             self.value = value
             self.url = url
+            self.copiable = copiable
         }
     }
 
@@ -56,6 +59,14 @@ public struct AgentTable: View {
                     }
                     .buttonStyle(.plain)
                     .accessibilityAddTraits(.isLink)
+                } else if row.copiable != nil {
+                    Button {
+                        copyValue(row)
+                    } label: {
+                        rowContent(row)
+                    }
+                    .buttonStyle(.plain)
+                    .accessibilityHint("Toque para copiar")
                 } else {
                     rowContent(row)
                 }
@@ -106,11 +117,28 @@ public struct AgentTable: View {
                 Image(systemName: "arrow.up.right")
                     .small()
                     .foregroundStyle(Tokens.Color.tertiaryLabel.color)
+            } else if row.copiable != nil {
+                let isCopied = copiedRowID == row.id
+                Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
+                    .small()
+                    .foregroundStyle(isCopied ? Tokens.Color.green.color : Tokens.Color.tertiaryLabel.color)
             }
         }
         .padding(.horizontal, Tokens.Spacing.medium)
         .padding(.vertical, Tokens.Spacing.small)
         .contentShape(Rectangle())
+    }
+
+    private func copyValue(_ row: Row) {
+        guard let copiable = row.copiable else { return }
+        UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+        UIPasteboard.general.string = copiable
+        withAnimation { copiedRowID = row.id }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            withAnimation {
+                if copiedRowID == row.id { copiedRowID = nil }
+            }
+        }
     }
 }
 
@@ -135,6 +163,12 @@ public struct AgentTable: View {
             .init(label: "Código", value: "YHBRRY"),
             .init(label: "Convites", value: "5"),
             .init(label: "Link", value: "bipa.app/convite/YHBRRY", url: URL(string: "https://bipa.app/convite/YHBRRY")),
+        ])
+
+        AgentTable(rows: [
+            .init(label: "ID da transação", value: "abc1...f9e2", copiable: "abc123def456789f9e2"),
+            .init(label: "Valor", value: "R$ 1.234,56"),
+            .init(label: "Chave PIX", value: "email@ex.com", copiable: "email@example.com"),
         ])
     }
     .padding()

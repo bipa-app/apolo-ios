@@ -25,6 +25,7 @@ public struct AgentList: View {
         public let trailingColor: Color?
         public let icon: String?
         public let url: URL?
+        public let copiable: String?
 
         public init(
             id: String = UUID().uuidString,
@@ -33,7 +34,8 @@ public struct AgentList: View {
             trailing: String? = nil,
             trailingColor: Color? = nil,
             icon: String? = nil,
-            url: URL? = nil
+            url: URL? = nil,
+            copiable: String? = nil
         ) {
             self.id = id
             self.title = title
@@ -42,6 +44,7 @@ public struct AgentList: View {
             self.trailingColor = trailingColor
             self.icon = icon
             self.url = url
+            self.copiable = copiable
         }
     }
 
@@ -112,6 +115,7 @@ public struct AgentList: View {
 public struct AgentListRow: View {
     public let item: AgentList.Item
     @Environment(\.openURL) private var openURL
+    @State private var isCopied = false
 
     public init(item: AgentList.Item) {
         self.item = item
@@ -127,6 +131,15 @@ public struct AgentListRow: View {
             }
             .buttonStyle(.plain)
             .accessibilityAddTraits(.isLink)
+        } else if item.copiable != nil {
+            Button {
+                copyValue()
+            } label: {
+                rowContent
+                    .contentShape(Rectangle())
+            }
+            .buttonStyle(.plain)
+            .accessibilityHint("Toque para copiar")
         } else {
             rowContent
         }
@@ -168,11 +181,25 @@ public struct AgentListRow: View {
                 Image(systemName: "arrow.up.right")
                     .small()
                     .foregroundStyle(Tokens.Color.tertiaryLabel.color)
+            } else if item.copiable != nil {
+                Image(systemName: isCopied ? "checkmark" : "doc.on.doc")
+                    .small()
+                    .foregroundStyle(isCopied ? Tokens.Color.green.color : Tokens.Color.tertiaryLabel.color)
             }
         }
         .dynamicTypeSize(...DynamicTypeSize.accessibility2)
         .padding(.horizontal, Tokens.Spacing.medium)
         .padding(.vertical, Tokens.Spacing.small)
+    }
+
+    private func copyValue() {
+        guard let copiable = item.copiable else { return }
+        UIImpactFeedbackGenerator(style: .rigid).impactOccurred()
+        UIPasteboard.general.string = copiable
+        withAnimation { isCopied = true }
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+            withAnimation { isCopied = false }
+        }
     }
 }
 

@@ -68,9 +68,9 @@ public struct Checkbox: View {
     private var checkboxSymbol: some View {
         let fill: AnyShapeStyle = {
             if let shapeStyle {
-                return isChecked ? shapeStyle : AnyShapeStyle(Tokens.Color.secondarySystemFill.color)
+                return isChecked ? shapeStyle : AnyShapeStyle(Tokens.Color.label.color)
             } else {
-                return AnyShapeStyle(isChecked ? Tokens.Color.label.color : Tokens.Color.secondarySystemFill.color)
+                return AnyShapeStyle(Tokens.Color.label.color)
             }
         }()
 
@@ -153,9 +153,9 @@ public struct ToggleCheckboxStyle: ToggleStyle {
             HStack {
                 let fill: AnyShapeStyle = {
                     if let shapeStyle {
-                        return configuration.isOn ? shapeStyle : AnyShapeStyle(Tokens.Color.secondarySystemFill.color)
+                        return configuration.isOn ? shapeStyle : AnyShapeStyle(Tokens.Color.label.color)
                     } else {
-                        return AnyShapeStyle(configuration.isOn ? Tokens.Color.label.color : Tokens.Color.secondarySystemFill.color)
+                        return AnyShapeStyle(Tokens.Color.label.color)
                     }
                 }()
                 
